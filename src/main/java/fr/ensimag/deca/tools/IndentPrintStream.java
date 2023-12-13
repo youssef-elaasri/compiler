@@ -4,8 +4,8 @@ import java.io.PrintStream;
 
 /**
  *
- * @author @AUTHOR@
- * @date @DATE@
+ * @author gl22
+ * @date 01/01/2024
  */
 public class IndentPrintStream {
     private PrintStream stream;
