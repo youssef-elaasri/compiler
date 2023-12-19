@@ -14,7 +14,7 @@ options {
 //Identifiors
 fragment LETTER: 'a' .. 'z' | 'A' .. 'Z';
 fragment DIGIT: '0' .. '9';
-IDENT: (LETTER | '$' | '_') (LETTER | DIGIT | '$' | '_');
+IDENT: (LETTER | '$' | '_')(LETTER | DIGIT | '$' | '_')*;
 
 
 // Reserved words
