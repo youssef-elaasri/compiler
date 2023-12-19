@@ -89,8 +89,8 @@ MULTI_LINE_STRING: '"' (STRING_CAR | '\n' | '\\"' | '\\\\')* '"';
 
 // Comments
 
-MULTI_LINE_COMMENT: '/*' .*? '*/' ;
-MONO_LINE_COMMENT: '//' ~('\n')* '\n';
+fragment MULTI_LINE_COMMENT: '/*' .*? '*/' ;
+fragment MONO_LINE_COMMENT: '//' ~('\n')* '\n';
 
 // File Name
 
