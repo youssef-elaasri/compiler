@@ -103,8 +103,9 @@ WS  :   ( ' '
         | '\t'
         | '\r'
         | '\n'
+        | MULTI_LINE_COMMENT
+        | MONO_LINE_COMMENT
         ) {
               skip(); // avoid producing a token
           }
     ;
-
