@@ -11,10 +11,6 @@ options {
 @members {
 }
 
-//Identifiors
-fragment LETTER: 'a' .. 'z' | 'A' .. 'Z';
-fragment DIGIT: '0' .. '9';
-IDENT: (LETTER | '$' | '_')(LETTER | DIGIT | '$' | '_')*;
 
 
 // Reserved words
@@ -100,7 +96,10 @@ INCLUDE : '#include' (' ')* '"' FILENAME '"'{
       doInclude(filename);
 };
 
-
+//Identifiors
+fragment LETTER: 'a' .. 'z' | 'A' .. 'Z';
+fragment DIGIT: '0' .. '9';
+IDENT: (LETTER | '$' | '_')(LETTER | DIGIT | '$' | '_')*;
 
 // Ignore spaces, tabs, newlines and whitespaces
 WS  :   ( ' '
@@ -111,4 +110,6 @@ WS  :   ( ' '
         | MONO_LINE_COMMENT
         ) ->
               skip; // avoid producing a token
+
+
 
