@@ -95,7 +95,11 @@ fragment MONO_LINE_COMMENT: '//' ~('\n')* '\n';
 // File Name
 
 fragment FILENAME : (LETTER | DIGIT | '.' | '_' | '-')+;
-INCLUDE : '#include' (' ')* '"' FILENAME '"';
+INCLUDE : '#include' (' ')* '"' FILENAME '"'{ 
+      String filename = getText();
+      doInclude(filename);
+};
+
 
 
 // Ignore spaces, tabs, newlines and whitespaces
