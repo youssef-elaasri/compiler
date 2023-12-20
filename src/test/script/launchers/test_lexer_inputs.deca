@@ -1,4 +1,3 @@
-#include "test_include.deca"
 // affichage en flottant de la moitié du carré d'un entier
 {
  int x ;

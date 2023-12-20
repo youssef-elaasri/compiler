@@ -99,9 +99,9 @@ list_inst returns[ListInst tree]
 @init {
         $tree = new ListInst();
 }
-    : (inst {
-            assert($inst.tree != null);
-            $tree.add($inst.tree);
+    : (e=inst {
+            assert($e.tree != null);
+            $tree.add($e.tree);
         }
       )*
     ;
@@ -109,7 +109,7 @@ list_inst returns[ListInst tree]
 inst returns[AbstractInst tree]
     : e1=expr SEMI {
             assert($e1.tree != null);
-            $tree = e1.tree;
+            $tree = $e1.tree;
         }
     | SEMI {
         }
@@ -193,7 +193,7 @@ assign_expr returns[AbstractExpr tree]
             if (! ($e.tree instanceof AbstractLValue)) {
                 throw new InvalidLValue(this, $ctx);
             }
-            $tree = e.tree;
+            $tree = $e.tree;
         }
         EQUALS e2=assign_expr {
             assert($e.tree != null);
@@ -201,6 +201,8 @@ assign_expr returns[AbstractExpr tree]
         }
       | /* epsilon */ {
             assert($e.tree != null);
+            $tree = $e.tree;
+
         }
       )
     ;
@@ -213,7 +215,7 @@ or_expr returns[AbstractExpr tree]
     | e1=or_expr OR e2=and_expr {
             assert($e1.tree != null);
             assert($e2.tree != null);
-            &tree = new Or($e1.tree, $e2.tree);
+            $tree = new Or($e1.tree, $e2.tree);
        }
     ;
 
@@ -316,6 +318,7 @@ unary_expr returns[AbstractExpr tree]
     | select_expr {
             assert($select_expr.tree != null);
             $tree=$select_expr.tree;
+            setLocation($tree, $select_expr.start);
         }
     ;
 
@@ -334,6 +337,7 @@ select_expr returns[AbstractExpr tree]
         }
         | /* epsilon */ {
             // we matched "e.i"
+            
         }
         )
     ;
@@ -377,8 +381,8 @@ literal returns[AbstractExpr tree]
         }
     | fd=FLOAT {
         }
-    | STRING {
-            $tree = new StringLiteral();
+    | s=STRING {
+            $tree = new StringLiteral($s.text);
         }
     | TRUE {
         }
@@ -398,8 +402,11 @@ ident returns[AbstractIdentifier tree]
 /****     Class related rules     ****/
 
 list_classes returns[ListDeclClass tree]
-    :
-      (c1=class_decl {
+    @init { 
+         $tree = new ListDeclClass();
+    }
+    :  (c1=class_decl {
+    
         }
       )*
     ;
