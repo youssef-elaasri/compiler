@@ -43,28 +43,28 @@ THIS         : 'this';
 // Tokens
 EQUALS : '=' ;
 PLUS : '+' ;
-EXCLAMATION : '!' ;
-SEMICOLON : ';' ;
+EXCLAM : '!' ;
+SEMI : ';' ;
 MINUS : '-' ;
-ASTERISK : '*' ;
-GREATER_THAN_EQUALS : '>=' ;
-DIVISION : '/' ;
-MODULO : '%' ;
+TIMES : '*' ;
+GEQ : '>=' ;
+SLASH : '/' ;
+PERCENT : '%' ;
 DOT : '.' ;
-LESS_THAN_EQUALS : '<=' ;
+LEQ : '<=' ;
 AND : '&&' ;
 OR : '||' ;
 COMMA : ',' ;
-OPEN_PAREN : '(' ;
-CLOSE_PAREN : ')' ;
-OPEN_BRACE : '{' ;
-CLOSE_BRACE : '}' ;
+OPARENT : '(' ;
+CPARENT : ')' ;
+OBRACE : '{' ;
+CBRACE : '}' ;
 
 //Token rules
 LT : '<' ;
 GT : '>' ;
-EQUAL_EQUAL : '==' ;
-NOT_EQUAL : '!=' ;
+EQEQ : '==' ;
+NEQ : '!=' ;
 
 // Integers
 fragment POSITIVE_DIGIT : '1' .. '9';
@@ -109,7 +109,6 @@ WS  :   ( ' '
         | '\n'
         | MULTI_LINE_COMMENT
         | MONO_LINE_COMMENT
-        ) {
-              skip(); // avoid producing a token
-          }
-    ;
+        ) ->
+              skip; // avoid producing a token
+
