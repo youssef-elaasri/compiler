@@ -52,8 +52,6 @@ public class CompilerOptions {
                 sourceFiles.add(file);
         }
 
-
-
         Logger logger = Logger.getRootLogger();
         // map command-line debug option to log4j's level.
         switch (getDebug()) {
