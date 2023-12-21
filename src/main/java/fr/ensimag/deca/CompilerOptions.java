@@ -48,6 +48,8 @@ public class CompilerOptions {
         switch (args[0]){
             case "-p": break;
             default:
+                File file = new File(args[0]);
+                sourceFiles.add(file);
         }
 
 
