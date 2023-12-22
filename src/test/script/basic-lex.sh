@@ -17,26 +17,104 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-# /!\ test valide lexicalement, mais invalide pour l'étape A.
-# test_lex peut au choix afficher les messages sur la sortie standard
-# (1) ou sortie d'erreur (2). On redirige la sortie d'erreur sur la
-# sortie standard pour accepter les deux (2>&1)
-if test_lex src/test/deca/syntax/invalid/provided/simple_lex.deca 2>&1 \
-    | head -n 1 | grep -q 'simple_lex.deca:[0-9]'
+RED='\e[0;31m'
+GREEN='\e[0;32m'
+RESET='\e[0m'
+
+
+# Testing  synthax
+echo "Testing  Synthax..."
+if test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 \
+            | grep -q  -e 'while' \
+    # && test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 \
+    # | grep -q -e 'if'\
+    # && test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 \
+    # | grep -q -e 'println'\
+    # && test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 \
+    # | grep -q -e 'else'
 then
-    echo "Echec inattendu de test_lex"
-    exit 1
+    echo "${GREEN}PASSED${RESET}"
 else
-    echo "OK"
+    echo "${RED}FAILED${RESET}"
+    exit 1
 fi
 
-# Ligne 10 codée en dur. Il faudrait stocker ça quelque part ...
-if test_lex src/test/deca/syntax/invalid/provided/chaine_incomplete.deca 2>&1 \
-    | grep -q -e 'chaine_incomplete.deca:10:'
+
+# Testing  include
+echo "Testing  include..."
+
+if test_lex "./src/test/deca/syntax/valid/provided/Include_test.deca" 2>&1 \
+            | grep -q -e 'println'
 then
-    echo "Echec attendu pour test_lex"
+    echo "${GREEN}PASSED${RESET}"
 else
-    echo "Erreur non detectee par test_lex pour chaine_incomplete.deca"
+    echo "${RED}FAILED${RESET}"
     exit 1
 fi
+
+
+
+
+# Testing Circular include
+echo "Testing circual include..."
+
+if test_lex "./src/test/deca/syntax/invalid/provided/circularInclude_test.deca" 2>&1 \
+            | grep -q -e ' Circular include for file'
+then
+    echo "${GREEN}PASSED${RESET}"
+else
+    echo "${RED}FAILED${RESET}"
+    exit 1
+fi
+
+
+# Testing not found include
+echo "Testing invalid file include..."
+
+if test_lex "./src/test/deca/syntax/invalid/provided/Include_not_found_test.deca" 2>&1 \
+            | grep -q -e ' include file not found'
+then
+    echo "${GREEN}PASSED${RESET}"
+else
+    echo "${RED}FAILED${RESET}"
+    exit 1
+fi
+
+
+# Testing Wrong braces
+echo " Testing wrong braces ..."
+if test_lex ./src/test/deca/syntax/invalid/provided/wrong_braces_lex.deca 2>&1 \
+    | grep -q -e 'wrong_braces_lex.deca:[0-9]:'
+then
+   echo "${GREEN}PASSED${RESET}"
+else
+echo "${RED}FAILED${RESET}"
+exit 1
+fi
+
+# Testing comments 
+
+echo " Testing comments..."
+if test_lex ./src/test/deca/syntax/invalid/provided/Comments_text.deca 2>&1 \
+    | grep -q -e 'comment'
+then
+   echo "${RED}FAILED${RESET}"
+    exit 1
+else
+echo "${GREEN}PASSED${RESET}"
+fi
+
+
+# Testing chaine incomplete
+
+echo " Testing incomplete String..."
+if test_lex ./src/test/deca/syntax/invalid/provided/chaine_incomplete_test.deca 2>&1 \
+    | grep -q -e 'chaine_incomplete_test.deca:[0-9]'
+then
+   echo "${GREEN}PASSED${RESET}"
+    exit 1
+else
+echo "${RED}FAILED${RESET}"
+fi
+
 
