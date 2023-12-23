@@ -110,7 +110,6 @@ list_inst returns[ListInst tree]
     : (e=inst {
             assert($e.tree != null);
             $tree.add($e.tree);
-            setLocation($tree, $e.start);
         }
       )*
     ;
@@ -188,12 +187,10 @@ list_expr returns[ListExpr tree]
     : (e1=expr {
             assert($e1.tree != null);
             $tree.add($e1.tree);
-            setLocation($tree, $e1.start);
         }
        (COMMA e2=expr {
             assert($e2.tree != null);
             $tree.add($e2.tree);
-            setLocation($tree, $e2.start);
         }
        )* )?
     ;
@@ -418,8 +415,14 @@ type returns[AbstractIdentifier tree]
 
 literal returns[AbstractExpr tree]
     : INT {
-            $tree = new IntLiteral(Integer.parseInt($INT.text));
-            setLocation($tree, $INT);
+            try {
+                $tree = new IntLiteral(Integer.parseInt($INT.text));
+                setLocation($tree, $INT);
+            }
+            catch (NumberFormatException e) {
+                System.out.println("the interger is too long");
+                $tree = null;
+            }
         }
     | fd=FLOAT {
             $tree = new FloatLiteral(Float.parseFloat($fd.text));
