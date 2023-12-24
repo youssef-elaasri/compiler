@@ -14,6 +14,15 @@ import fr.ensimag.deca.tools.IndentPrintStream;
  */
 public class ListDeclVar extends TreeList<AbstractDeclVar> {
 
+    //TODO add codeGenListDeclVar
+    /*
+        public void codeGenListInst(DecacCompiler compiler) {
+        for (AbstractInst i : getList()) {
+            i.codeGenInst(compiler);
+        }
+    }
+     */
+
     @Override
     public void decompile(IndentPrintStream s) {
         throw new UnsupportedOperationException("Not yet implemented");
