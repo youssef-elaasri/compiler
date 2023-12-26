@@ -38,6 +38,11 @@ public class EnvironmentExp {
      * Return the definition of the symbol in the environment, or null if the
      * symbol is undefined.
      */
+    //TODO
+    /*
+    Poly: Un squelette de classe EnvironmentExp, qui devra implémenter un dictionnaire qui associe à
+chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefinition ;
+    */
     public ExpDefinition get(Symbol key) {
         throw new UnsupportedOperationException("not yet implemented");
     }

@@ -1,5 +1,6 @@
 package fr.ensimag.deca;
 
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.EnvironmentType;
 import fr.ensimag.deca.syntax.DecaLexer;
 import fr.ensimag.deca.syntax.DecaParser;
@@ -48,6 +49,8 @@ public class DecacCompiler {
         super();
         this.compilerOptions = compilerOptions;
         this.source = source;
+
+        this.stack = new Stack();
     }
 
     /**
@@ -241,5 +244,18 @@ public class DecacCompiler {
         parser.setDecacCompiler(this);
         return parser.parseProgramAndManageErrors(err);
     }
+
+    /** ADDED CODE **/
+
+    private final Stack stack;
+
+    /**
+     * Gets stack of the compiler
+     * @return stack
+     */
+    public Stack getStack() {
+        return stack;
+    }
+
 
 }

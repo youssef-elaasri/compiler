@@ -17,11 +17,21 @@ public class ListDeclVar extends TreeList<AbstractDeclVar> {
     //TODO add codeGenListDeclVar
     /*
         public void codeGenListInst(DecacCompiler compiler) {
-        for (AbstractInst i : getList()) {
+        f r (AbstrFactInst i : getList()) {
             i.codeGenInst(compiler);
         }
     }
-     */
+    */
+
+    public void codeGenListDeclVar(DecacCompiler compiler) {
+        for (AbstractDeclVar abstractDeclVar : getList()) {
+            compiler.getStack();
+            DeclVar declVar = (DeclVar) abstractDeclVar;
+
+
+            // i.codeGenInst(compiler);
+        }
+    }
 
     @Override
     public void decompile(IndentPrintStream s) {
