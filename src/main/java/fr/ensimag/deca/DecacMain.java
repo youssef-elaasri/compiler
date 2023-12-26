@@ -1,6 +1,8 @@
 package fr.ensimag.deca;
 
 import java.io.File;
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -24,6 +26,8 @@ public class DecacMain {
                     + e.getMessage());
             options.displayUsage();
             System.exit(1);
+        } catch (IOException e) {
+            System.out.println("Error: File not found");
         }
         if (options.getPrintBanner()) {
             throw new UnsupportedOperationException("decac -b not yet implemented");
