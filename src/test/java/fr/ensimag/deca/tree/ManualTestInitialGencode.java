@@ -6,6 +6,9 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.IntType;
+import fr.ensimag.deca.context.TypeDefinition;
+import fr.ensimag.deca.tools.SymbolTable;
 
 /**
  *
@@ -15,16 +18,18 @@ import fr.ensimag.deca.DecacCompiler;
 public class ManualTestInitialGencode {
     
     public static AbstractProgram initTest1() {
+        SymbolTable symbolTable = new SymbolTable();
         ListInst linst = new ListInst();
+        ListDeclVar listDeclVar = new ListDeclVar();
         AbstractProgram source =
             new Program(
                 new ListDeclClass(),
-                new Main(new ListDeclVar(),linst));
-        ListExpr lexp1 = new ListExpr(), lexp2 = new ListExpr();
-        linst.add(new Print(false,lexp1));
-        linst.add(new Println(false,lexp2));
-        lexp1.add(new StringLiteral("Hello "));
-        lexp2.add(new StringLiteral("everybody !"));
+                new Main(listDeclVar,linst));
+        Identifier intIdentifier = new Identifier(symbolTable.create("int"));
+        Identifier xIdentifier = new Identifier(symbolTable.create("x"));
+        intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        listDeclVar.add(new DeclVar( intIdentifier, xIdentifier,new NoInitialization()));
         return source;
     }
     
