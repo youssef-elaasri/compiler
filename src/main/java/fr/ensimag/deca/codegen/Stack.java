@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 
 public class Stack {
-    private static int addrCounter = 0;
+    private static int addrCounter = 1;
     private static int numberOfRegisters = 2;
     private int maxTSTO;
     private int currentRegister;
@@ -43,8 +43,15 @@ public class Stack {
     }
 
     public int getAddrCounter() {
-        addrCounter++;
         return addrCounter;
+    }
+
+    public void increaseAddrCounter(){
+        addrCounter++;
+    }
+
+    public void decreaseAddrCounter(){
+        addrCounter--;
     }
 
     public int getCurrentRegister(){
@@ -55,7 +62,7 @@ public class Stack {
         currentRegister++;
     }
 
-    public void freeRegister(){
+    public void decreaseRegister(){
         currentRegister--;
     }
 }

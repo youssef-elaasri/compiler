@@ -68,7 +68,8 @@ public class DeclVar extends AbstractDeclVar {
                         Register.GB
                 )
         );
-        this.initialization.codeGenInitialization(compiler);
+        compiler.getStack().increaseAddrCounter();
+        this.initialization.codeGenInitialization(compiler, varName);
 
     }
 }
