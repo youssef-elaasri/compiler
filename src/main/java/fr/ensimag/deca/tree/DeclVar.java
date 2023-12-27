@@ -7,6 +7,9 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -54,5 +57,18 @@ public class DeclVar extends AbstractDeclVar {
         type.prettyPrint(s, prefix, false);
         varName.prettyPrint(s, prefix, false);
         initialization.prettyPrint(s, prefix, true);
+    }
+
+    /** ADDED CODE **/
+
+    public void codeGenDeclVar(DecacCompiler compiler){
+        this.varName.getExpDefinition().setOperand(
+                new RegisterOffset(
+                        compiler.getStack().getAddrCounter(),
+                        Register.GB
+                )
+        );
+        this.initialization.codeGenInitialization(compiler);
+
     }
 }

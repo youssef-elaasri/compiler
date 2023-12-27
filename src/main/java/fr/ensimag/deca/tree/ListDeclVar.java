@@ -14,22 +14,15 @@ import fr.ensimag.deca.tools.IndentPrintStream;
  */
 public class ListDeclVar extends TreeList<AbstractDeclVar> {
 
-    //TODO add codeGenListDeclVar
-    /*
-        public void codeGenListInst(DecacCompiler compiler) {
-        f r (AbstrFactInst i : getList()) {
-            i.codeGenInst(compiler);
-        }
-    }
-    */
+    /**
+     *
+     * @param compiler
+     */
 
     public void codeGenListDeclVar(DecacCompiler compiler) {
         for (AbstractDeclVar abstractDeclVar : getList()) {
-            compiler.getStack();
-            DeclVar declVar = (DeclVar) abstractDeclVar;
-
-
-            // i.codeGenInst(compiler);
+            abstractDeclVar.codeGenDeclVar(compiler);
+            compiler.getStack().increaseTSTO();
         }
     }
 

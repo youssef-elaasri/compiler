@@ -9,8 +9,7 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 
 /**
- * Absence of initialization (e.g. "int x;" as opposed to "int x =
- * 42;").
+ * Absence of initialization (e.g. "int x;" as opposed to "int x = 42;").
  *
  * @author gl22
  * @date 01/01/2024
@@ -23,6 +22,7 @@ public class NoInitialization extends AbstractInitialization {
             throws ContextualError {
         throw new UnsupportedOperationException("not yet implemented");
     }
+
 
 
     /**
@@ -47,5 +47,13 @@ public class NoInitialization extends AbstractInitialization {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         // leaf node => nothing to do
     }
+
+    /** ADDED CODE **/
+
+    @Override
+    public void codeGenInitialization(DecacCompiler compiler) {
+        // nothing
+    }
+
 
 }

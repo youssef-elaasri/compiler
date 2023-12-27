@@ -54,4 +54,13 @@ public class Initialization extends AbstractInitialization {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         expression.prettyPrint(s, prefix, true);
     }
+
+    /** ADDED CODE **/
+
+    @Override
+    public void codeGenInitialization(DecacCompiler compiler) {
+        this.expression.codeGenInst(compiler);
+
+    }
+
 }

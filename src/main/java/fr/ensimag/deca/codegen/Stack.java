@@ -9,10 +9,10 @@ import java.util.HashMap;
  */
 
 public class Stack {
-    private static int addrCounter = 1;
+    private static int addrCounter = 0;
+    private static int numberOfRegisters = 1;
     private int maxTSTO;
-    private int register;
-
+    private int currentRegister;
     private HashMap<Symbol, Integer> symbolAddr;
 
     /**
@@ -22,7 +22,7 @@ public class Stack {
      */
     public Stack(){
         maxTSTO = 1;
-        register = 15;
+        numberOfRegisters = 15;
         symbolAddr = new HashMap<>();
 
     }
@@ -42,9 +42,17 @@ public class Stack {
         return maxTSTO;
     }
 
-//    public void putSymbol(Symbol symbol){
-//        this.symbolAddr.put(symbol, addrCounter);
-//        addrCounter++;
-//    }
+    public int getAddrCounter() {
+        addrCounter++;
+        return addrCounter;
+    }
 
+    public int getCurrentRegister(){
+        currentRegister++;
+        return currentRegister;
+    }
+
+    public void freeRegister(){
+        currentRegister--;
+    }
 }
