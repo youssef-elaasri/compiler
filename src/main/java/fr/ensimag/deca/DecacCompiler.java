@@ -129,8 +129,7 @@ public class DecacCompiler {
     public final SymbolTable symbolTable = new SymbolTable();
 
     public Symbol createSymbol(String name) {
-        return null; // A FAIRE: remplacer par la ligne en commentaire ci-dessous
-        // return symbolTable.create(name);
+        return symbolTable.create(name);
     }
 
     /**
@@ -248,7 +247,6 @@ public class DecacCompiler {
     /** ADDED CODE **/
 
     private final Stack stack;
-
     /**
      * Gets stack of the compiler
      * @return stack

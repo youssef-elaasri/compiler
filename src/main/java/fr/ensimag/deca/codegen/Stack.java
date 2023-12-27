@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class Stack {
     private static int addrCounter = 0;
-    private static int numberOfRegisters = 1;
+    private static int numberOfRegisters = 2;
     private int maxTSTO;
     private int currentRegister;
     private HashMap<Symbol, Integer> symbolAddr;
@@ -48,8 +48,11 @@ public class Stack {
     }
 
     public int getCurrentRegister(){
-        currentRegister++;
         return currentRegister;
+    }
+
+    public void increaseRegister(){
+        currentRegister++;
     }
 
     public void freeRegister(){
