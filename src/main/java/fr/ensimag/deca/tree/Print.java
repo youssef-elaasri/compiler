@@ -19,7 +19,6 @@ public class Print extends AbstractPrint {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("(");
         String st = this.getPrintHex() ? "printx(" : "print(";
         s.print(st);
         this.getArguments().decompile(s);

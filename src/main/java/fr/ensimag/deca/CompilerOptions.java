@@ -5,7 +5,15 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.IOException;
 
+import fr.ensimag.deca.syntax.AbstractDecaLexer;
+import fr.ensimag.deca.syntax.DecaLexer;
+import fr.ensimag.deca.syntax.DecaParser;
+import fr.ensimag.deca.tree.AbstractProgram;
+import fr.ensimag.deca.tree.Program;
+import fr.ensimag.deca.tree.Tree;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -42,14 +50,32 @@ public class CompilerOptions {
     private List<File> sourceFiles = new ArrayList<File>();
 
     
-    public void parseArgs(String[] args) throws CLIException {
+    public void parseArgs(String[] args) throws CLIException, IOException {
         // A FAIRE : parcourir args pour positionner les options correctement.
 
         switch (args[0]){
-            case "-p": break;
+            case "-p":
+                String[] file_name = new String[1];
+                file_name[0] = args[1];
+                DecaLexer lex = AbstractDecaLexer.createLexerFromArgs(file_name);
+                CommonTokenStream tokens = new CommonTokenStream(lex);
+                DecaParser parser = new DecaParser(tokens);
+                File file = null;
+                if (lex.getSourceName() != null) {
+                    file = new File(lex.getSourceName());
+                }
+                //sourceFiles.add(file);
+                final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
+                parser.setDecacCompiler(decacCompiler);
+                Program prog = (Program)parser.parseProgramAndManageErrors(System.err);
+                if (prog == null) {
+                    System.exit(1);
+                } else {
+                    prog.decompile(System.out);
+                }
             default:
-                File file = new File(args[0]);
-                sourceFiles.add(file);
+                File srcFile = new File(args[0]);
+                sourceFiles.add(srcFile);
         }
 
         Logger logger = Logger.getRootLogger();
