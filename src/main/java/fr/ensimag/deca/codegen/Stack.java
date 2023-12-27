@@ -42,9 +42,9 @@ public class Stack {
         return maxTSTO;
     }
 
-    public void putSymbol(Symbol symbol){
-        this.symbolAddr.put(symbol, addrCounter);
-        addrCounter++;
-    }
+//    public void putSymbol(Symbol symbol){
+//        this.symbolAddr.put(symbol, addrCounter);
+//        addrCounter++;
+//    }
 
 }
