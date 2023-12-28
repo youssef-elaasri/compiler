@@ -8,6 +8,7 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.IntType;
 import fr.ensimag.deca.context.TypeDefinition;
+import fr.ensimag.deca.context.VariableDefinition;
 import fr.ensimag.deca.tools.SymbolTable;
 
 /**
@@ -28,8 +29,9 @@ public class ManualTestInitialGencode {
         Identifier intIdentifier = new Identifier(symbolTable.create("int"));
         Identifier xIdentifier = new Identifier(symbolTable.create("x"));
         intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
-        intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
-        listDeclVar.add(new DeclVar( intIdentifier, xIdentifier,new NoInitialization()));
+        xIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        DeclVar declVar = new DeclVar( intIdentifier, xIdentifier,new NoInitialization());
+        listDeclVar.add(declVar);
         return source;
     }
     
