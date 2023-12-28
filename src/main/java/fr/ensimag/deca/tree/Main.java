@@ -36,16 +36,6 @@ public class Main extends AbstractMain {
 
     @Override
     protected void codeGenMain(DecacCompiler compiler) {
-        // A FAIRE: traiter les déclarations de variables.
-
-        // NOTE: TSTO should be done once per block. It should be generated after code generation. Therefore we should count the following things:
-        /*
-        — du nombre de registres sauvegardés en début de bloc ;
-        — du nombre de variables du bloc ;
-        — du nombre maximal de temporaires nécessaires à l’évaluation des expressions ;
-        — du nombre maximal de paramètres des méthodes appelées (chaque instruction BSR effectuant deux empilements).
-        */
-
         declVariables.codeGenListDeclVar(compiler);
         compiler.addComment("Beginning of main instructions:");
         insts.codeGenListInst(compiler);

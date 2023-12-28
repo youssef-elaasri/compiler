@@ -64,12 +64,12 @@ public class Initialization extends AbstractInitialization {
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
         this.expression.codeGenInst(compiler);
-
         compiler.addInstruction(
                 new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1),
                         varName.getExpDefinition().getOperand()
                 )
         );
+        compiler.getStack().decreaseRegister();
 
     }
 
