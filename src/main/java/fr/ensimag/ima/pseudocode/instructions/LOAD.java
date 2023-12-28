@@ -19,4 +19,11 @@ public class LOAD extends BinaryInstructionDValToReg {
     public LOAD(float f, GPRegister r) {
         this(new ImmediateFloat(f),r);
     }
+
+    public LOAD(boolean value, GPRegister r){
+        this(
+                value ? 1 : 0,
+                r
+        );
+    }
 }
