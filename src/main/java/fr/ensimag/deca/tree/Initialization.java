@@ -1,5 +1,6 @@
 package fr.ensimag.deca.tree;
 
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
@@ -63,14 +64,20 @@ public class Initialization extends AbstractInitialization {
 
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
-        this.expression.codeGenInst(compiler);
-        compiler.addInstruction(
-                new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1),
-                        varName.getExpDefinition().getOperand()
-                )
-        );
-        compiler.getStack().decreaseRegister();
-
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            this.expression.codeGenInst(compiler);
+            compiler.addInstruction(
+                    new STORE(Register.getR(compiler.getStack().getCurrentRegister()),
+                            varName.getExpDefinition().getOperand()
+                    )
+            );
+            compiler.getStack().decreaseRegister();
+        }
+        else{
+            Stack.pushRegister(compiler);
+            codeGenInitialization(compiler, varName);
+            Stack.popRegister(compiler);
+        }
     }
 
 }

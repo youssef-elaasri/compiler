@@ -126,15 +126,6 @@ public abstract class AbstractExpr extends AbstractInst {
 
     }
 
-    protected void pushRegister(DecacCompiler compiler){
-        compiler.getStack().decreaseRegister();
-        compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
-    }
-
-    protected void popRegister(DecacCompiler compiler){
-        compiler.addInstruction(new POP(Register.getR(compiler.getStack().getCurrentRegister())));
-        compiler.getStack().increaseRegister();
-    }
 
     @Override
     protected void decompileInst(IndentPrintStream s) {

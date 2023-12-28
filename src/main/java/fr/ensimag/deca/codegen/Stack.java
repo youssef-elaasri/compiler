@@ -1,6 +1,10 @@
 package fr.ensimag.deca.codegen;
 
+import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.POP;
+import fr.ensimag.ima.pseudocode.instructions.PUSH;
 
 import java.util.HashMap;
 
@@ -66,4 +70,15 @@ public class Stack {
     public int getNumberOfRegisters() {
         return numberOfRegisters;
     }
+
+    public static void pushRegister(DecacCompiler compiler){
+        compiler.getStack().decreaseRegister();
+        compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
+    }
+
+    public static void popRegister(DecacCompiler compiler){
+        compiler.addInstruction(new POP(Register.getR(compiler.getStack().getCurrentRegister())));
+        compiler.getStack().increaseRegister();
+    }
+
 }
