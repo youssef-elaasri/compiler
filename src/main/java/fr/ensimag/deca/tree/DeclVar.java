@@ -1,12 +1,11 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+
+import fr.ensimag.deca.tools.SymbolTable;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -33,6 +32,17 @@ public class DeclVar extends AbstractDeclVar {
     protected void verifyDeclVar(DecacCompiler compiler,
             EnvironmentExp localEnv, ClassDefinition currentClass)
             throws ContextualError {
+//        if (type.getDefinition().getType() instanceof VoidType) {
+//            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
+//        }
+//        SymbolTable.Symbol symb = varName.getName();
+//        ExpDefinition def = new VariableDefinition(type.getDefinition().getType(), type.getDefinition().getLocation());
+//        localEnv.declare(symb, def);
+        Type ty = varName.verifyType(compiler);
+        initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
+        if (ty instanceof VoidType) {
+            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
+        }
     }
 
     

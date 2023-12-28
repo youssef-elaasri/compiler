@@ -71,11 +71,10 @@ public class EnvironmentExp {
      *
      */
     public void declare(Symbol name, ExpDefinition def) throws DoubleDefException {
-
-        ExpDefinition estDoubleDef = expDefinitionMap.putIfAbsent(name, def);
-        if (estDoubleDef != null){
-            throw new DoubleDefException("This symbol is already defined in the environment.");
+        if (expDefinitionMap.containsKey(name)) {
+            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
         }
+        expDefinitionMap.put(name, def);
 
     }
 
