@@ -67,7 +67,7 @@ public class Initialization extends AbstractInitialization {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
             this.expression.codeGenInst(compiler);
             compiler.addInstruction(
-                    new STORE(Register.getR(compiler.getStack().getCurrentRegister()),
+                    new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
                             varName.getExpDefinition().getOperand()
                     )
             );
