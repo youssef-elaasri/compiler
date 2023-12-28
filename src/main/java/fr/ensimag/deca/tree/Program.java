@@ -1,8 +1,11 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
@@ -41,10 +44,21 @@ public class Program extends AbstractProgram {
 
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
-        // A FAIRE: compléter ce squelette très rudimentaire de code
+        compiler.addComment("start main program");
+        ImmediateInteger immediateInteger = new ImmediateInteger(1);
+        compiler.addInstruction(new TSTO(immediateInteger));
+        Label stackOverflowError = new Label("stack_overflow_error");
+        compiler.addInstruction(new BOV(stackOverflowError));
         compiler.addComment("Main program");
         main.codeGenMain(compiler);
         compiler.addInstruction(new HALT());
+        compiler.addComment("end main program");
+        // start of stackOverflowError label
+        compiler.addLabel(stackOverflowError);
+        compiler.addInstruction(new WSTR("Error: Stack Overflow"));
+        compiler.addInstruction(new WNL());
+        compiler.addInstruction(new ERROR());
+        immediateInteger.setValue(Math.max(Stack.getMaxTSTO(), Stack.getCounterTSTO()));
     }
 
     @Override

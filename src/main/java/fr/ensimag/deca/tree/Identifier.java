@@ -15,6 +15,9 @@ import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -212,6 +215,13 @@ public class Identifier extends AbstractIdentifier {
             s.print(d);
             s.println();
         }
+    }
+    /** ADDED CODE **/
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        compiler.addInstruction(new LEA(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        compiler.getStack().increaseRegister();
     }
 
 }

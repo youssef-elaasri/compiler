@@ -30,7 +30,7 @@ public class ManualTestInitialGencode {
         Identifier xIdentifier = new Identifier(symbolTable.create("x"));
         Identifier yIdentifier = new Identifier(symbolTable.create("y"));
         Initialization xinitialization = new Initialization(new IntLiteral(1));
-        Initialization yinitialization = new Initialization(xIdentifier);
+        Initialization yinitialization = new Initialization(new ReadInt());
         intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         xIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         yIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));

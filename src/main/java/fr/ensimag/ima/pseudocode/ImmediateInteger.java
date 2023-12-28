@@ -18,4 +18,11 @@ public class ImmediateInteger extends DVal {
     public String toString() {
         return "#" + value;
     }
+
+
+    /** ADDED CODE **/
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

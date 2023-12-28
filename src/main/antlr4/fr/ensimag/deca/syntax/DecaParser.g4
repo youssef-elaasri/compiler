@@ -391,6 +391,7 @@ primary_expr returns[AbstractExpr tree]
             $tree = new ReadInt();
         }
     | READFLOAT OPARENT CPARENT {
+            $tree = new ReadFloat();
         }
     | NEW ident OPARENT CPARENT {
             assert($ident.tree != null);
@@ -422,20 +423,26 @@ literal returns[AbstractExpr tree]
                 setLocation($tree, $INT);
             }
             catch (NumberFormatException e) {
-                System.out.println("the interger is too long");
-                $tree = null;
+                throw new DecaRecognitionException("the integer may be too long or invalid",this,$ctx);
             }
         }
     | fd=FLOAT {
-            $tree = new FloatLiteral(Float.parseFloat($fd.text));
-            setLocation($tree, $fd);
+            try {
+                $tree = new FloatLiteral(Float.parseFloat($fd.text));
+                setLocation($tree, $fd);
+                }
+            catch (NumberFormatException e) {
+                throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
+            }
         }
     | s=STRING {
             $tree = new StringLiteral($s.text);
         }
     | TRUE {
+            $tree = new BooleanLiteral(true);
         }
     | FALSE {
+            $tree = new BooleanLiteral(false);
         }
     | THIS {
         }
