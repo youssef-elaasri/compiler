@@ -58,9 +58,14 @@ public class IntLiteral extends AbstractExpr {
     }
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        compiler.addInstruction(new LOAD(value, Register.getR(compiler.getStack().getCurrentRegister())));
-
-        compiler.getStack().increaseRegister();
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            compiler.addInstruction(new LOAD(value, Register.getR(compiler.getStack().getCurrentRegister())));
+            compiler.getStack().increaseRegister();
+        }else{
+            super.pushRegister(compiler);
+            codeGenInst(compiler);
+            super.popRegister(compiler);
+        }
     }
 
 }

@@ -10,10 +10,9 @@ import java.util.HashMap;
 
 public class Stack {
     private static int addrCounter = 1;
-    private static int numberOfRegisters = 2;
+    private int numberOfRegisters = 16;
     private int maxTSTO;
     private int currentRegister;
-    private HashMap<Symbol, Integer> symbolAddr;
 
     /**
      * The Stack constructor
@@ -22,9 +21,7 @@ public class Stack {
      */
     public Stack(){
         maxTSTO = 1;
-        numberOfRegisters = 15;
-        symbolAddr = new HashMap<>();
-
+        currentRegister = 2;
     }
 
     /**
@@ -64,5 +61,9 @@ public class Stack {
 
     public void decreaseRegister(){
         currentRegister--;
+    }
+
+    public int getNumberOfRegisters() {
+        return numberOfRegisters;
     }
 }
