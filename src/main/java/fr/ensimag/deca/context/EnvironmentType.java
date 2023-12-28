@@ -14,7 +14,10 @@ import fr.ensimag.deca.tree.Location;
  * @author gl22
  * @date 01/01/2024
  */
+
 public class EnvironmentType {
+
+    private final Map<Symbol, TypeDefinition> envTypes;
     public EnvironmentType(DecacCompiler compiler) {
         
         envTypes = new HashMap<Symbol, TypeDefinition>();
@@ -41,7 +44,6 @@ public class EnvironmentType {
         
     }
 
-    private final Map<Symbol, TypeDefinition> envTypes;
 
     public TypeDefinition defOfType(Symbol s) {
         return envTypes.get(s);

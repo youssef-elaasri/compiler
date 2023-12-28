@@ -430,10 +430,15 @@ literal returns[AbstractExpr tree]
         }
     | s=STRING {
             $tree = new StringLiteral($s.text);
+            setLocation($tree, $s);
         }
-    | TRUE {
+    | t=TRUE {
+            $tree = new BooleanLiteral(Boolean.parseBoolean($t.text));
+            setLocation($tree, $t);
         }
-    | FALSE {
+    | f=FALSE {
+            $tree = new BooleanLiteral(Boolean.parseBoolean($f.text));
+            setLocation($tree, $f);
         }
     | THIS {
         }

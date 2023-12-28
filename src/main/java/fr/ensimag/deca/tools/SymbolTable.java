@@ -2,6 +2,7 @@ package fr.ensimag.deca.tools;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Manage unique symbols.
@@ -16,8 +17,12 @@ import java.util.Map;
  * @date 01/01/2024
  */
 public class SymbolTable {
-    private Map<String, Symbol> map = new HashMap<String, Symbol>();
+    private Map<String, Symbol> map;
 
+    public SymbolTable() {
+        super();
+        this.map = new HashMap<String, Symbol>();
+    }
     /**
      * Create or reuse a symbol.
      * 
@@ -28,8 +33,8 @@ public class SymbolTable {
         if(map.containsKey(name)){
             return map.get(name);
         }
-        Symbol newSymb=new Symbol(name);
-        map.put(name,newSymb);
+        Symbol newSymb = new Symbol(name);
+        map.put(name, newSymb);
         return newSymb;
     }
 
@@ -52,5 +57,18 @@ public class SymbolTable {
         }
 
         private String name;
+
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof Symbol) {
+                return this.name.equals(((Symbol) other).name);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
     }
 }

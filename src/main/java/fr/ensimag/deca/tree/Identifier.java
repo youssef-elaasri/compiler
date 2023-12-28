@@ -143,12 +143,13 @@ public class Identifier extends AbstractIdentifier {
         this.definition = definition;
     }
 
+    private Symbol name;
+
     @Override
     public Symbol getName() {
         return name;
     }
 
-    private Symbol name;
 
     public Identifier(Symbol name) {
         Validate.notNull(name);
@@ -177,10 +178,10 @@ public class Identifier extends AbstractIdentifier {
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
         TypeDefinition tDef = compiler.environmentType.defOfType(name);
         if (tDef == null) {
-            throw new ContextualError("Name: "+ name +" is undefined !", compiler.environmentType.defOfType(name).getLocation());
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
-        if (!tDef.getNature().equals("type")) {
-            throw new ContextualError("Identifier must be of type: type !", tDef.getLocation());
+        if (tDef.getType() == null) {
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
         return tDef.getType();
     }

@@ -4,6 +4,7 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.Map;
 
 import fr.ensimag.deca.tools.SymbolTable;
 import org.apache.commons.lang.Validate;
@@ -38,11 +39,18 @@ public class DeclVar extends AbstractDeclVar {
 //        SymbolTable.Symbol symb = varName.getName();
 //        ExpDefinition def = new VariableDefinition(type.getDefinition().getType(), type.getDefinition().getLocation());
 //        localEnv.declare(symb, def);
-        Type ty = varName.verifyType(compiler);
+        Type ty = type.verifyType(compiler);
         initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
         if (ty instanceof VoidType) {
             throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
         }
+        SymbolTable.Symbol name = varName.getName();
+        VariableDefinition varDef = new VariableDefinition(ty, Location.BUILTIN);
+        Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
+        if (expDef.containsKey(name)) {
+            throw new ContextualError("Name " + name + "is already defined in localEnv !", Location.BUILTIN);
+        }
+        expDef.put(name, varDef);
     }
 
     

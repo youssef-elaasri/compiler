@@ -1,10 +1,7 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
@@ -83,7 +80,14 @@ public abstract class AbstractExpr extends AbstractInst {
             Type expectedType)
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
-        this.verifyExpr(compiler, localEnv, currentClass);
+        Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
+        System.out.println(expectedType.getName().toString());
+        System.out.println(currentType.getName().toString());
+        if (!(expectedType instanceof FloatType && currentType instanceof IntType)) {
+            if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
+                throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
+            }
+        }
         return this;
     }
     

@@ -2,6 +2,5 @@
 {
 
         //salaaaamo3alaykom
-        println("Ya kharaaa");
-        boolean x;
+        int x = 1;
 }
