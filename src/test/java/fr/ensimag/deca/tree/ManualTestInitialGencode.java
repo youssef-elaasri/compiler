@@ -26,15 +26,16 @@ public class ManualTestInitialGencode {
             new Program(
                 new ListDeclClass(),
                 new Main(listDeclVar,linst));
-        Initialization initialization = new Initialization(new IntLiteral(1));
         Identifier intIdentifier = new Identifier(symbolTable.create("int"));
         Identifier xIdentifier = new Identifier(symbolTable.create("x"));
         Identifier yIdentifier = new Identifier(symbolTable.create("y"));
+        Initialization xinitialization = new Initialization(new IntLiteral(1));
+        Initialization yinitialization = new Initialization(xIdentifier);
         intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         xIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         yIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
-        DeclVar xdeclVar = new DeclVar( intIdentifier, xIdentifier,initialization);
-        DeclVar ydeclVar = new DeclVar( intIdentifier, yIdentifier,initialization);
+        DeclVar xdeclVar = new DeclVar( intIdentifier, xIdentifier,xinitialization);
+        DeclVar ydeclVar = new DeclVar( intIdentifier, yIdentifier,yinitialization);
         listDeclVar.add(xdeclVar);
         listDeclVar.add(ydeclVar);
         return source;
