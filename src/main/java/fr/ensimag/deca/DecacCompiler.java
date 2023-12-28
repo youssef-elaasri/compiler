@@ -129,7 +129,9 @@ public class DecacCompiler {
     public final SymbolTable symbolTable = new SymbolTable();
 
     public Symbol createSymbol(String name) {
-        return symbolTable.create(name);
+        return null;
+        //TODO uncomment later
+        //return symbolTable.create(name);
     }
 
     /**
@@ -165,6 +167,22 @@ public class DecacCompiler {
         } catch (AssertionError e) {
             LOG.fatal("Assertion failed while compiling file " + sourceFile
                     + ":", e);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
