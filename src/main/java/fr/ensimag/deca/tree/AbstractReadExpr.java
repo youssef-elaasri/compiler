@@ -4,6 +4,7 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.POP;
 import fr.ensimag.ima.pseudocode.instructions.PUSH;
 
@@ -20,10 +21,7 @@ public abstract class AbstractReadExpr extends AbstractExpr {
     }
 
     protected void moveToRegister (DecacCompiler compiler) {
-        compiler.addInstruction(new PUSH(Register.getR(1)));
-        Stack.increaseCounterTSTO();
-        compiler.addInstruction(new POP(Register.getR(compiler.getStack().getCurrentRegister())));
-        Stack.decreaseCounterTSTO();
+        compiler.addInstruction(new LOAD(Register.getR(1),Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }
 

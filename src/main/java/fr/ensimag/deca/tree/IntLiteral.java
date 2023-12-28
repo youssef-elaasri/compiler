@@ -56,11 +56,12 @@ public class IntLiteral extends AbstractExpr {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         // leaf node => nothing to do
     }
+
+    /** ADDED CODE **/
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new LOAD(value, Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
-
     }
 
 }
