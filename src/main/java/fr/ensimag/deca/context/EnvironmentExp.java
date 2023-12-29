@@ -52,7 +52,10 @@ public class EnvironmentExp {
      */
     public ExpDefinition get(Symbol key) {
         ExpDefinition definition = expDefinitionMap.get(key);
-        return definition != null ? definition : parentEnvironment.getExpDefinitionMap().get(key);
+        if (definition == null) {
+            return parentEnvironment != null ? parentEnvironment.getExpDefinitionMap().get(key) : null;
+        }
+        return definition;
     }
 
     /**
