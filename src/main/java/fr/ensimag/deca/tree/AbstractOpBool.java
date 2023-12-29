@@ -25,8 +25,6 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
             ClassDefinition currentClass) throws ContextualError {
         //throw new UnsupportedOperationException("not yet implemented");
         List<String> opList = new ArrayList<String>();
-        opList.add("==");
-        opList.add("!=");
         opList.add("&&");
         opList.add("||");
 
