@@ -1,6 +1,12 @@
 package fr.ensimag.deca.tree;
 
 
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.BranchInstruction;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BGT;
+
 /**
  * Operator "x >= y"
  * 
@@ -17,6 +23,15 @@ public class GreaterOrEqual extends AbstractOpIneq {
     @Override
     protected String getOperatorName() {
         return ">=";
+    }
+
+    /** ADDED CODE **/
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        Label label = new Label("greater_or_equal");
+        BranchInstruction branchInstruction = new BGT(label);
+        codeGenInstGeneral(compiler,branchInstruction,label,"greater_or_equal");
     }
 
 }

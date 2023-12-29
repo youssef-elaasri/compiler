@@ -5,7 +5,9 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 import fr.ensimag.ima.pseudocode.instructions.MUL;
 import fr.ensimag.ima.pseudocode.instructions.OPP;
 
@@ -35,7 +37,16 @@ public class UnaryMinus extends AbstractUnaryExpr {
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        super.getOperand().codeGenInst(compiler);
-        compiler.addInstruction(new OPP(Register.getR(compiler.getStack().getCurrentRegister()-1),Register.getR(compiler.getStack().getCurrentRegister()-1)));
+        DVal dVal = getDval(getOperand());
+        if ( dVal != null) {
+            compiler.addInstruction(new OPP(dVal,
+                    Register.getR(compiler.getStack().getCurrentRegister())));
+            compiler.getStack().increaseRegister();
+        }
+        else {
+            super.getOperand().codeGenInst(compiler);
+            compiler.addInstruction(new OPP(Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)));
+        }
     }
 }

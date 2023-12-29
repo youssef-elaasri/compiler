@@ -4,6 +4,7 @@ import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 
@@ -34,9 +35,17 @@ public class ConvFloat extends AbstractUnaryExpr {
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        super.getOperand().codeGenInst(compiler);
-        compiler.addInstruction(new FLOAT(Register.getR(compiler.getStack().getCurrentRegister() -1),
-                Register.getR(compiler.getStack().getCurrentRegister() -1)));
+        DVal dVal = getDval(getOperand());
+        if (dVal != null) {
+            compiler.addInstruction(new FLOAT(dVal,
+                    Register.getR(compiler.getStack().getCurrentRegister())));
+            compiler.getStack().increaseRegister();
+        }
+        else {
+            super.getOperand().codeGenInst(compiler);
+            compiler.addInstruction(new FLOAT(Register.getR(compiler.getStack().getCurrentRegister() - 1),
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        }
     }
 
 }

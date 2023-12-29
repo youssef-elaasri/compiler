@@ -31,6 +31,7 @@ public class Or extends AbstractOpBool {
         Label trueLabel = new Label("trueLabel");
         Label falseLabel = new Label("falseLabel");
         Label endOr = new Label("endOr");
+
         getLeftOperand().codeGenInst(compiler);
         compareAndJump(1,compiler.getStack().getCurrentRegister()-1,trueLabel,compiler);
         compiler.getStack().decreaseRegister();

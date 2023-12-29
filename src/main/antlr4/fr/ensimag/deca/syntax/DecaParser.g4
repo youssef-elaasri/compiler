@@ -340,7 +340,7 @@ mult_expr returns[AbstractExpr tree]
 unary_expr returns[AbstractExpr tree]
     : op=MINUS e=unary_expr {
             assert($e.tree != null);
-            $tree = $e.tree
+            $tree = $e.tree;
         }
     | op=EXCLAM e=unary_expr {
             assert($e.tree != null);

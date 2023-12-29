@@ -7,10 +7,10 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.*;
+
 import java.io.PrintStream;
 
-import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.POP;
 import fr.ensimag.ima.pseudocode.instructions.PUSH;
 import org.apache.commons.lang.Validate;
@@ -142,5 +142,20 @@ public abstract class AbstractExpr extends AbstractInst {
             s.print(t);
             s.println();
         }
+    }
+
+    /** ADDED CODE **/
+
+    protected DVal getDval(AbstractExpr expr) {
+        if (expr instanceof Identifier) {
+            return ((Identifier) expr).getExpDefinition().getOperand();
+        } else if (expr instanceof IntLiteral) {
+            return new ImmediateInteger(((IntLiteral) expr).getValue());
+        } else if (expr instanceof FloatLiteral) {
+            return new ImmediateFloat(((FloatLiteral) expr).getValue());
+        } else if (expr instanceof BooleanLiteral) {
+            return new ImmediateInteger(((BooleanLiteral) expr).getValue() ? 1 : 0);
+        }
+        return null;
     }
 }
