@@ -74,9 +74,9 @@ public class Initialization extends AbstractInitialization {
             compiler.getStack().decreaseRegister();
         }
         else{
-            Stack.pushRegister(compiler);
+            compiler.getStack().pushRegister(compiler);
             codeGenInitialization(compiler, varName);
-            Stack.popRegister(compiler);
+            compiler.getStack().popRegister(compiler);
         }
     }
 
