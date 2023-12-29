@@ -163,7 +163,7 @@ public class Identifier extends AbstractIdentifier {
         //which correspond to the main case
         Definition expDefinition = localEnv.get(this.name);
         if (expDefinition == null){
-            throw new ContextualError("This expression is not defined in the local environment", definition.getLocation());
+            throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
         }
         else{
             return expDefinition.getType();

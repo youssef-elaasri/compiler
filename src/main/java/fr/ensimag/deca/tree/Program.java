@@ -37,7 +37,7 @@ public class Program extends AbstractProgram {
         LOG.debug("verify program: start");
         //throw new UnsupportedOperationException("not yet implemented");
         main.verifyMain(compiler);
-         LOG.debug("verify program: end");
+        LOG.debug("verify program: end");
     }
 
     @Override
