@@ -5,6 +5,9 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 /**
  *
@@ -27,5 +30,26 @@ public class Not extends AbstractUnaryExpr {
     @Override
     protected String getOperatorName() {
         return "!";
+    }
+
+
+    /** ADDED CODE **/
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        super.getOperand().codeGenInst(compiler);
+        Label endNot = new Label("end_not");
+        Label falseNot = new Label("false_not");
+
+        compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        compiler.addInstruction(new BEQ(falseNot));
+
+        compiler.addInstruction(new LOAD(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        compiler.addInstruction(new BRA(endNot));
+
+        compiler.addLabel(falseNot);
+        compiler.addInstruction(new LOAD(1, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        compiler.addLabel(endNot);
+
     }
 }
