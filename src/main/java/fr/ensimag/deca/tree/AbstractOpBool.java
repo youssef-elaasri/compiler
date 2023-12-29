@@ -36,11 +36,10 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         compiler.addInstruction(new BEQ(label));
     }
 
-    protected void trueLabel(int val, Label label, Label endlabel, DecacCompiler compiler) {
+    protected void boolLabel(int val, Label label, Label endlabel, DecacCompiler compiler) {
         compiler.addLabel(label);
-        compiler.addInstruction(new LOAD(val,Register.getR(compiler.getStack().getCurrentRegister()-2)));
+        compiler.addInstruction(new LOAD(val,Register.getR(compiler.getStack().getCurrentRegister()-1)));
         compiler.addInstruction(new BRA(endlabel));
-        compiler.getStack().decreaseRegister();
     }
 
 }
