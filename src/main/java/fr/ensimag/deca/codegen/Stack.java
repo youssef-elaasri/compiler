@@ -13,11 +13,11 @@ import java.util.HashMap;
  */
 
 public class Stack {
-    private static int addrCounter = 1;
+    private int addrCounter = 1;
     private int numberOfRegisters = 16;
-    private static int maxTSTO;
+    private int maxTSTO;
 
-    private static int counterTSTO;
+    private int counterTSTO;
     private int currentRegister;
 
     /**
@@ -42,15 +42,15 @@ public class Stack {
      *
      * @return {@code this.maxTSTO}
      */
-    public static int getMaxTSTO() {
+    public int getMaxTSTO() {
         return maxTSTO;
     }
 
-    public static int getCounterTSTO() {
+    public int getCounterTSTO() {
         return counterTSTO;
     }
 
-    public static void setMaxTSTO(int maxTSTOArg) {
+    public void setMaxTSTO(int maxTSTOArg) {
         maxTSTO = maxTSTOArg;
     }
 
@@ -82,23 +82,23 @@ public class Stack {
         return numberOfRegisters;
     }
 
-    public static void increaseCounterTSTO() {
+    public void increaseCounterTSTO() {
         counterTSTO++;
     }
 
-    public static void decreaseCounterTSTO() {
+    public void decreaseCounterTSTO() {
         if (getCounterTSTO() > getMaxTSTO())
             setMaxTSTO(getCounterTSTO());
         counterTSTO--;
     }
 
-    public static void pushRegister(DecacCompiler compiler){
+    public void pushRegister(DecacCompiler compiler){
         compiler.getStack().decreaseRegister();
         compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
         increaseCounterTSTO();
     }
 
-    public static void popRegister(DecacCompiler compiler){
+    public void popRegister(DecacCompiler compiler){
         compiler.addInstruction(new POP(Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
         decreaseCounterTSTO();

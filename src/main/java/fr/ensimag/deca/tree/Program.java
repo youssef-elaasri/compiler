@@ -45,10 +45,12 @@ public class Program extends AbstractProgram {
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
         compiler.addComment("start main program");
-        ImmediateInteger immediateInteger = new ImmediateInteger(1);
-        compiler.addInstruction(new TSTO(immediateInteger));
+        ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(1);
+        compiler.addInstruction(new TSTO(TSTOimmediateInteger));
         Label stackOverflowError = new Label("stack_overflow_error");
         compiler.addInstruction(new BOV(stackOverflowError));
+        ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
+        compiler.addInstruction(new ADDSP(SPimmediateInteger));
         compiler.addComment("Main program");
         main.codeGenMain(compiler);
         compiler.addInstruction(new HALT());
@@ -58,7 +60,8 @@ public class Program extends AbstractProgram {
         compiler.addInstruction(new WSTR("Error: Stack Overflow"));
         compiler.addInstruction(new WNL());
         compiler.addInstruction(new ERROR());
-        immediateInteger.setValue(Math.max(Stack.getMaxTSTO(), Stack.getCounterTSTO()));
+        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
+        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
 
     @Override
