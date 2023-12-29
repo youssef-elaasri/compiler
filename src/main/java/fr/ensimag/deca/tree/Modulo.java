@@ -22,7 +22,7 @@ public class Modulo extends AbstractOpArith {
         AbstractExpr right = this.getRightOperand();
         Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
         Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
-        if ((type1 instanceof IntType) && (type2 instanceof IntType)) {
+        if ((type1.isInt()) && (type2.isInt())) {
             return compiler.environmentType.INT;
         }
         else {

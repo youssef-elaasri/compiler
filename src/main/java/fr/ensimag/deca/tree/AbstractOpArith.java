@@ -35,16 +35,16 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
     }
 
     public Type verifyArithOp(DecacCompiler compiler, String op, Type type1, Type type2) throws ContextualError {
-        if ((type1 instanceof IntType) && (type2 instanceof IntType)) {
+        if ((type1.isInt()) && (type2.isInt())) {
             return compiler.environmentType.INT;
         }
-        if ((type1 instanceof IntType) && (type2 instanceof FloatType)) {
+        if ((type1.isInt()) && (type2.isFloat())) {
             return compiler.environmentType.FLOAT;
         }
-        if ((type1 instanceof FloatType) && (type2 instanceof IntType)) {
+        if ((type1.isFloat()) && (type2.isInt())) {
             return compiler.environmentType.FLOAT;
         }
-        if ((type1 instanceof FloatType) && (type2 instanceof FloatType)) {
+        if ((type1.isFloat()) && (type2.isFloat())) {
             return compiler.environmentType.FLOAT;
         }
         throw new ContextualError(op + " operation cannot occur between " + type1 + " and " + type2 + " !", this.getLocation());
