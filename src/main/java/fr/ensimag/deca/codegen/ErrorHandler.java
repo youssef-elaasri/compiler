@@ -12,9 +12,6 @@ import java.util.HashMap;
 public class ErrorHandler {
     HashMap<String, Label> errors;
 
-    public final static String stack_overflow = "Error: Stack Overflow";
-    public final static String division_by_zero = "Error: Division by Zero";
-
 
     public ErrorHandler(){
         errors = new HashMap<>();
@@ -24,7 +21,7 @@ public class ErrorHandler {
     public Label addStackOverflowError(){
         Label label = new Label("stack_overflow_error");
         errors.putIfAbsent(
-                stack_overflow,
+                "Error: Stack Overflow",
                 label
         );
         return label;
@@ -33,7 +30,7 @@ public class ErrorHandler {
     public Label addDivisionByZero(){
         Label label = new Label("division_by_zero");
         errors.putIfAbsent(
-                division_by_zero,
+                "Error: Division by Zero",
                 label
                 );
         return label;
