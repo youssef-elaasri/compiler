@@ -31,14 +31,37 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
 
     /** ADDED CODE **/
 
+
+    /**
+     * Generated the assembly code that compares the given integer value with the content of the specified register.
+     * If they are equal {@code BEQ}, jumps to the provided label.
+     *
+     * @param val The integer value to compare.
+     * @param registerNumber The register number whose content is compared.
+     * @param label The label to jump to if the comparison is true.
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     protected void compareAndJump(int val, int registerNumber, Label label, DecacCompiler compiler) {
+        // Compare the specified value with the content of the specified register
         compiler.addInstruction(new CMP(val, Register.getR(registerNumber)));
+        // Branch to the specified label if the comparison is true (BEQ)
         compiler.addInstruction(new BEQ(label));
     }
 
+    /**
+     * Generated the assembly code that adds a label and instructions for branching based on a boolean value.
+     *
+     * @param val The boolean value to load into a register.
+     * @param label The label to add before the branch instruction.
+     * @param endlabel The label to jump to if the boolean value is true.
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     protected void boolLabel(int val, Label label, Label endlabel, DecacCompiler compiler) {
+        // Add the specified label
         compiler.addLabel(label);
+        // Load the boolean value into the current register
         compiler.addInstruction(new LOAD(val,Register.getR(compiler.getStack().getCurrentRegister()-1)));
+        // Unconditionally branch to the endlabel
         compiler.addInstruction(new BRA(endlabel));
     }
 
