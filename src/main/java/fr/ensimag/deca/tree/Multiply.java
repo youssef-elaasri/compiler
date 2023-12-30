@@ -5,6 +5,7 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.DIV;
 import fr.ensimag.ima.pseudocode.instructions.MUL;
 
 /**
@@ -32,9 +33,11 @@ public class Multiply extends AbstractOpArith {
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
         }
         else {
-            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() - 2),
-                    Register.getR(compiler.getStack().getCurrentRegister() - 1));
-            codeGenInstOpArith(compiler,binaryInstructionDValToReg);
+            int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
+                    1 : 0;
+            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() + registerDec -1),
+                    Register.getR(compiler.getStack().getCurrentRegister() + registerDec));
+            codeGenInstOpArith(compiler,binaryInstructionDValToReg, false, true);
         }
     }
 }

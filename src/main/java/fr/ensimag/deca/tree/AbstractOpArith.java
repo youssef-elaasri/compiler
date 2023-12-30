@@ -7,8 +7,9 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
+import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.SUB;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.util.function.Supplier;
 
@@ -32,15 +33,23 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
     /** ADDED CODE**/
 
-    public void codeGenInstOpArith(DecacCompiler compiler, BinaryInstructionDValToReg binaryInstructionDValToReg) {
+    public void codeGenInstOpArith(DecacCompiler compiler, BinaryInstructionDValToReg binaryInstructionDValToReg,
+                                   boolean isDiv, boolean isLoad) {
         if (compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()) {
             getRightOperand().codeGenInst(compiler);
+            if (isDiv) {
+                compiler.addInstruction(new CMP(0,Register.getR(compiler.getStack().getCurrentRegister()-1)));
+                compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDivisionByZero()));
+            }
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(binaryInstructionDValToReg);
             compiler.getStack().decreaseRegister();
+            if (isLoad)
+                compiler.addInstruction(new LOAD(Register.getR(compiler.getStack().getCurrentRegister()),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)));
         } else {
             compiler.getStack().pushRegister(compiler);
-            codeGenInst(compiler);
+            codeGenInstOpArith(compiler, binaryInstructionDValToReg,isDiv,false);
             compiler.getStack().decreaseRegister();
             compiler.getStack().popRegister(compiler);
             compiler.getStack().increaseRegister();
