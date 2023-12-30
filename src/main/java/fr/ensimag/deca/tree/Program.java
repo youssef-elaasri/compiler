@@ -43,26 +43,40 @@ public class Program extends AbstractProgram {
         // LOG.debug("verify program: end");
     }
 
+    /**
+     * Generates code for the entire program.
+     * This method is called during the code generation phase for the main program.
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
+        // Comment: Start main program
         compiler.addComment("start main program");
+
+        // Initialize the stack with a total stack object (TSTO) value of 1
+        // The value is going to be modified at the end to match the actual used stack size
         ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(1);
         compiler.addInstruction(new TSTO(TSTOimmediateInteger));
 
 
-
+        // Check for stack overflow and branch to the specified label if overflow occurs
         compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
-
+        // Set the stack pointer (SP) to 0
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
         compiler.addInstruction(new ADDSP(SPimmediateInteger));
+
         compiler.addComment("Main program");
         main.codeGenMain(compiler);
+
+        // Halt the program execution
         compiler.addInstruction(new HALT());
         compiler.addComment("end main program");
 
+        // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
 
+        // Update TSTO and SP values based on stack information
         TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
         SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
