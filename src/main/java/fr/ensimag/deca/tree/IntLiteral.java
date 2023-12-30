@@ -58,6 +58,12 @@ public class IntLiteral extends AbstractExpr {
     }
 
     /** ADDED CODE **/
+    /**
+     * Generates code to load a constant value onto the stack.
+     * This code is specific to the implementation of the generated instruction.
+     *
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new LOAD(value, Register.getR(compiler.getStack().getCurrentRegister())));

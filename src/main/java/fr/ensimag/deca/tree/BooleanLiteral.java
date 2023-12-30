@@ -56,12 +56,21 @@ public class BooleanLiteral extends AbstractExpr {
     }
 
     /** ADDED CODE **/
+
+    /**
+     * Generates assembly code to load a constant value onto the stack.
+     * The constant value is loaded into the current register,
+     * and the register count in the stack is increased.
+     *
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     @Override
     public void codeGenInst(DecacCompiler compiler) {
-        compiler.addInstruction(
-                new LOAD( value,
-                Register.getR(compiler.getStack().getCurrentRegister()))
-        );
+        // Load the constant value onto the stack using the specified register
+        compiler.addInstruction(new LOAD(
+                value,
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
         compiler.getStack().increaseRegister();
     }
 
