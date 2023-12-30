@@ -24,6 +24,16 @@ public class Multiply extends AbstractOpArith {
     }
 
     /** ADDED CODE**/
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions to perform multiplication operation based on the types of operands.
+     * If the right operand is a constant or variable, it directly multiplies it with the left operand.
+     * If the right operand is not a constant or variable, it generates instructions to perform
+     * the multiplication operation and updates the compiler's stack accordingly.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         DVal dVal = getDval(getRightOperand());

@@ -45,6 +45,13 @@ public class ReadInt extends AbstractReadExpr {
 
     /** ADDED CODE **/
 
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates an instruction to read an integer from the input and then
+     * calls the superclass method to move the result to an available register.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new RINT());

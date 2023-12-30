@@ -218,6 +218,13 @@ public class Identifier extends AbstractIdentifier {
     }
     /** ADDED CODE **/
 
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates an instruction to load the effective address of the expression's operand
+     * into the current available register and increments the register counter.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new LEA(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));

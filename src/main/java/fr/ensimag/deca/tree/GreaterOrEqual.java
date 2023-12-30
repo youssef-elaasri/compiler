@@ -27,6 +27,12 @@ public class GreaterOrEqual extends AbstractOpIneq {
 
     /** ADDED CODE **/
 
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions for the greater-than or equal comparison operation.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         Label label = new Label("greater_or_equal");

@@ -11,6 +11,13 @@ import fr.ensimag.deca.context.ContextualError;
  */
 public abstract class AbstractMain extends Tree {
 
+    /**
+     * Perform main code generation for a specific component.
+     * This method is meant to be implemented by subclasses to handle
+     * the main code generation logic for a particular component.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     protected abstract void codeGenMain(DecacCompiler compiler);
 
 

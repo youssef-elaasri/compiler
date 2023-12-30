@@ -26,6 +26,18 @@ public abstract class AbstractInitialization extends Tree {
             Type t, EnvironmentExp localEnv, ClassDefinition currentClass)
             throws ContextualError;
 
+    /** ADDED CODE **/
+
+
+    /**
+     * Perform code generation initialization for a specific variable.
+     * This method is meant to be implemented by subclasses to handle
+     * the initialization of code generation for a particular variable.
+     *
+     * @param compiler    The DecacCompiler instance managing the compilation process.
+     * @param varName     The AbstractIdentifier representing the variable for which
+     *                    code generation initialization is to be performed.
+     */
     public abstract void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName);
 
 }

@@ -61,6 +61,13 @@ public class DeclVar extends AbstractDeclVar {
 
     /** ADDED CODE **/
 
+    /**
+     * Implements code generation logic for the declaration of a variable.
+     * Sets the operand for the variable's expression definition and generates
+     * initialization code for the variable.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     public void codeGenDeclVar(DecacCompiler compiler){
         this.varName.getExpDefinition().setOperand(
                 new RegisterOffset(

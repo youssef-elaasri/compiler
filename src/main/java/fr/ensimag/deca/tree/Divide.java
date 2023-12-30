@@ -24,6 +24,15 @@ public class Divide extends AbstractOpArith {
     }
 
     /** ADDED CODE**/
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions to perform division operation based on the types of operands.
+     * Generates instructions to perform the division operation and updates the
+     * compiler's stack accordingly.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
