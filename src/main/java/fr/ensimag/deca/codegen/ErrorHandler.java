@@ -21,18 +21,22 @@ public class ErrorHandler {
     }
 
 
-    public void addStackOverflowError(){
+    public Label addStackOverflowError(){
+        Label label = new Label("stack_overflow_error");
         errors.putIfAbsent(
                 stack_overflow,
-                new Label("stack_overflow_error")
+                label
         );
+        return label;
     }
 
-    public void addDivisionByZero(){
+    public Label addDivisionByZero(){
+        Label label = new Label("division_by_zero");
         errors.putIfAbsent(
                 division_by_zero,
-                new Label("division_by_zero")
+                label
                 );
+        return label;
     }
 
     public Label getLabel(String errorMessage){

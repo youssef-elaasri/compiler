@@ -49,9 +49,9 @@ public class Program extends AbstractProgram {
         ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(1);
         compiler.addInstruction(new TSTO(TSTOimmediateInteger));
 
-        compiler.getErrorHandler().addStackOverflowError();
 
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().getLabel(ErrorHandler.stack_overflow)));
+
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
 
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
