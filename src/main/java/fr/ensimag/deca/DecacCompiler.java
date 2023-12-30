@@ -1,5 +1,6 @@
 package fr.ensimag.deca;
 
+import fr.ensimag.deca.codegen.ErrorHandler;
 import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.EnvironmentType;
 import fr.ensimag.deca.syntax.DecaLexer;
@@ -51,6 +52,7 @@ public class DecacCompiler {
         this.source = source;
 
         this.stack = new Stack();
+        this.errorHandler = new ErrorHandler();
     }
 
     /**
@@ -273,5 +275,13 @@ public class DecacCompiler {
         return stack;
     }
 
+    private final ErrorHandler errorHandler;
 
+    /**
+     * Gets errorHandler of the compiler
+     * @return errorHandler
+     */
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
 }

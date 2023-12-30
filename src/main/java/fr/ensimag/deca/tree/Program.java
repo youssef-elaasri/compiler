@@ -1,6 +1,7 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.codegen.ErrorHandler;
 import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
@@ -47,19 +48,21 @@ public class Program extends AbstractProgram {
         compiler.addComment("start main program");
         ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(1);
         compiler.addInstruction(new TSTO(TSTOimmediateInteger));
-        Label stackOverflowError = new Label("stack_overflow_error");
-        compiler.addInstruction(new BOV(stackOverflowError));
+
+        compiler.getErrorHandler().addStackOverflowError();
+
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().getLabel(ErrorHandler.stack_overflow)));
+
+
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
         compiler.addInstruction(new ADDSP(SPimmediateInteger));
         compiler.addComment("Main program");
         main.codeGenMain(compiler);
         compiler.addInstruction(new HALT());
         compiler.addComment("end main program");
-        // start of stackOverflowError label
-        compiler.addLabel(stackOverflowError);
-        compiler.addInstruction(new WSTR("Error: Stack Overflow"));
-        compiler.addInstruction(new WNL());
-        compiler.addInstruction(new ERROR());
+
+        compiler.getErrorHandler().putErrors(compiler);
+
         TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
         SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
