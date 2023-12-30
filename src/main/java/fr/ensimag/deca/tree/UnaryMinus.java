@@ -35,18 +35,35 @@ public class UnaryMinus extends AbstractUnaryExpr {
 
     /** ADDED CODE **/
 
+    /**
+     * Generates code for the negation (opposite) of an operand.
+     * If the operand is a constant, the negation is performed directly.
+     * If the operand is not a constant, its value is loaded into a register and then negated.
+     *
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
+
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         DVal dVal = getDval(getOperand());
+
+        // Check if the operand is a constant (DVal)
         if ( dVal != null) {
-            compiler.addInstruction(new OPP(dVal,
-                    Register.getR(compiler.getStack().getCurrentRegister())));
+            // Perform the negation of the constant directly
+            compiler.addInstruction(new OPP(
+                    dVal,
+                    Register.getR(compiler.getStack().getCurrentRegister())
+            ));
             compiler.getStack().increaseRegister();
         }
         else {
+            // Operand is not a constant, generate code for the operand
             super.getOperand().codeGenInst(compiler);
-            compiler.addInstruction(new OPP(Register.getR(compiler.getStack().getCurrentRegister()-1),
-                    Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            // Load the value from the operand into a register and then perform the negation
+            compiler.addInstruction(new OPP(
+                    Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)
+            ));
         }
     }
 }
