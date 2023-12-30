@@ -8,6 +8,7 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.DIV;
 import fr.ensimag.ima.pseudocode.instructions.REM;
 
 /**
@@ -31,6 +32,25 @@ public class Modulo extends AbstractOpArith {
     @Override
     protected String getOperatorName() {
         return "%";
+    }
+
+    /** ADDED CODE**/
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions to perform remainder (modulus) operation based on the types of operands.
+     * Generates instructions to perform the remainder operation and updates the
+     * compiler's stack accordingly.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
+                1 : 0;
+        BinaryInstructionDValToReg binaryInstructionDValToReg = new REM(Register.getR(compiler.getStack().getCurrentRegister() + registerDec -1),
+                Register.getR(compiler.getStack().getCurrentRegister() + registerDec));
+        codeGenInstOpArith(compiler,binaryInstructionDValToReg, true, true);
     }
 
 }

@@ -34,6 +34,12 @@ public class Main extends AbstractMain {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    /**
+     * Overrides the main code generation method for a specific component.
+     * Generates instructions for declaring variables and executing main instructions.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenMain(DecacCompiler compiler) {
         declVariables.codeGenListDeclVar(compiler);

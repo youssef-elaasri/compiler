@@ -26,6 +26,12 @@ public class Lower extends AbstractOpIneq {
 
     /** ADDED CODE **/
 
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions for the less-than comparison operation.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         Label label = new Label("lower");

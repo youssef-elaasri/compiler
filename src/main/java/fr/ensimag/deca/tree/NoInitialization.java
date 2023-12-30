@@ -50,9 +50,17 @@ public class NoInitialization extends AbstractInitialization {
 
     /** ADDED CODE **/
 
+    /**
+     * Overrides the code generation initialization method for a specific variable.
+     * This implementation does nothing and serves as a placeholder.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     * @param varName  The AbstractIdentifier representing the variable for which
+     *                 code generation initialization is to be performed.
+     */
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
-        // nothing
+        // This method does nothing.
     }
 
 

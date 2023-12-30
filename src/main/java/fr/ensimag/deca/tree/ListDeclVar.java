@@ -15,9 +15,14 @@ import fr.ensimag.deca.tools.IndentPrintStream;
  */
 public class ListDeclVar extends TreeList<AbstractDeclVar> {
 
+
     /**
+     * Generate code for a list of variable declarations.
+     * Iterates through the list of variable declarations, calling the
+     * code generation method for each declaration and updating the
+     * compiler's stack counter accordingly.
      *
-     * @param compiler
+     * @param compiler The DecacCompiler instance managing the compilation process.
      */
 
     public void codeGenListDeclVar(DecacCompiler compiler) {

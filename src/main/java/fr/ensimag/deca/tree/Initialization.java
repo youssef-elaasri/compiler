@@ -62,6 +62,15 @@ public class Initialization extends AbstractInitialization {
 
     /** ADDED CODE **/
 
+    /**
+     * Overrides the code generation initialization method for a specific variable.
+     * Generates instructions to initialize the given variable with the value of the
+     * associated expression.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     * @param varName  The AbstractIdentifier representing the variable for which
+     *                 code generation initialization is to be performed.
+     */
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {

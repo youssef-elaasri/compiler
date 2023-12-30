@@ -146,6 +146,14 @@ public abstract class AbstractExpr extends AbstractInst {
 
     /** ADDED CODE **/
 
+    /**
+     * Get the DVal (Data Value) representation for a given expression.
+     * Determines the appropriate DVal representation based on the type of the expression.
+     * Supported expression types include Identifiers, IntLiterals, FloatLiterals, and BooleanLiterals.
+     *
+     * @param expr The AbstractExpr for which to obtain the DVal representation.
+     * @return The DVal representation of the given expression, or null if the expression type is not supported.
+     */
     protected DVal getDval(AbstractExpr expr) {
         if (expr instanceof Identifier) {
             return ((Identifier) expr).getExpDefinition().getOperand();

@@ -32,6 +32,16 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
 
     /** ADDED CODE **/
 
+    /**
+     * Generate general code for comparison operations with a branch instruction.
+     * Generates instructions for a comparison operation with a specified branch instruction,
+     * handling cases where additional stack manipulation is required due to the limited number of registers.
+     *
+     * @param compiler           The DecacCompiler instance managing the compilation process.
+     * @param branchInstruction  The branch instruction to be used for the comparison.
+     * @param trueLabel          The label to branch to when the comparison is true.
+     * @param opCmp              A string representation of the comparison operation.
+     */
     protected void codeGenInstGeneral(DecacCompiler compiler,
                                       BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
         if(compiler.getStack().getCurrentRegister()+1 < compiler.getStack().getNumberOfRegisters()) {
@@ -46,6 +56,17 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         }
     }
 
+    /**
+     * Generate code for a comparison operation with branch instruction and loading true/false values.
+     * Generates instructions for a comparison operation with a specified branch instruction,
+     * loading true or false values based on the result of the comparison.
+     *
+     * @param compiler           The DecacCompiler instance managing the compilation process.
+     * @param val                The number of registers to skip for the load instruction.
+     * @param branchInstruction  The branch instruction to be used for the comparison.
+     * @param trueLabel          The label to branch to when the comparison is true.
+     * @param opCmp              A string representation of the comparison operation.
+     */
     protected void codeGenInstOpCmp(DecacCompiler compiler, int val,
                                     BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
         Label endEqualLabel = new Label("end_" + opCmp);

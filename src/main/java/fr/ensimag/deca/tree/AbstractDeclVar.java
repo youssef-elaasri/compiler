@@ -33,6 +33,13 @@ public abstract class AbstractDeclVar extends Tree {
 
     /** ADDED CODE **/
 
+    /**
+     * Perform code generation for the declaration of a variable.
+     * This method is meant to be implemented by subclasses to handle
+     * the code generation logic for declaring a variable.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     public abstract void codeGenDeclVar(DecacCompiler compiler);
 
 }

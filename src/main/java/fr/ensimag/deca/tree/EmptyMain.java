@@ -17,9 +17,16 @@ public class EmptyMain extends AbstractMain {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    /**
+     * Overrides the main code generation method for a specific component.
+     * This implementation does nothing and serves as a placeholder.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+
     @Override
     protected void codeGenMain(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        // This method does nothing.
     }
 
     /**
