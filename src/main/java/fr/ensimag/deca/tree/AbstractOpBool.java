@@ -65,4 +65,6 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         compiler.addInstruction(new BRA(endlabel));
     }
 
+    public abstract void increaseCounter();
+
 }

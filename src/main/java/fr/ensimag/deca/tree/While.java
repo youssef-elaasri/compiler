@@ -8,6 +8,11 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -18,6 +23,8 @@ import org.apache.commons.lang.Validate;
 public class While extends AbstractInst {
     private AbstractExpr condition;
     private ListInst body;
+
+    private static int counter = 0;
 
     public AbstractExpr getCondition() {
         return condition;
@@ -36,7 +43,27 @@ public class While extends AbstractInst {
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            int i = counter;
+            increaseCounter();
+            Label whileLabel = new Label("while_" + i);
+            Label endOfWhile = new Label("end_of_while_" + i);
+            compiler.addLabel(whileLabel);
+            condition.codeGenInst(compiler);
+            compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            compiler.addInstruction(new BEQ(endOfWhile));
+            compiler.getStack().decreaseRegister();
+            for (AbstractInst inst : body.getList()) {
+                inst.codeGenInst(compiler);
+            }
+            compiler.addInstruction(new BRA(whileLabel));
+            compiler.addLabel(endOfWhile);
+        }
+        else {
+            compiler.getStack().pushRegister(compiler);
+            codeGenInst(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
     }
 
     @Override
@@ -68,4 +95,7 @@ public class While extends AbstractInst {
         body.prettyPrint(s, prefix, true);
     }
 
+    private void increaseCounter() {
+        counter++;
+    }
 }

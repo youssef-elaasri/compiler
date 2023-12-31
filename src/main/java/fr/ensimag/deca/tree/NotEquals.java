@@ -14,6 +14,8 @@ import fr.ensimag.ima.pseudocode.instructions.BNE;
  */
 public class NotEquals extends AbstractOpExactCmp {
 
+    private static int counter = 0;
+
     public NotEquals(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -34,9 +36,16 @@ public class NotEquals extends AbstractOpExactCmp {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        Label label = new Label("not_equal");
+        int i = counter;
+        increaseCounter();
+        Label label = new Label("not_equal_" + i);
         BranchInstruction branchInstruction = new BNE(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"not_equal");
+        codeGenInstGeneral(compiler,branchInstruction,label,"not_equal_"+i);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 
 }

@@ -15,6 +15,8 @@ import fr.ensimag.ima.pseudocode.instructions.CMP;
  */
 public class Or extends AbstractOpBool {
 
+    private static int counter = 0;
+
     public Or(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -62,5 +64,10 @@ public class Or extends AbstractOpBool {
 
         // Add the label for the end of the OR operation
         compiler.addLabel(endOr);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 }

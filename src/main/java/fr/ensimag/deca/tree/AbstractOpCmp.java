@@ -83,4 +83,6 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         compiler.getStack().decreaseRegister();
     }
 
+    public abstract void increaseCounter();
+
 }
