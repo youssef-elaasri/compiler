@@ -23,6 +23,7 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
         switch (opName) {
             case "%":
                 Type typeMod =  this.verifyExpr(compiler, localEnv, currentClass);
+                this.setType(typeMod);
                 return typeMod;
             default:
                 AbstractExpr left = this.getLeftOperand();
@@ -31,6 +32,7 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                 Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
                 Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
                 Type syntType = verifyArithOp(compiler, opName, type1, type2);
+                this.setType(syntType);
                 return syntType;
         }
     }

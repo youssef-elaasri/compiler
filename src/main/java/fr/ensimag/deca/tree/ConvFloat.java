@@ -23,6 +23,7 @@ public class ConvFloat extends AbstractUnaryExpr {
         //throw new UnsupportedOperationException("not yet implemented");
         Type operandType = this.getOperand().getType();
         if (operandType.isInt()){
+            this.setType(compiler.environmentType.FLOAT);
             return compiler.environmentType.FLOAT;
         }
         throw new ContextualError("ConvFloat only possible for INT type and not with type: " +  operandType, this.getLocation());

@@ -1,11 +1,7 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.Definition;
-import fr.ensimag.deca.context.EnvironmentExp;
 
 /**
  * Assignment, i.e. lvalue = expr.
@@ -34,6 +30,7 @@ public class Assign extends AbstractBinaryExpr {
         AbstractExpr right = this.getRightOperand();
         Type inheritedType = left.verifyExpr(compiler, localEnv, currentClass);
         right.verifyRValue(compiler, localEnv, currentClass, inheritedType);
+        this.setType(inheritedType);
         return inheritedType;
     }
 

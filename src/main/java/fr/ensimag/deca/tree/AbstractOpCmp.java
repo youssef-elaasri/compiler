@@ -35,6 +35,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
         Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
         Type syntType = verifyCmpOp(compiler, opName, type1, type2);
+        this.setType(syntType);
         return syntType;
     }
 
