@@ -37,7 +37,7 @@ public class ErrorHandler {
     public Label addStackOverflowError(){
         Label label = new Label("stack_overflow_error");
         errors.putIfAbsent(
-                "Error: Stack Overflow",
+                "\"Error: Stack Overflow\"",
                 label
         );
         return label;
@@ -52,7 +52,7 @@ public class ErrorHandler {
     public Label addDivisionByZero(){
         Label label = new Label("division_by_zero");
         errors.putIfAbsent(
-                "Error: Division by Zero",
+                "\"Error: Division by Zero\"",
                 label
                 );
         return label;

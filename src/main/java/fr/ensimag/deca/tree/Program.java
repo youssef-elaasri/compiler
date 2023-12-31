@@ -51,8 +51,6 @@ public class Program extends AbstractProgram {
      */
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
-        // Comment: Start main program
-        compiler.addComment("start main program");
 
         // Initialize the stack with a total stack object (TSTO) value of 1
         // The value is going to be modified at the end to match the actual used stack size
@@ -72,7 +70,6 @@ public class Program extends AbstractProgram {
 
         // Halt the program execution
         compiler.addInstruction(new HALT());
-        compiler.addComment("end main program");
 
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
