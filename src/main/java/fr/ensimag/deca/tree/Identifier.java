@@ -1,16 +1,7 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
-import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.Definition;
-import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.FieldDefinition;
-import fr.ensimag.deca.context.MethodDefinition;
-import fr.ensimag.deca.context.ExpDefinition;
-import fr.ensimag.deca.context.VariableDefinition;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
@@ -155,12 +146,13 @@ public class Identifier extends AbstractIdentifier {
         this.definition = definition;
     }
 
+    private Symbol name;
+
     @Override
     public Symbol getName() {
         return name;
     }
 
-    private Symbol name;
 
     public Identifier(Symbol name) {
         Validate.notNull(name);
@@ -174,7 +166,7 @@ public class Identifier extends AbstractIdentifier {
         //which correspond to the main case
         Definition expDefinition = localEnv.get(this.name);
         if (expDefinition == null){
-            throw new ContextualError("This expression is not defined in the local environment", definition.getLocation());
+            throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
         }
         else{
             return expDefinition.getType();
@@ -187,13 +179,14 @@ public class Identifier extends AbstractIdentifier {
      */
     @Override
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
-        Definition expDefinition = compiler.environmentType.defOfType(this.name);
-        if (expDefinition == null){
-            throw new ContextualError("This expression is not defined in the local environment", definition.getLocation());
+        TypeDefinition tDef = compiler.environmentType.defOfType(name);
+        if (tDef == null) {
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
-        else{
-            return expDefinition.getType();
+        if (tDef.getType() == null) {
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
+        return tDef.getType();
     }
 
 

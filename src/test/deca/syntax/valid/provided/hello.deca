@@ -2,5 +2,8 @@
 {
 
         //salaaaamo3alaykom
-        println("Hello World");
+        int x = 5;
+        int y = 4;
+        x = x / y;
+
 }

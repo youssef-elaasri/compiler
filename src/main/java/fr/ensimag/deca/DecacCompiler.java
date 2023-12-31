@@ -127,13 +127,12 @@ public class DecacCompiler {
  
 
     /** The global environment for types (and the symbolTable) */
-    public final EnvironmentType environmentType = new EnvironmentType(this);
     public final SymbolTable symbolTable = new SymbolTable();
+    public final EnvironmentType environmentType = new EnvironmentType(this);
 
     public Symbol createSymbol(String name) {
-        return null;
-        //TODO uncomment later
-        //return symbolTable.create(name);
+//        return null; // A FAIRE: remplacer par la ligne en commentaire ci-dessous
+        return symbolTable.create(name);
     }
 
     /**
@@ -169,22 +168,6 @@ public class DecacCompiler {
         } catch (AssertionError e) {
             LOG.fatal("Assertion failed while compiling file " + sourceFile
                     + ":", e);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }

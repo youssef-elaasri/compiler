@@ -1,12 +1,12 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.Map;
+
+import fr.ensimag.deca.tools.SymbolTable;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
@@ -36,6 +36,24 @@ public class DeclVar extends AbstractDeclVar {
     protected void verifyDeclVar(DecacCompiler compiler,
             EnvironmentExp localEnv, ClassDefinition currentClass)
             throws ContextualError {
+//        if (type.getDefinition().getType() instanceof VoidType) {
+//            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
+//        }
+//        SymbolTable.Symbol symb = varName.getName();
+//        ExpDefinition def = new VariableDefinition(type.getDefinition().getType(), type.getDefinition().getLocation());
+//        localEnv.declare(symb, def);
+        Type ty = type.verifyType(compiler);
+        initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
+        if (ty instanceof VoidType) {
+            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
+        }
+        SymbolTable.Symbol name = varName.getName();
+        VariableDefinition varDef = new VariableDefinition(ty, Location.BUILTIN);
+        Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
+        if (expDef.containsKey(name)) {
+            throw new ContextualError("Name " + name + "is already defined in localEnv !", Location.BUILTIN);
+        }
+        expDef.put(name, varDef);
     }
 
     

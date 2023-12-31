@@ -12,6 +12,9 @@ import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author gl22
@@ -26,7 +29,20 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+        //throw new UnsupportedOperationException("not yet implemented");
+        List<String> opList = new ArrayList<String>();
+        opList.add("&&");
+        opList.add("||");
+
+        AbstractExpr left = this.getLeftOperand();
+        AbstractExpr right = this.getRightOperand();
+        Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
+        Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
+
+        if( (type1.isBoolean() && type2.isBoolean()) && opList.contains(this.getOperatorName()) ){
+            return compiler.environmentType.BOOLEAN;
+        }
+        throw new ContextualError(this.getOperatorName() + " operation cannot occur between " + type1 + " and " + type2 + " !", this.getLocation());
     }
 
     /** ADDED CODE **/
@@ -64,5 +80,4 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         // Unconditionally branch to the endlabel
         compiler.addInstruction(new BRA(endlabel));
     }
-
 }

@@ -57,7 +57,10 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
     */
     public ExpDefinition get(Symbol key) {
         ExpDefinition definition = expDefinitionMap.get(key);
-        return definition != null ? definition : parentEnvironment.getExpDefinitionMap().get(key);
+        if (definition == null) {
+            return parentEnvironment != null ? parentEnvironment.getExpDefinitionMap().get(key) : null;
+        }
+        return definition;
     }
 
     /**
@@ -76,11 +79,10 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
      *
      */
     public void declare(Symbol name, ExpDefinition def) throws DoubleDefException {
-
-        ExpDefinition estDoubleDef = expDefinitionMap.putIfAbsent(name, def);
-        if (estDoubleDef != null){
-            throw new DoubleDefException("This symbol is already defined in the environment.");
+        if (expDefinitionMap.containsKey(name)) {
+            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
         }
+        expDefinitionMap.put(name, def);
 
     }
 
