@@ -1,0 +1,8 @@
+
+{
+   int a;
+   Float f;
+
+   // Doit se transformer en float
+   f=a+f;
+}

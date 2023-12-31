@@ -1,0 +1,13 @@
+// Description:
+//    Affectation et typage
+//
+// Resultats:
+//    Ligne 12: Variable non utilise.
+// 
+
+{
+   int a;
+   boolean b;
+   int c;
+   a=a+c;
+}

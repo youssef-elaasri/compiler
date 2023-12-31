@@ -1,0 +1,12 @@
+// Description:
+//    Affectation et typage
+//
+// Resultats:
+//    Ligne 13: Variable non declare:
+// 
+
+{
+    int a;
+    int b;
+    a=b+c;
+}
