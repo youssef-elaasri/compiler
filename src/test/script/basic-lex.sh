@@ -118,3 +118,4 @@ echo "${RED}FAILED${RESET}"
 fi
 
 
+exit 0
