@@ -41,6 +41,12 @@ public class While extends AbstractInst {
         this.body = body;
     }
 
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions for a while loop, including the condition evaluation and loop body.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
