@@ -94,10 +94,12 @@ decl_var[AbstractIdentifier t] returns[AbstractDeclVar tree]
         }
     : i=ident {
         $tree = new DeclVar($t,$i.tree,noInitialization);
+        setLocation($tree, $i.start);
         }
       (EQUALS e=expr {
         Initialization initialization = new Initialization($e.tree);
         $tree = new DeclVar($t,$i.tree,initialization);
+        setLocation($tree, $e.start);
         }
       )? {
         }
@@ -151,6 +153,7 @@ inst returns[AbstractInst tree]
             assert($condition.tree != null);
             assert($body.tree != null);
             $tree = new While($condition.tree,$body.tree);
+            setLocation($tree, $condition.start);
         }
     | RETURN expr SEMI {
             assert($expr.tree != null);
@@ -342,16 +345,19 @@ mult_expr returns[AbstractExpr tree]
             assert($e1.tree != null);                                         
             assert($e2.tree != null);
             $tree = new Multiply($e1.tree,$e2.tree);
+            setLocation($tree,$e1.start);
         }
     | e1=mult_expr SLASH e2=unary_expr {
             assert($e1.tree != null);                                         
             assert($e2.tree != null);
             $tree = new Divide($e1.tree, $e2.tree);
+            setLocation($tree,$e1.start);
         }
     | e1=mult_expr PERCENT e2=unary_expr {
             assert($e1.tree != null);                                                                          
             assert($e2.tree != null);
             $tree = new Modulo($e1.tree, $e2.tree);
+            setLocation($tree,$e1.start);
         }
     ;
 
@@ -434,6 +440,7 @@ type returns[AbstractIdentifier tree]
     : ident {
             assert($ident.tree != null);
             $tree = $ident.tree;
+            setLocation($tree,$ident.start);
         }
     ;
 
@@ -474,6 +481,7 @@ ident returns[AbstractIdentifier tree]
     : IDENT {
             SymbolTable symbolTable = new SymbolTable();
             $tree = new Identifier(symbolTable.create($IDENT.text));
+            setLocation($tree, $IDENT);
         }
     ;
 

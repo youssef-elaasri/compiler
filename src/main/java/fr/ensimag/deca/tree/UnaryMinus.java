@@ -22,8 +22,10 @@ public class UnaryMinus extends AbstractUnaryExpr {
         //throw new UnsupportedOperationException("not yet implemented");
         Type type1 = this.getOperand().verifyExpr(compiler, localEnv,currentClass);
         if (type1.isInt()){
+            this.setType(compiler.environmentType.INT);
             return compiler.environmentType.INT;
         } else if (type1.isFloat()) {
+            this.setType(compiler.environmentType.FLOAT);
             return compiler.environmentType.FLOAT;
         }
         throw new ContextualError(this.getOperatorName() + " unary operation cannot occur with " + type1 + " !", this.getLocation());

@@ -39,18 +39,24 @@ public class DeclVar extends AbstractDeclVar {
 //        SymbolTable.Symbol symb = varName.getName();
 //        ExpDefinition def = new VariableDefinition(type.getDefinition().getType(), type.getDefinition().getLocation());
 //        localEnv.declare(symb, def);
+
         Type ty = type.verifyType(compiler);
+        TypeDefinition tDef = compiler.environmentType.defOfType(type.getName());
+        type.setDefinition(tDef);
+        SymbolTable.Symbol name = varName.getName();
+        Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
+        if (expDef.containsKey(name)) {
+            throw new ContextualError("Name " + name + " is already defined in localEnv !", Location.BUILTIN);
+        }
+        VariableDefinition varDef = new VariableDefinition(ty, varName.getLocation());
+        varName.setDefinition(varDef);
+        expDef.put(name, varDef);
+
         initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
         if (ty instanceof VoidType) {
             throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
         }
-        SymbolTable.Symbol name = varName.getName();
-        VariableDefinition varDef = new VariableDefinition(ty, Location.BUILTIN);
-        Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
-        if (expDef.containsKey(name)) {
-            throw new ContextualError("Name " + name + "is already defined in localEnv !", Location.BUILTIN);
-        }
-        expDef.put(name, varDef);
+
     }
 
     
