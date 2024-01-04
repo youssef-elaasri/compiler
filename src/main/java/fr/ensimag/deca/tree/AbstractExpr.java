@@ -144,8 +144,8 @@ public abstract class AbstractExpr extends AbstractInst {
 
             else{
                 // Create labels for the end of the NOT operation and the false condition
-                Label endNot = new Label("print_end_not" + labelCounter);
-                Label falseNot = new Label("print_false_not"+ labelCounter);
+                Label endNot = new Label("print_end_not_" + labelCounter);
+                Label falseNot = new Label("print_false_not_"+ labelCounter);
                 increaseLabelCounter();
 
                 compiler.addInstruction(new CMP(0, Register.R1));
