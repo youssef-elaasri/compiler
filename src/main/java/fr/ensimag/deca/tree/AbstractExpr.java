@@ -8,8 +8,7 @@ import fr.ensimag.ima.pseudocode.*;
 
 import java.io.PrintStream;
 
-import fr.ensimag.ima.pseudocode.instructions.POP;
-import fr.ensimag.ima.pseudocode.instructions.PUSH;
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -119,14 +118,57 @@ public abstract class AbstractExpr extends AbstractInst {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    private int labelCounter = 0;
+
+    private void increaseLabelCounter(){
+        labelCounter++;
+    }
     /**
      * Generate code to print the expression
      *
      * @param compiler
      */
     protected void codeGenPrint(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
+            codeGenInst(compiler);
+            compiler.addInstruction(new LOAD(
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1),
+                    Register.R1
+            ));
+
+            if(this.getType().isFloat())
+                compiler.addInstruction(new WFLOAT());
+
+            else if (this.getType().isInt())
+                compiler.addInstruction(new WINT());
+
+            else{
+                // Create labels for the end of the NOT operation and the false condition
+                Label endNot = new Label("print_end_not" + labelCounter);
+                Label falseNot = new Label("print_false_not"+ labelCounter);
+                increaseLabelCounter();
+
+                compiler.addInstruction(new CMP(0, Register.R1));
+
+                compiler.addInstruction(new BEQ(falseNot));
+
+                compiler.addInstruction(new WSTR("\"true\""));
+                compiler.addInstruction(new BRA(endNot));
+
+                compiler.addLabel(falseNot);
+                compiler.addInstruction(new WSTR("\"false\""));
+
+                compiler.addLabel(endNot);
+            }
+            compiler.getStack().decreaseRegister();
+        }else {
+
+            compiler.getStack().pushRegister(compiler);
+            codeGenPrint(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
     }
+
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {

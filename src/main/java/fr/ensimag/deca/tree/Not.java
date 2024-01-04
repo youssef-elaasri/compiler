@@ -73,44 +73,44 @@ public class Not extends AbstractUnaryExpr {
         compiler.addLabel(endNot);
 
     }
-    @Override
-    protected void codeGenPrint(DecacCompiler compiler) {
-        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
-
-            // Create labels for the end of the NOT operation and the false condition
-            Label endNot = new Label("end_not");
-            Label falseNot = new Label("false_not");
-
-            // Generate code for the operand
-            super.getOperand().codeGenInst(compiler);
-
-            compiler.addInstruction(new LOAD(
-                    Register.getR(compiler.getStack().getCurrentRegister() - 1),
-                    Register.R1
-            ));
-
-            compiler.addInstruction(new CMP(0, Register.R1));
-
-            compiler.addInstruction(new BEQ(falseNot));
-
-            compiler.addInstruction(new WSTR("false"));
-            compiler.addInstruction(new BRA(endNot));
-
-            compiler.addLabel(falseNot);
-            compiler.addInstruction(new WSTR("true"));
-
-            compiler.addLabel(endNot);
-        }
-        else {
-            compiler.getStack().pushRegister(compiler);
-            codeGenPrint(compiler);
-            compiler.getStack().popRegister(compiler);
-
-        }
-
-
-
-
-    }
+//    @Override
+//    protected void codeGenPrint(DecacCompiler compiler) {
+//        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
+//
+//            // Create labels for the end of the NOT operation and the false condition
+//            Label endNot = new Label("end_not");
+//            Label falseNot = new Label("false_not");
+//
+//            // Generate code for the operand
+//            super.getOperand().codeGenInst(compiler);
+//
+//            compiler.addInstruction(new LOAD(
+//                    Register.getR(compiler.getStack().getCurrentRegister() - 1),
+//                    Register.R1
+//            ));
+//
+//            compiler.addInstruction(new CMP(0, Register.R1));
+//
+//            compiler.addInstruction(new BEQ(falseNot));
+//
+//            compiler.addInstruction(new WSTR("false"));
+//            compiler.addInstruction(new BRA(endNot));
+//
+//            compiler.addLabel(falseNot);
+//            compiler.addInstruction(new WSTR("true"));
+//
+//            compiler.addLabel(endNot);
+//        }
+//        else {
+//            compiler.getStack().pushRegister(compiler);
+//            codeGenPrint(compiler);
+//            compiler.getStack().popRegister(compiler);
+//
+//        }
+//
+//
+//
+//
+//    }
 
 }
