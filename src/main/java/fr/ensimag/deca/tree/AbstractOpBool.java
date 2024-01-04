@@ -80,4 +80,7 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         // Unconditionally branch to the endlabel
         compiler.addInstruction(new BRA(endlabel));
     }
+
+    public abstract void increaseCounter();
+
 }

@@ -14,6 +14,8 @@ import fr.ensimag.ima.pseudocode.instructions.BGT;
  */
 public class Greater extends AbstractOpIneq {
 
+    private static int counter = 0;
+
     public Greater(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -34,8 +36,15 @@ public class Greater extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        Label label = new Label("greater");
+        int i = counter;
+        increaseCounter();
+        Label label = new Label("greater_"+i);
         BranchInstruction branchInstruction = new BGT(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"greater");
+        codeGenInstGeneral(compiler,branchInstruction,label,"greater_"+i);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 }

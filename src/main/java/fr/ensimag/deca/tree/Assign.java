@@ -6,6 +6,8 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.Definition;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
 
 /**
  * Assignment, i.e. lvalue = expr.
@@ -41,6 +43,33 @@ public class Assign extends AbstractBinaryExpr {
     @Override
     protected String getOperatorName() {
         return "=";
+    }
+
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates instructions for an assignment operation, storing the value of the right operand
+     * into the memory location specified by the left operand.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            getRightOperand().codeGenInst(compiler);
+            AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
+            compiler.addInstruction(
+                    new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
+                            lvalue.getExpDefinition().getOperand()
+                    )
+            );
+            compiler.getStack().decreaseRegister();
+        }
+        else {
+            compiler.getStack().pushRegister(compiler);
+            codeGenInst(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
     }
 
 }

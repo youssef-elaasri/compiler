@@ -14,6 +14,8 @@ import fr.ensimag.ima.pseudocode.instructions.BLT;
  */
 public class Lower extends AbstractOpIneq {
 
+    private static int counter = 0;
+
     public Lower(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -34,9 +36,16 @@ public class Lower extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        Label label = new Label("lower");
+        int i = counter;
+        Label label = new Label("lower_"+i);
+        increaseCounter();
         BranchInstruction branchInstruction = new BLT(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"lower");
+        codeGenInstGeneral(compiler,branchInstruction,label,"lower_" + i);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 
 }

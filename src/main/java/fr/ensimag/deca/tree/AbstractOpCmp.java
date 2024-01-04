@@ -124,4 +124,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         compiler.addLabel(endEqualLabel);
         compiler.getStack().decreaseRegister();
     }
+
+    public abstract void increaseCounter();
+
 }
