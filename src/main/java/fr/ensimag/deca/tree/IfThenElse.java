@@ -7,6 +7,12 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -36,9 +42,49 @@ public class IfThenElse extends AbstractInst {
             throws ContextualError {
     }
 
+    private int counterIf = 0;
+
+    private void increaseCounterIf(){
+        counterIf++;
+    }
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            Label ifBranch = new Label("if_branch_" + counterIf);
+            Label elseBranch_ = new Label("else_branch_" + counterIf);
+            Label endOfIf = new Label("end_of_if_" + counterIf);
+
+            increaseCounterIf();
+
+            condition.codeGenInst(compiler);
+            compiler.addInstruction(new CMP(
+                    0,
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)
+            ));
+            compiler.getStack().decreaseRegister();
+            compiler.addInstruction(new BEQ(elseBranch_));
+
+            compiler.addLabel(ifBranch);
+            for (AbstractInst abstractInst : thenBranch.getList()) {
+                abstractInst.codeGenInst(compiler);
+            }
+            compiler.addInstruction(new BRA(endOfIf));
+
+            compiler.addLabel(elseBranch_);
+            for (AbstractInst abstractInst : elseBranch.getList()) {
+                abstractInst.codeGenInst(compiler);
+            }
+            compiler.addLabel(endOfIf);
+        }else{
+            compiler.getStack().pushRegister(compiler);
+            codeGenInst(compiler);
+            compiler.getStack().popRegister(compiler);
+
+        }
+
+
+
+
     }
 
     @Override
