@@ -11,6 +11,7 @@ import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.POP;
 import fr.ensimag.ima.pseudocode.instructions.PUSH;
 import fr.ensimag.ima.pseudocode.instructions.RINT;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
 
 import java.io.PrintStream;
 
@@ -56,5 +57,12 @@ public class ReadInt extends AbstractReadExpr {
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new RINT());
         super.moveToRegister(compiler);
+    }
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+        compiler.addInstruction(new RINT());
+        compiler.addInstruction(new WINT());
+
     }
 }
