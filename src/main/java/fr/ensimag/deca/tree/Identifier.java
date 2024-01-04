@@ -9,6 +9,7 @@ import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -234,7 +235,7 @@ public class Identifier extends AbstractIdentifier {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        compiler.addInstruction(new LEA(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }
 
