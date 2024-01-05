@@ -12,8 +12,17 @@ PATH=./src/test/script/launchers:"$PATH"
 
 # Test variable declarations
 
-if test_context src/test/deca/context/valid/provided/test_delcaration_var.deca 2>&1 | \
-    grep -q 'definition: variable defined at \[5, 8\], type=int' && grep -q 'definition: variable defined at \[5, 8\], type=ss'
+if test_context src/test/deca/context/valid/provided/test_declaration_int.deca 2>&1 | \
+    grep -q 'definition: variable defined at \[5, 8\], type=int'
+then
+    echo "PASSED"
+else
+    echo "FAILED"
+    exit 1
+fi
+
+if test_context src/test/deca/context/valid/provided/test_declaration_int.deca 2>&1 | \
+    grep -q 'definition: variable defined at \[7, 8\], type=int'
 then
     echo "PASSED"
 else
@@ -22,8 +31,32 @@ else
 fi
 
 
+if test_context src/test/deca/context/valid/provided/test_declaration_float.deca 2>&1 | \
+    grep -q 'definition: variable defined at \[5, 10\], type=float'
+then
+    echo "PASSED"
+else
+    echo "FAILED"
+    exit 1
+fi
 
+if test_context src/test/deca/context/valid/provided/test_declaration_int.deca 2>&1 | \
+    grep -q '\[9, 4\] Assign'
+then
+    echo "PASSED"
+else
+    echo "FAILED"
+    exit 1
+fi
 
+if test_context src/test/deca/context/valid/provided/test_conv_Float.deca 2>&1 | \
+    grep -q 'ConvFloat'
+then
+    echo "PASSED"
+else
+    echo "FAILED"
+    exit 1
+fi
 
 
 
