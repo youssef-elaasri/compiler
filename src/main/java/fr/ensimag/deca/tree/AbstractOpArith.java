@@ -31,22 +31,26 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
                 Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
                 Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
-                Type syntType = verifyArithOp(compiler, opName, type1, type2);
+                Type syntType = verifyArithOp(compiler, opName, type1, type2, localEnv, currentClass);
                 this.setType(syntType);
                 return syntType;
         }
     }
 
-    public Type verifyArithOp(DecacCompiler compiler, String op, Type type1, Type type2) throws ContextualError {
+    public Type verifyArithOp(DecacCompiler compiler, String op, Type type1, Type type2, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
         if ((type1.isInt()) && (type2.isInt())) {
             return compiler.environmentType.INT;
         }
         if ((type1.isInt()) && (type2.isFloat())) {
-            this.setLeftOperand(new ConvFloat(this.getLeftOperand()));
+            AbstractExpr leftOp = new ConvFloat(this.getLeftOperand());
+            this.setLeftOperand(leftOp);
+            leftOp.verifyExpr(compiler, localEnv, currentClass);
             return compiler.environmentType.FLOAT;
         }
         if ((type1.isFloat()) && (type2.isInt())) {
-            this.setRightOperand(new ConvFloat(this.getRightOperand()));
+            AbstractExpr rightOp = new ConvFloat(this.getRightOperand());
+            this.setRightOperand(rightOp);
+            rightOp.verifyExpr(compiler, localEnv, currentClass);
             return compiler.environmentType.FLOAT;
         }
         if ((type1.isFloat()) && (type2.isFloat())) {
