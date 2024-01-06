@@ -34,3 +34,52 @@ else
     echo "$resultat"
     exit 1
 fi
+
+
+
+# Tester la declaration et initialisation d'un int et float 
+rm -f ./src/test/deca/codegen/valid/provided/test_declaration_init.ass 2>/dev/null
+decac ./src/test/deca/codegen/valid/provided/test_declaration_init.deca || exit 1
+if [ ! -f ./src/test/deca/codegen/valid/provided/test_declaration_init.ass ]; then
+    echo "Fichier test_declaration_init.ass non généré."
+    exit 1
+fi
+
+resultat=$(ima ./src/test/deca/codegen/valid/provided/test_declaration_init.ass) || exit 1
+rm -f ./src/test/deca/codegen/valid/provided/test_declaration_init.ass
+
+# On code en dur la valeur attendue.
+attendu="54.5"
+
+if [ "$resultat" = "$attendu" ]; then
+    echo "PASSED"
+else
+    echo "FAILED"
+    echo "expected $attendu but got instead $resultat"
+    exit 1
+fi
+
+
+
+# Tester la conversion de int en float
+rm -f ./src/test/deca/codegen/valid/provided/test_conv_float.ass 2>/dev/null
+decac ./src/test/deca/codegen/valid/provided/test_conv_float.deca || exit 1
+if [ ! -f ./src/test/deca/codegen/valid/provided/test_conv_float.ass ]; then
+    echo "Fichier test_conv_float.ass non généré."
+    exit 1
+fi
+
+resultat=$(ima ./src/test/deca/codegen/valid/provided/test_conv_float.ass) || exit 1
+rm -f ./src/test/deca/codegen/valid/provided/test_conv_float.ass
+
+# On code en dur la valeur attendue.
+attendu="7.5"
+
+if [ "$resultat" = "$attendu" ]; then
+    echo "PASSED"
+else
+    echo "FAILED"
+    echo "expected $attendu but got instead $resultat"
+    exit 1
+fi
+
