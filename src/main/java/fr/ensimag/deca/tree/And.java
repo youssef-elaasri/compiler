@@ -17,6 +17,8 @@ import org.antlr.v4.runtime.atn.SemanticContext;
  */
 public class And extends AbstractOpBool {
 
+    private static int counter = 0;
+
     public And(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -34,10 +36,12 @@ public class And extends AbstractOpBool {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
+        int i = counter;
+        increaseCounter();
         // Create labels for the end of the AND operation, true condition, and false condition
-        Label isFalse = new Label("is_false");
-        Label isTrue = new Label("is_true");
-        Label endAnd = new Label("end_and");
+        Label isFalse = new Label("is_false_"+i);
+        Label isTrue = new Label("is_true_"+i);
+        Label endAnd = new Label("end_and_"+i);
 
         // Generate code for the left operand
         super.getLeftOperand().codeGenInst(compiler);
@@ -64,6 +68,10 @@ public class And extends AbstractOpBool {
         compiler.addLabel(endAnd);
     }
 
+    @Override
+    public void increaseCounter() {
+        counter++;
+    }
 
 
 }

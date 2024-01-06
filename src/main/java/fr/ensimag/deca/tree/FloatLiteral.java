@@ -10,6 +10,8 @@ import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -79,4 +81,11 @@ public class FloatLiteral extends AbstractExpr {
         ));
         compiler.getStack().increaseRegister();
     }
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+        compiler.addInstruction(new LOAD(value , Register.R1));
+        compiler.addInstruction(new WFLOAT());
+    }
+
 }

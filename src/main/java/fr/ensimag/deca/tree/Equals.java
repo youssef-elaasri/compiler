@@ -19,6 +19,8 @@ import java.util.Random;
  */
 public class Equals extends AbstractOpExactCmp {
 
+    private static int counter = 0;
+
     public Equals(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -39,9 +41,16 @@ public class Equals extends AbstractOpExactCmp {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        Label label = new Label("equal");
+        int i = counter;
+        increaseCounter();
+        Label label = new Label("equal_"+ i);
         BranchInstruction branchInstruction = new BEQ(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"equal");
+        codeGenInstGeneral(compiler,branchInstruction,label,"equal_" + i);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 
     

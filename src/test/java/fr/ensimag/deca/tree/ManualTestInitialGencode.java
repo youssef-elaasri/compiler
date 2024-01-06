@@ -21,6 +21,7 @@ public class ManualTestInitialGencode {
     public static AbstractProgram initTest1() {
         SymbolTable symbolTable = new SymbolTable();
         ListInst linst = new ListInst();
+        ListInst linstWhile = new ListInst();
         ListDeclVar listDeclVar = new ListDeclVar();
         AbstractProgram source =
             new Program(
@@ -29,8 +30,8 @@ public class ManualTestInitialGencode {
         Identifier intIdentifier = new Identifier(symbolTable.create("int"));
         Identifier xIdentifier = new Identifier(symbolTable.create("x"));
         Identifier yIdentifier = new Identifier(symbolTable.create("y"));
-        Initialization xinitialization = new Initialization(new FloatLiteral((float) 0.5));
-        Initialization yinitialization = new Initialization(new UnaryMinus(xIdentifier));
+        NoInitialization xinitialization = new NoInitialization();
+        NoInitialization yinitialization = new NoInitialization();
         intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         xIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
         yIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
@@ -38,6 +39,8 @@ public class ManualTestInitialGencode {
         DeclVar ydeclVar = new DeclVar( intIdentifier, yIdentifier,yinitialization);
         listDeclVar.add(xdeclVar);
         listDeclVar.add(ydeclVar);
+        linstWhile.add(new While(new Equals(new IntLiteral(0),new IntLiteral(0)),new ListInst()));
+        linst.add(new While(new Equals(new IntLiteral(1),new IntLiteral(2)),linstWhile));
         return source;
     }
     

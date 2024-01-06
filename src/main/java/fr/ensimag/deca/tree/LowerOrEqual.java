@@ -13,6 +13,8 @@ import fr.ensimag.ima.pseudocode.instructions.BLE;
  * @date 01/01/2024
  */
 public class LowerOrEqual extends AbstractOpIneq {
+
+    private static int counter = 0;
     public LowerOrEqual(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -33,9 +35,16 @@ public class LowerOrEqual extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        Label label = new Label("lower_or_equal");
+        int i = counter;
+        increaseCounter();
+        Label label = new Label("lower_or_equal_"+i);
         BranchInstruction branchInstruction = new BLE(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"lower_or_equal");
+        codeGenInstGeneral(compiler,branchInstruction,label,"lower_or_equal_"+i);
+    }
+
+    @Override
+    public void increaseCounter() {
+        counter++;
     }
 
 
