@@ -142,7 +142,9 @@ public class DecacCompiler {
      */
     public boolean compile() {
         String sourceFile = source.getAbsolutePath();
-        String destFile = "hello.ass"; //TODO
+        String fileName=sourceFile.substring(0, sourceFile.length()-5);
+        String destFile = fileName+".ass"; //TODO
+
         // A FAIRE: calculer le nom du fichier .ass à partir du nom du
         // A FAIRE: fichier .deca.
         PrintStream err = System.err;
