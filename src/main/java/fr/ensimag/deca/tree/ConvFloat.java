@@ -22,17 +22,11 @@ public class ConvFloat extends AbstractUnaryExpr {
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
-            ClassDefinition currentClass) throws ContextualError {
+            ClassDefinition currentClass) {
         //throw new UnsupportedOperationException("not yet implemented");
-        Type operandType = this.getOperand().getType();
-        if (operandType.isInt()){
-            this.setType(compiler.environmentType.FLOAT);
-            return compiler.environmentType.FLOAT;
-        }
-        throw new ContextualError("ConvFloat only possible for INT type and not with type: " +  operandType, this.getLocation());
+        this.setType(compiler.environmentType.FLOAT);
+        return compiler.environmentType.FLOAT;
     }
-
-
     @Override
     protected String getOperatorName() {
         return "/* conv float */";
