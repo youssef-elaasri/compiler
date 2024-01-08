@@ -64,7 +64,7 @@ public class CompilerOptions {
                 if (lex.getSourceName() != null) {
                     file = new File(lex.getSourceName());
                 }
-                //sourceFiles.add(file);
+                sourceFiles.add(file);
                 final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
                 parser.setDecacCompiler(decacCompiler);
                 Program prog = (Program)parser.parseProgramAndManageErrors(System.err);

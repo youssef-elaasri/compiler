@@ -1,3 +1,5 @@
 {
-   int a;
+   println(1) ; 
 }
+
+

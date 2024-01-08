@@ -101,6 +101,7 @@ decl_var[AbstractIdentifier t] returns[AbstractDeclVar tree]
         Initialization initialization = new Initialization($e.tree);
         $tree = new DeclVar($t,$i.tree,initialization);
         setLocation($tree, $e.start);
+        setLocation(initialization, $e.start);
         }
       )? {
         }
@@ -166,29 +167,29 @@ inst returns[AbstractInst tree]
 if_then_else returns[IfThenElse tree]
 @init {
         ListInst li_else_2 = new ListInst();
-        ListInst li_else_fin = new ListInst();
+        ListInst current = new ListInst();
 }
     : if1=IF OPARENT condition=expr CPARENT OBRACE li_if=list_inst CBRACE {
                 assert($condition.tree != null);
                 assert($li_if.tree != null);
                 $tree =  new IfThenElse($condition.tree,$li_if.tree,li_else_2);
+                current = li_else_2;
                 setLocation($tree, $condition.start);
         }
       (ELSE elsif=IF OPARENT elsif_cond=expr CPARENT OBRACE elsif_li=list_inst CBRACE {
                 assert($elsif_cond.tree != null);
                 assert($elsif_li.tree != null);
-                li_else_2.add(new IfThenElse($elsif_cond.tree, $elsif_li.tree, li_else_fin));
+                ListInst li_else_fin = new ListInst();
+                current.add(new IfThenElse($elsif_cond.tree, $elsif_li.tree, li_else_fin));
                 setLocation($tree, $elsif);
-                li_else_2 = li_else_fin;
-
-
+                current = li_else_fin;
         }
       )*
       (ELSE OBRACE li_else=list_inst CBRACE {
                 assert($li_else.tree != null);
                 Iterator<AbstractInst> iter = $li_else.tree.iterator();
                 while (iter.hasNext()) {
-                    li_else_2.add(iter.next());
+                    current.add(iter.next());
                 }
                 setLocation($tree, $ELSE);
         }
