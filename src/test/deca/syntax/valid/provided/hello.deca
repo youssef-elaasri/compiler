@@ -1,9 +1,7 @@
-
 {
 
         //salaaaamo3alaykom
-        int x = 5;
-        int y = 4;
-        x = x / y;
-
+        int i = 3;
+        float f = 5.5;
+        f = f + i;
 }

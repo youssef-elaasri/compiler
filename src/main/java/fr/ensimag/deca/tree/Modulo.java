@@ -28,6 +28,7 @@ public class Modulo extends AbstractOpArith {
         Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
         Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
         if ((type1.isInt()) && (type2.isInt())) {
+            this.setType(compiler.environmentType.INT);
             return compiler.environmentType.INT;
         }
         else {
