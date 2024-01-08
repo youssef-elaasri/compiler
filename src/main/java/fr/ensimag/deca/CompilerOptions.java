@@ -72,7 +72,7 @@ public class CompilerOptions {
                     System.exit(1);
                 } else {
                     prog.decompile(System.out);
-                }
+                } break;
             default:
                 File srcFile = new File(args[0]);
                 sourceFiles.add(srcFile);
