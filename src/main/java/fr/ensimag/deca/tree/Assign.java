@@ -31,7 +31,8 @@ public class Assign extends AbstractBinaryExpr {
         AbstractLValue left = this.getLeftOperand();
         AbstractExpr right = this.getRightOperand();
         Type inheritedType = left.verifyExpr(compiler, localEnv, currentClass);
-        right.verifyRValue(compiler, localEnv, currentClass, inheritedType);
+        AbstractExpr convRight = right.verifyRValue(compiler, localEnv, currentClass, inheritedType);
+        this.setRightOperand(convRight);
         this.setType(inheritedType);
         return inheritedType;
     }

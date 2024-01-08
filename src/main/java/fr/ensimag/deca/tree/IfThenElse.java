@@ -7,6 +7,7 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.List;
 
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
@@ -45,7 +46,7 @@ public class IfThenElse extends AbstractInst {
         elseBranch.verifyListInst(compiler, localEnv, currentClass, returnType);
     }
 
-    private int counterIf = 0;
+    private static int counterIf = -1;
 
     private void increaseCounterIf(){
         counterIf++;
@@ -53,11 +54,12 @@ public class IfThenElse extends AbstractInst {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
-            Label ifBranch = new Label("if_branch_" + counterIf);
-            Label elseBranch_ = new Label("else_branch_" + counterIf);
-            Label endOfIf = new Label("end_of_if_" + counterIf);
-
             increaseCounterIf();
+            int number = counterIf;
+            Label ifBranch = new Label("if_branch_" + number);
+            Label elseBranch_ = new Label("else_branch_" + number);
+            Label endOfIf = new Label("end_of_if_" + number);
+
 
             condition.codeGenInst(compiler);
             compiler.addInstruction(new CMP(
@@ -74,6 +76,8 @@ public class IfThenElse extends AbstractInst {
             compiler.addInstruction(new BRA(endOfIf));
 
             compiler.addLabel(elseBranch_);
+
+
             for (AbstractInst abstractInst : elseBranch.getList()) {
                 abstractInst.codeGenInst(compiler);
             }

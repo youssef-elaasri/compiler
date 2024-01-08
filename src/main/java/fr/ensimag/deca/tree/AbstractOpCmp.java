@@ -115,8 +115,14 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         Label endEqualLabel = new Label("end_" + opCmp);
         getLeftOperand().codeGenInst(compiler);
         getRightOperand().codeGenInst(compiler);
-        compiler.addInstruction(new CMP(Register.getR(compiler.getStack().getCurrentRegister()-2),
-                Register.getR(compiler.getStack().getCurrentRegister()-1)));
+
+        compiler.addInstruction(new CMP(
+                Register.getR(compiler.getStack().getCurrentRegister()-1),
+                Register.getR(compiler.getStack().getCurrentRegister()-2)
+        ));
+
+
+
         compiler.addInstruction(branchInstruction);
         compiler.addInstruction(new LOAD(0,Register.getR(compiler.getStack().getCurrentRegister()-val)));
         compiler.addInstruction(new BRA(endEqualLabel));
