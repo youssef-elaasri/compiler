@@ -5,6 +5,7 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BGE;
 import fr.ensimag.ima.pseudocode.instructions.BGT;
 
 /**
@@ -40,7 +41,7 @@ public class GreaterOrEqual extends AbstractOpIneq {
         int i = counter;
         increaseCounter();
         Label label = new Label("greater_or_equal_"+ i);
-        BranchInstruction branchInstruction = new BGT(label);
+        BranchInstruction branchInstruction = new BGE(label);
         codeGenInstGeneral(compiler,branchInstruction,label,"greater_or_equal_"+i);
     }
 
