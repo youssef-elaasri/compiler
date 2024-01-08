@@ -41,7 +41,8 @@ public class Initialization extends AbstractInitialization {
             EnvironmentExp localEnv, ClassDefinition currentClass)
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
-        expression.verifyRValue(compiler, localEnv, currentClass, t);
+        AbstractExpr expConv = expression.verifyRValue(compiler, localEnv, currentClass, t);
+        this.setExpression(expConv);
     }
 
 

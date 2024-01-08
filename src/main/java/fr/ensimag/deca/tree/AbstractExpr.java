@@ -89,6 +89,10 @@ public abstract class AbstractExpr extends AbstractInst {
                 throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
             }
         }
+        if (expectedType.isFloat() && currentType.isInt()) {
+            AbstractExpr convF = new ConvFloat(this);
+            return convF;
+        }
         return this;
     }
     
