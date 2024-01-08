@@ -171,7 +171,9 @@ public class Identifier extends AbstractIdentifier {
         }
         else{
             this.setDefinition(expDefinition);
-            return expDefinition.getType();
+            Type typeId = expDefinition.getType();
+            this.setType(typeId);
+            return typeId;
         }
     }
 
