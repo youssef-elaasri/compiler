@@ -46,7 +46,7 @@ public class IfThenElse extends AbstractInst {
         elseBranch.verifyListInst(compiler, localEnv, currentClass, returnType);
     }
 
-    private int counterIf = -1;
+    private static int counterIf = -1;
 
     private void increaseCounterIf(){
         counterIf++;
