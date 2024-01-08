@@ -84,7 +84,7 @@ public abstract class AbstractExpr extends AbstractInst {
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
-        if (!(expectedType instanceof FloatType && currentType instanceof IntType)) {
+        if (!(expectedType.isFloat() && currentType.isInt())) {
             if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
                 throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
             }
