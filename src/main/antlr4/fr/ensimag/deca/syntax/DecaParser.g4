@@ -180,8 +180,10 @@ if_then_else returns[IfThenElse tree]
                 assert($elsif_cond.tree != null);
                 assert($elsif_li.tree != null);
                 ListInst li_else_fin = new ListInst();
-                current.add(new IfThenElse($elsif_cond.tree, $elsif_li.tree, li_else_fin));
+                IfThenElse if_then_else = new IfThenElse($elsif_cond.tree, $elsif_li.tree, li_else_fin);
+                current.add(if_then_else);
                 setLocation($tree, $elsif);
+                setLocation(if_then_else, $elsif);
                 current = li_else_fin;
         }
       )*
