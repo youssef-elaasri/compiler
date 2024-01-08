@@ -91,7 +91,7 @@ public abstract class AbstractExpr extends AbstractInst {
         }
         if (expectedType.isFloat() && currentType.isInt()) {
             AbstractExpr convF = new ConvFloat(this);
-            convF.verifyExpr(compiler,localEnv,currentClass);
+            convF.verifyExpr(compiler, localEnv, currentClass);
             return convF;
         }
         return this;
