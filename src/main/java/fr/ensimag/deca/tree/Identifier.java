@@ -170,6 +170,7 @@ public class Identifier extends AbstractIdentifier {
             throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
         }
         else{
+            this.setDefinition(expDefinition);
             return expDefinition.getType();
         }
     }
@@ -182,10 +183,10 @@ public class Identifier extends AbstractIdentifier {
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
         TypeDefinition tDef = compiler.environmentType.defOfType(name);
         if (tDef == null) {
-            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
+            throw new ContextualError("Type: "+ name +" is undefined !", Location.BUILTIN);
         }
         if (tDef.getType() == null) {
-            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
+            throw new ContextualError("Name: "+ name +" is undefined !", Location.BUILTIN);
         }
         return tDef.getType();
     }

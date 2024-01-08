@@ -26,6 +26,7 @@ public class Not extends AbstractUnaryExpr {
         //throw new UnsupportedOperationException("not yet implemented");
         Type type1 = this.getOperand().verifyExpr(compiler, localEnv,currentClass);
         if (type1.isBoolean()){
+            this.setType(compiler.environmentType.BOOLEAN);
             return compiler.environmentType.BOOLEAN;
         }
         throw new ContextualError(this.getOperatorName() + " unary operation cannot occur with " + type1 + " !", this.getLocation());

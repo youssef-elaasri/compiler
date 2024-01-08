@@ -100,6 +100,7 @@ decl_var[AbstractIdentifier t] returns[AbstractDeclVar tree]
       (EQUALS e=expr {
         Initialization initialization = new Initialization($e.tree);
         $tree = new DeclVar($t,$i.tree,initialization);
+        setLocation($tree, $e.start);
         }
       )? {
         }
@@ -153,6 +154,7 @@ inst returns[AbstractInst tree]
             assert($condition.tree != null);
             assert($body.tree != null);
             $tree = new While($condition.tree,$body.tree);
+            setLocation($tree, $condition.start);
         }
     | RETURN expr SEMI {
             assert($expr.tree != null);
@@ -163,21 +165,32 @@ inst returns[AbstractInst tree]
 
 if_then_else returns[IfThenElse tree]
 @init {
-        ListInst li_else = new ListInst();
+        ListInst li_else_2 = new ListInst();
+        ListInst current = new ListInst();
 }
     : if1=IF OPARENT condition=expr CPARENT OBRACE li_if=list_inst CBRACE {
                 assert($condition.tree != null);
                 assert($li_if.tree != null);
-                $tree =  new IfThenElse($condition.tree,$li_if.tree,$li_else.tree);
+                $tree =  new IfThenElse($condition.tree,$li_if.tree,li_else_2);
+                current = li_else_2;
+                setLocation($tree, $condition.start);
         }
       (ELSE elsif=IF OPARENT elsif_cond=expr CPARENT OBRACE elsif_li=list_inst CBRACE {
                 assert($elsif_cond.tree != null);
                 assert($elsif_li.tree != null);
+                ListInst li_else_fin = new ListInst();
+                current.add(new IfThenElse($elsif_cond.tree, $elsif_li.tree, li_else_fin));
+                setLocation($tree, $elsif);
+                current = li_else_fin;
         }
       )*
       (ELSE OBRACE li_else=list_inst CBRACE {
                 assert($li_else.tree != null);
-                $tree =  new IfThenElse($condition.tree,$li_if.tree,$li_else.tree);
+                Iterator<AbstractInst> iter = $li_else.tree.iterator();
+                while (iter.hasNext()) {
+                    current.add(iter.next());
+                }
+                setLocation($tree, $ELSE);
         }
       )?
     ;
@@ -344,16 +357,19 @@ mult_expr returns[AbstractExpr tree]
             assert($e1.tree != null);                                         
             assert($e2.tree != null);
             $tree = new Multiply($e1.tree,$e2.tree);
+            setLocation($tree,$e1.start);
         }
     | e1=mult_expr SLASH e2=unary_expr {
             assert($e1.tree != null);                                         
             assert($e2.tree != null);
             $tree = new Divide($e1.tree, $e2.tree);
+            setLocation($tree,$e1.start);
         }
     | e1=mult_expr PERCENT e2=unary_expr {
             assert($e1.tree != null);                                                                          
             assert($e2.tree != null);
             $tree = new Modulo($e1.tree, $e2.tree);
+            setLocation($tree,$e1.start);
         }
     ;
 
@@ -437,6 +453,7 @@ type returns[AbstractIdentifier tree]
     : ident {
             assert($ident.tree != null);
             $tree = $ident.tree;
+            setLocation($tree,$ident.start);
         }
     ;
 

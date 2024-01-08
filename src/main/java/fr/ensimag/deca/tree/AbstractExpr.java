@@ -84,8 +84,6 @@ public abstract class AbstractExpr extends AbstractInst {
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
-        System.out.println(expectedType.getName().toString());
-        System.out.println(currentType.getName().toString());
         if (!(expectedType instanceof FloatType && currentType instanceof IntType)) {
             if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
                 throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
@@ -115,7 +113,11 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     void verifyCondition(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        Type typeC = this.verifyExpr(compiler, localEnv, currentClass);
+        if (!typeC.isBoolean()) {
+            throw new ContextualError("Condition in ifThenElse loop must be of type boolean: " + typeC + " was given !", this.getLocation());
+        }
     }
 
     private int labelCounter = 0;
