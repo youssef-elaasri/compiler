@@ -7,6 +7,13 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.List;
+
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -34,16 +41,71 @@ public class IfThenElse extends AbstractInst {
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
             throws ContextualError {
+        condition.verifyCondition(compiler, localEnv, currentClass);
+        thenBranch.verifyListInst(compiler, localEnv, currentClass, returnType);
+        elseBranch.verifyListInst(compiler, localEnv, currentClass, returnType);
     }
 
+    private static int counterIf = -1;
+
+    private void increaseCounterIf(){
+        counterIf++;
+    }
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            increaseCounterIf();
+            int number = counterIf;
+            Label ifBranch = new Label("if_branch_" + number);
+            Label elseBranch_ = new Label("else_branch_" + number);
+            Label endOfIf = new Label("end_of_if_" + number);
+
+
+            condition.codeGenInst(compiler);
+            compiler.addInstruction(new CMP(
+                    0,
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)
+            ));
+            compiler.getStack().decreaseRegister();
+            compiler.addInstruction(new BEQ(elseBranch_));
+
+            compiler.addLabel(ifBranch);
+            for (AbstractInst abstractInst : thenBranch.getList()) {
+                abstractInst.codeGenInst(compiler);
+            }
+            compiler.addInstruction(new BRA(endOfIf));
+
+            compiler.addLabel(elseBranch_);
+
+
+            for (AbstractInst abstractInst : elseBranch.getList()) {
+                abstractInst.codeGenInst(compiler);
+            }
+            compiler.addLabel(endOfIf);
+        }else{
+            compiler.getStack().pushRegister(compiler);
+            codeGenInst(compiler);
+            compiler.getStack().popRegister(compiler);
+
+        }
+
+
+
+
     }
 
     @Override
     public void decompile(IndentPrintStream s) {
-        throw new UnsupportedOperationException("not yet implemented");
+       String st = "if";
+       s.print(st);
+       condition.decompile(s);
+       s.println("{");
+       thenBranch.decompile(s);
+       s.println("} else {");
+       elseBranch.decompile(s);
+       s.println("}");
+
+
     }
 
     @Override

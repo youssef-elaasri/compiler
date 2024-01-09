@@ -1,6 +1,7 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
@@ -14,9 +15,29 @@ import fr.ensimag.deca.tools.IndentPrintStream;
  */
 public class ListDeclVar extends TreeList<AbstractDeclVar> {
 
+
+    /**
+     * Generate code for a list of variable declarations.
+     * Iterates through the list of variable declarations, calling the
+     * code generation method for each declaration and updating the
+     * compiler's stack counter accordingly.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+
+    public void codeGenListDeclVar(DecacCompiler compiler) {
+        for (AbstractDeclVar abstractDeclVar : getList()) {
+            abstractDeclVar.codeGenDeclVar(compiler);
+            compiler.getStack().increaseCounterTSTO();
+        }
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        s.print("");
+        for(AbstractDeclVar exp : super.getList()){
+            exp.decompile(s);
+        }
     }
 
     /**
@@ -33,6 +54,9 @@ public class ListDeclVar extends TreeList<AbstractDeclVar> {
      */    
     void verifyListDeclVariable(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
+        for (AbstractDeclVar exp : this.getList()) {
+            exp.verifyDeclVar(compiler, localEnv, currentClass);
+        }
     }
 
 

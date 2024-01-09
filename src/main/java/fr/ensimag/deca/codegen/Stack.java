@@ -1,0 +1,130 @@
+package fr.ensimag.deca.codegen;
+
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.POP;
+import fr.ensimag.ima.pseudocode.instructions.PUSH;
+
+import java.util.HashMap;
+
+/**
+ * The Stack class represents the stack management in the Deca compiler's code generation.
+ * It keeps track of the address counter, the number of registers, and provides methods
+ * for managing the stack during code generation.
+ *
+ * @author gl22
+ * @date 30/12/2023
+ */
+
+public class Stack {
+    private int addrCounter = 1;
+    private int numberOfRegisters = 16;
+    private int maxTSTO;
+
+    private int counterTSTO;
+    private int currentRegister;
+
+    /**
+     * The Stack constructor initializes stack-related variables.
+     * It sets the maximum TSTO to 1, the counter TSTO to 1, and the current register to 2.
+     * These values are set based on the requirements of the compiler.
+     */
+    public Stack(){
+
+        maxTSTO = 1;
+        counterTSTO = 1;
+        currentRegister = 2;
+    }
+
+    /**
+     * Increases the maximum TSTO by one.
+     */
+    public void increaseTSTO(){
+        maxTSTO++;
+    }
+
+    /**
+     * Returns the current maximum TSTO value.
+     *
+     * @return The maximum TSTO.
+     */
+    public int getMaxTSTO() {
+        return maxTSTO;
+    }
+
+    /**
+     * Returns the current counter TSTO value.
+     *
+     * @return The counter TSTO.
+     */
+    public int getCounterTSTO() {
+        return counterTSTO;
+    }
+
+    public void setMaxTSTO(int maxTSTOArg) {
+        maxTSTO = maxTSTOArg;
+    }
+
+    public int getAddrCounter() {
+        return addrCounter;
+    }
+
+    public void increaseAddrCounter(){
+        addrCounter++;
+    }
+
+    public void decreaseAddrCounter(){
+        addrCounter--;
+    }
+
+    public int getCurrentRegister(){
+        return currentRegister;
+    }
+
+    public void increaseRegister(){
+        currentRegister++;
+    }
+
+    public void decreaseRegister(){
+        currentRegister--;
+    }
+
+    public int getNumberOfRegisters() {
+        return numberOfRegisters;
+    }
+
+    public void increaseCounterTSTO() {
+        counterTSTO++;
+    }
+
+    public void decreaseCounterTSTO() {
+        if (getCounterTSTO() > getMaxTSTO())
+            setMaxTSTO(getCounterTSTO());
+        counterTSTO--;
+    }
+
+    /**
+     * Increases the counter TSTO and pushes the current register onto the stack.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    public void pushRegister(DecacCompiler compiler){
+        compiler.getStack().decreaseRegister();
+        compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
+        increaseCounterTSTO();
+    }
+
+
+    /**
+     * Pops the current register from the stack and decreases the counter TSTO.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    public void popRegister(DecacCompiler compiler){
+        compiler.addInstruction(new POP(Register.getR(compiler.getStack().getCurrentRegister())));
+        compiler.getStack().increaseRegister();
+        decreaseCounterTSTO();
+    }
+
+}

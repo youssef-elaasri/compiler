@@ -1,8 +1,12 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.codegen.ErrorHandler;
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
@@ -35,16 +39,44 @@ public class Program extends AbstractProgram {
     @Override
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
         LOG.debug("verify program: start");
-        throw new UnsupportedOperationException("not yet implemented");
-        // LOG.debug("verify program: end");
+        //throw new UnsupportedOperationException("not yet implemented");
+        main.verifyMain(compiler);
+        LOG.debug("verify program: end");
     }
 
+    /**
+     * Generates code for the entire program.
+     * This method is called during the code generation phase for the main program.
+     * @param compiler The {@link DecacCompiler} instance managing the compilation process.
+     */
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
-        // A FAIRE: compléter ce squelette très rudimentaire de code
+
+        // Initialize the stack with a total stack object (TSTO) value of 1
+        // The value is going to be modified at the end to match the actual used stack size
+        ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(1);
+        compiler.addInstruction(new TSTO(TSTOimmediateInteger));
+
+
+        // Check for stack overflow and branch to the specified label if overflow occurs
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
+
+        // Set the stack pointer (SP) to 0
+        ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
+        compiler.addInstruction(new ADDSP(SPimmediateInteger));
+
         compiler.addComment("Main program");
         main.codeGenMain(compiler);
+
+        // Halt the program execution
         compiler.addInstruction(new HALT());
+
+        // Add error labels and associate them with their corresponding error messages
+        compiler.getErrorHandler().putErrors(compiler);
+
+        // Update TSTO and SP values based on stack information
+        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
+        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
 
     @Override

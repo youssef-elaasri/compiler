@@ -1,11 +1,18 @@
 package fr.ensimag.deca.tree;
 
+import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.POP;
+import fr.ensimag.ima.pseudocode.instructions.PUSH;
+import fr.ensimag.ima.pseudocode.instructions.RINT;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+
 import java.io.PrintStream;
 
 /**
@@ -18,7 +25,9 @@ public class ReadInt extends AbstractReadExpr {
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        this.setType(compiler.environmentType.INT);
+        return compiler.environmentType.INT;
     }
 
 
@@ -37,4 +46,25 @@ public class ReadInt extends AbstractReadExpr {
         // leaf node => nothing to do
     }
 
+    /** ADDED CODE **/
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates an instruction to read an integer from the input and then
+     * calls the superclass method to move the result to an available register.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        compiler.addInstruction(new RINT());
+        super.moveToRegister(compiler);
+    }
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+        compiler.addInstruction(new RINT());
+        compiler.addInstruction(new WINT());
+
+    }
 }

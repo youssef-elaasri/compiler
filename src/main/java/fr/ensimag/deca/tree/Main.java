@@ -1,7 +1,10 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
@@ -30,13 +33,24 @@ public class Main extends AbstractMain {
         // A FAIRE: Appeler méthodes "verify*" de ListDeclVarSet et ListInst.
         // Vous avez le droit de changer le profil fourni pour ces méthodes
         // (mais ce n'est à priori pas nécessaire).
+        EnvironmentExp envExp = new EnvironmentExp(null);
+        ClassDefinition classDef = new ClassDefinition(null, Location.BUILTIN, null);
+        declVariables.verifyListDeclVariable(compiler, envExp, classDef);
+        Type voidT = compiler.environmentType.VOID;
+        insts.verifyListInst(compiler, envExp, classDef, voidT);
         LOG.debug("verify Main: end");
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
     }
 
+    /**
+     * Overrides the main code generation method for a specific component.
+     * Generates instructions for declaring variables and executing main instructions.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
     @Override
     protected void codeGenMain(DecacCompiler compiler) {
-        // A FAIRE: traiter les déclarations de variables.
+        declVariables.codeGenListDeclVar(compiler);
         compiler.addComment("Beginning of main instructions:");
         insts.codeGenListInst(compiler);
     }

@@ -9,8 +9,7 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 
 /**
- * Absence of initialization (e.g. "int x;" as opposed to "int x =
- * 42;").
+ * Absence of initialization (e.g. "int x;" as opposed to "int x = 42;").
  *
  * @author gl22
  * @date 01/01/2024
@@ -21,8 +20,9 @@ public class NoInitialization extends AbstractInitialization {
     protected void verifyInitialization(DecacCompiler compiler, Type t,
             EnvironmentExp localEnv, ClassDefinition currentClass)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
     }
+
 
 
     /**
@@ -47,5 +47,21 @@ public class NoInitialization extends AbstractInitialization {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         // leaf node => nothing to do
     }
+
+    /** ADDED CODE **/
+
+    /**
+     * Overrides the code generation initialization method for a specific variable.
+     * This implementation does nothing and serves as a placeholder.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     * @param varName  The AbstractIdentifier representing the variable for which
+     *                 code generation initialization is to be performed.
+     */
+    @Override
+    public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
+        // This method does nothing.
+    }
+
 
 }

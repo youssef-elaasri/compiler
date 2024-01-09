@@ -2,6 +2,9 @@ package fr.ensimag.deca.context;
 
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Dictionary associating identifier's ExpDefinition to their names.
  * 
@@ -24,22 +27,40 @@ public class EnvironmentExp {
     // environnement (association nom -> définition, avec possibilité
     // d'empilement).
 
+    private Map<Symbol, ExpDefinition> expDefinitionMap = new HashMap<Symbol, ExpDefinition>();
+
     EnvironmentExp parentEnvironment;
-    
+
+    public Map<Symbol, ExpDefinition> getExpDefinitionMap() {
+        return expDefinitionMap;
+    }
+
     public EnvironmentExp(EnvironmentExp parentEnvironment) {
         this.parentEnvironment = parentEnvironment;
     }
 
     public static class DoubleDefException extends Exception {
         private static final long serialVersionUID = -2733379901827316441L;
+        public DoubleDefException(String message){
+            super(message);
+        }
     }
 
     /**
      * Return the definition of the symbol in the environment, or null if the
      * symbol is undefined.
      */
+    //TODO
+    /*
+    Poly: Un squelette de classe EnvironmentExp, qui devra implémenter un dictionnaire qui associe à
+chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefinition ;
+    */
     public ExpDefinition get(Symbol key) {
-        throw new UnsupportedOperationException("not yet implemented");
+        ExpDefinition definition = expDefinitionMap.get(key);
+        if (definition == null) {
+            return parentEnvironment != null ? parentEnvironment.getExpDefinitionMap().get(key) : null;
+        }
+        return definition;
     }
 
     /**
@@ -58,7 +79,11 @@ public class EnvironmentExp {
      *
      */
     public void declare(Symbol name, ExpDefinition def) throws DoubleDefException {
-        throw new UnsupportedOperationException("not yet implemented");
+        if (expDefinitionMap.containsKey(name)) {
+            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
+        }
+        expDefinitionMap.put(name, def);
+
     }
 
 }

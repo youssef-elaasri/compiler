@@ -1,20 +1,15 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
-import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.Definition;
-import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.FieldDefinition;
-import fr.ensimag.deca.context.MethodDefinition;
-import fr.ensimag.deca.context.ExpDefinition;
-import fr.ensimag.deca.context.VariableDefinition;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -152,12 +147,13 @@ public class Identifier extends AbstractIdentifier {
         this.definition = definition;
     }
 
+    private Symbol name;
+
     @Override
     public Symbol getName() {
         return name;
     }
 
-    private Symbol name;
 
     public Identifier(Symbol name) {
         Validate.notNull(name);
@@ -167,7 +163,18 @@ public class Identifier extends AbstractIdentifier {
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+        //current implementation for currentClass == null
+        //which correspond to the main case
+        Definition expDefinition = localEnv.get(this.name);
+        if (expDefinition == null){
+            throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
+        }
+        else{
+            this.setDefinition(expDefinition);
+            Type typeId = expDefinition.getType();
+            this.setType(typeId);
+            return typeId;
+        }
     }
 
     /**
@@ -176,10 +183,17 @@ public class Identifier extends AbstractIdentifier {
      */
     @Override
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+        TypeDefinition tDef = compiler.environmentType.defOfType(name);
+        if (tDef == null) {
+            throw new ContextualError("Type: "+ name +" is undefined !", Location.BUILTIN);
+        }
+        if (tDef.getType() == null) {
+            throw new ContextualError("Name: "+ name +" is undefined !", Location.BUILTIN);
+        }
+        return tDef.getType();
     }
-    
-    
+
+
     private Definition definition;
 
 
@@ -212,6 +226,20 @@ public class Identifier extends AbstractIdentifier {
             s.print(d);
             s.println();
         }
+    }
+    /** ADDED CODE **/
+
+    /**
+     * Overrides the instruction code generation method for a specific expression.
+     * Generates an instruction to load the effective address of the expression's operand
+     * into the current available register and increments the register counter.
+     *
+     * @param compiler The DecacCompiler instance managing the compilation process.
+     */
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        compiler.getStack().increaseRegister();
     }
 
 }

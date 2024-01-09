@@ -3,10 +3,8 @@ package fr.ensimag.deca.syntax;
 import fr.ensimag.deca.tree.Location;
 import fr.ensimag.deca.tree.LocationException;
 import java.io.PrintStream;
-import org.antlr.v4.runtime.IntStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Token;
+
+import org.antlr.v4.runtime.*;
 
 /**
  * Base class for exception to be thrown manually within parser
@@ -30,6 +28,13 @@ class DecaRecognitionException extends RecognitionException {
                 );
     }
 
+    public DecaRecognitionException(String message,
+                                    DecaParser recognizer,
+                                    ParserRuleContext ctx) {
+        super(message,recognizer,recognizer.getInputStream(),ctx);
+        setOffendingToken(ctx.getStart());
+
+    }
     public DecaRecognitionException(AbstractDecaLexer recognizer,
                 IntStream input) {
         super(recognizer, input, null);

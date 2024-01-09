@@ -1,12 +1,7 @@
-// Description:
-//    Programme minimaliste utilisant println.
-//
-// Resultats:
-//    Hello
-//
-// Historique:
-//    cree le 01/01/2024
-
 {
-        println("Hello");
+
+        //salaaaamo3alaykom
+        int i = 3;
+        float f = 5.5;
+        f = f + i;
 }

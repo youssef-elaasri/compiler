@@ -39,7 +39,13 @@ public abstract class AbstractPrint extends AbstractInst {
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        for (AbstractExpr exp : arguments.getList()) {
+            Type typePrint = exp.verifyExpr(compiler, localEnv, currentClass);
+            if (!(typePrint.isInt()) && !(typePrint.isFloat()) && !(typePrint.isString())) {
+                throw new ContextualError("Printable expressions can only be of type Int or Float or String: " + typePrint + " was given !", this.getLocation());
+            }
+        }
     }
 
     @Override
@@ -49,7 +55,7 @@ public abstract class AbstractPrint extends AbstractInst {
         }
     }
 
-    private boolean getPrintHex() {
+    public boolean getPrintHex() {
         return printHex;
     }
 

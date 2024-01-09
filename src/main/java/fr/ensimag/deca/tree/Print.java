@@ -1,5 +1,9 @@
 package fr.ensimag.deca.tree;
 
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.instructions.WNL;
+
 /**
  * @author gl22
  * @date 01/01/2024
@@ -11,6 +15,19 @@ public class Print extends AbstractPrint {
      */
     public Print(boolean printHex, ListExpr arguments) {
         super(printHex, arguments);
+    }
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+        String st = this.getPrintHex() ? "printx(" : "print(";
+        s.print(st);
+        this.getArguments().decompile(s);
+        s.print(");");
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        super.codeGenInst(compiler);
     }
 
     @Override

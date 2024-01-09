@@ -1,14 +1,14 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.*;
+
 import java.io.PrintStream;
+
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -41,9 +41,9 @@ public abstract class AbstractExpr extends AbstractInst {
 
     @Override
     protected void checkDecoration() {
-        if (getType() == null) {
-            throw new DecacInternalError("Expression " + decompile() + " has no Type decoration");
-        }
+//        if (getType() == null) {
+//            throw new DecacInternalError("Expression " + decompile() + " has no Type decoration");
+//        }
     }
 
     /**
@@ -82,7 +82,19 @@ public abstract class AbstractExpr extends AbstractInst {
             EnvironmentExp localEnv, ClassDefinition currentClass, 
             Type expectedType)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
+        if (!(expectedType.isFloat() && currentType.isInt())) {
+            if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
+                throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
+            }
+        }
+        if (expectedType.isFloat() && currentType.isInt()) {
+            AbstractExpr convF = new ConvFloat(this);
+            convF.verifyExpr(compiler, localEnv, currentClass);
+            return convF;
+        }
+        return this;
     }
     
     
@@ -90,7 +102,8 @@ public abstract class AbstractExpr extends AbstractInst {
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        this.verifyExpr(compiler, localEnv, currentClass);
     }
 
     /**
@@ -105,28 +118,75 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     void verifyCondition(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        Type typeC = this.verifyExpr(compiler, localEnv, currentClass);
+        if (!typeC.isBoolean()) {
+            throw new ContextualError("Condition in ifThenElse loop must be of type boolean: " + typeC + " was given !", this.getLocation());
+        }
     }
 
+    private int labelCounter = 0;
+
+    private void increaseLabelCounter(){
+        labelCounter++;
+    }
     /**
      * Generate code to print the expression
      *
      * @param compiler
      */
     protected void codeGenPrint(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
+            codeGenInst(compiler);
+            compiler.addInstruction(new LOAD(
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1),
+                    Register.R1
+            ));
+
+            if(this.getType().isFloat())
+                compiler.addInstruction(new WFLOAT());
+
+            else if (this.getType().isInt())
+                compiler.addInstruction(new WINT());
+
+            else{
+                // Create labels for the end of the NOT operation and the false condition
+                Label endNot = new Label("print_end_not_" + labelCounter);
+                Label falseNot = new Label("print_false_not_"+ labelCounter);
+                increaseLabelCounter();
+
+                compiler.addInstruction(new CMP(0, Register.R1));
+
+                compiler.addInstruction(new BEQ(falseNot));
+
+                compiler.addInstruction(new WSTR("\"true\""));
+                compiler.addInstruction(new BRA(endNot));
+
+                compiler.addLabel(falseNot);
+                compiler.addInstruction(new WSTR("\"false\""));
+
+                compiler.addLabel(endNot);
+            }
+            compiler.getStack().decreaseRegister();
+        }else {
+
+            compiler.getStack().pushRegister(compiler);
+            codeGenPrint(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
     }
+
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        throw new UnsupportedOperationException("not yet implemented");
+
     }
-    
+
 
     @Override
     protected void decompileInst(IndentPrintStream s) {
         decompile(s);
-        s.print(";");
+        // s.print(";");
     }
 
     @Override
@@ -138,5 +198,28 @@ public abstract class AbstractExpr extends AbstractInst {
             s.print(t);
             s.println();
         }
+    }
+
+    /** ADDED CODE **/
+
+    /**
+     * Get the DVal (Data Value) representation for a given expression.
+     * Determines the appropriate DVal representation based on the type of the expression.
+     * Supported expression types include Identifiers, IntLiterals, FloatLiterals, and BooleanLiterals.
+     *
+     * @param expr The AbstractExpr for which to obtain the DVal representation.
+     * @return The DVal representation of the given expression, or null if the expression type is not supported.
+     */
+    protected DVal getDval(AbstractExpr expr) {
+        if (expr instanceof Identifier) {
+            return ((Identifier) expr).getExpDefinition().getOperand();
+        } else if (expr instanceof IntLiteral) {
+            return new ImmediateInteger(((IntLiteral) expr).getValue());
+        } else if (expr instanceof FloatLiteral) {
+            return new ImmediateFloat(((FloatLiteral) expr).getValue());
+        } else if (expr instanceof BooleanLiteral) {
+            return new ImmediateInteger(((BooleanLiteral) expr).getValue() ? 1 : 0);
+        }
+        return null;
     }
 }

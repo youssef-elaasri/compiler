@@ -6,6 +6,10 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.IntType;
+import fr.ensimag.deca.context.TypeDefinition;
+import fr.ensimag.deca.context.VariableDefinition;
+import fr.ensimag.deca.tools.SymbolTable;
 
 /**
  *
@@ -15,16 +19,28 @@ import fr.ensimag.deca.DecacCompiler;
 public class ManualTestInitialGencode {
     
     public static AbstractProgram initTest1() {
+        SymbolTable symbolTable = new SymbolTable();
         ListInst linst = new ListInst();
+        ListInst linstWhile = new ListInst();
+        ListDeclVar listDeclVar = new ListDeclVar();
         AbstractProgram source =
             new Program(
                 new ListDeclClass(),
-                new Main(new ListDeclVar(),linst));
-        ListExpr lexp1 = new ListExpr(), lexp2 = new ListExpr();
-        linst.add(new Print(false,lexp1));
-        linst.add(new Println(false,lexp2));
-        lexp1.add(new StringLiteral("Hello "));
-        lexp2.add(new StringLiteral("everybody !"));
+                new Main(listDeclVar,linst));
+        Identifier intIdentifier = new Identifier(symbolTable.create("int"));
+        Identifier xIdentifier = new Identifier(symbolTable.create("x"));
+        Identifier yIdentifier = new Identifier(symbolTable.create("y"));
+        NoInitialization xinitialization = new NoInitialization();
+        NoInitialization yinitialization = new NoInitialization();
+        intIdentifier.setDefinition(new TypeDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        xIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        yIdentifier.setDefinition(new VariableDefinition(new IntType(symbolTable.create("int")),new Location(1,1,"test.deca")));
+        DeclVar xdeclVar = new DeclVar( intIdentifier, xIdentifier,xinitialization);
+        DeclVar ydeclVar = new DeclVar( intIdentifier, yIdentifier,yinitialization);
+        listDeclVar.add(xdeclVar);
+        listDeclVar.add(ydeclVar);
+        linstWhile.add(new While(new Equals(new IntLiteral(0),new IntLiteral(0)),new ListInst()));
+        linst.add(new While(new Equals(new IntLiteral(1),new IntLiteral(2)),linstWhile));
         return source;
     }
     

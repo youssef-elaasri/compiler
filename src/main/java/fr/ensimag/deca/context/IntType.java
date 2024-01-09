@@ -20,9 +20,11 @@ public class IntType extends Type {
         return true;
     }
 
+    //TODO This should be done for step B
     @Override
     public boolean sameType(Type otherType) {
-        throw new UnsupportedOperationException("not yet implemented");
+        //throw new UnsupportedOperationException("not yet implemented");
+        return otherType.isInt();
     }
 
 

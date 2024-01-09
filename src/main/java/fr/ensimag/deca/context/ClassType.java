@@ -50,7 +50,7 @@ public class ClassType extends Type {
         super(className);
     }
     
-
+// TODO
     @Override
     public boolean sameType(Type otherType) {
         throw new UnsupportedOperationException("not yet implemented");
@@ -59,6 +59,7 @@ public class ClassType extends Type {
     /**
      * Return true if potentialSuperClass is a superclass of this class.
      */
+    // TODO
     public boolean isSubClassOf(ClassType potentialSuperClass) {
         throw new UnsupportedOperationException("not yet implemented"); 
     }
