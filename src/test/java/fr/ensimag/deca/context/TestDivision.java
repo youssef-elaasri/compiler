@@ -3,8 +3,8 @@ package fr.ensimag.deca.context;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tree.AbstractExpr;
 import fr.ensimag.deca.tree.ConvFloat;
+import fr.ensimag.deca.tree.Divide;
 import fr.ensimag.deca.tree.Minus;
-import fr.ensimag.deca.tree.Multiply;
 import fr.ensimag.deca.tree.Plus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations;
  * @author Ensimag
  * @date 01/01/2024
  */
-public class TestMult {
+public class TestDivision {
 
     final Type INT = new IntType(null);
     final Type FLOAT = new FloatType(null);
@@ -47,7 +47,7 @@ public class TestMult {
 
     @Test
     public void testIntInt() throws ContextualError {
-        Multiply t = new Multiply(intexpr1, intexpr2);
+        Divide t = new Divide(intexpr1, intexpr2);
         // check the result
         assertTrue(t.verifyExpr(compiler, null, null).isInt());
         // check that the mocks have been called properly.
@@ -57,7 +57,7 @@ public class TestMult {
 
     @Test
     public void testIntFloat() throws ContextualError {
-        Multiply t = new Multiply(intexpr1, floatexpr2);
+        Divide t = new Divide(intexpr1, floatexpr2);
         // check the result
         assertTrue(t.verifyExpr(compiler, null, null).isFloat());
         // ConvFloat should have been inserted on the right side
@@ -70,7 +70,7 @@ public class TestMult {
 
     @Test
     public void testFloatInt() throws ContextualError {
-       Multiply t = new Multiply(floatexpr1, intexpr2);
+       Divide t = new Divide(floatexpr1, intexpr2);
         // check the result
         assertTrue(t.verifyExpr(compiler, null, null).isFloat());
         // ConvFloat should have been inserted on the right side
@@ -84,7 +84,7 @@ public class TestMult {
 
     @Test
     public void testFloatFloat() throws ContextualError{
-        Multiply d = new Multiply(floatexpr2, floatexpr1);
+        Divide d = new Divide(floatexpr2, floatexpr1);
         // Check the result is Float
         assertTrue(d.verifyExpr(compiler,null,null).isFloat());
         // There is no ConvFloat here

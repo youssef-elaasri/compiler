@@ -3,6 +3,7 @@ package fr.ensimag.deca.context;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tree.AbstractExpr;
 import fr.ensimag.deca.tree.ConvFloat;
+import fr.ensimag.deca.tree.Divide;
 import fr.ensimag.deca.tree.Minus;
 import fr.ensimag.deca.tree.Plus;
 import org.junit.jupiter.api.Test;
@@ -78,6 +79,20 @@ public class TestMinus {
         // check that the mocks have been called properly.
         verify(intexpr2).verifyExpr(compiler, null, null);
         verify(floatexpr1).verifyExpr(compiler, null, null);
+    }
+
+    @Test
+    public void testFloatFloat() throws ContextualError{
+        Minus d = new Minus(floatexpr2, floatexpr1);
+        // Check the result is Float
+        assertTrue(d.verifyExpr(compiler,null,null).isFloat());
+        // There is no ConvFloat here
+        assertFalse(d.getLeftOperand()  instanceof ConvFloat);
+        assertFalse(d.getRightOperand() instanceof ConvFloat);
+        // check that the mocks have been called properly.
+        verify(floatexpr2).verifyExpr(compiler, null, null);
+        verify(floatexpr1).verifyExpr(compiler, null, null);
+
     }
 
     
