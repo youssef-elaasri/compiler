@@ -2,17 +2,17 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
 
+import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.syntax.AbstractDecaLexer;
 import fr.ensimag.deca.syntax.DecaLexer;
 import fr.ensimag.deca.syntax.DecaParser;
-import fr.ensimag.deca.tree.AbstractProgram;
-import fr.ensimag.deca.tree.Program;
-import fr.ensimag.deca.tree.Tree;
+import fr.ensimag.deca.tree.*;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -52,54 +52,71 @@ public class CompilerOptions {
     
     public void parseArgs(String[] args) throws CLIException, IOException {
         // A FAIRE : parcourir args pour positionner les options correctement.
-
-        switch (args[0]){
+        String[] file_name = new String[1];
+        if (args.length > 1) {
+            file_name[0] = args[1];
+        }
+        else {
+            file_name[0] = args[0];
+        }
+        DecaLexer lex = AbstractDecaLexer.createLexerFromArgs(file_name);
+        CommonTokenStream tokens = new CommonTokenStream(lex);
+        DecaParser parser = new DecaParser(tokens);
+        File file = null;
+        if (lex.getSourceName() != null) {
+            file = new File(lex.getSourceName());
+        }
+        sourceFiles.add(file);
+        final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
+        parser.setDecacCompiler(decacCompiler);
+        AbstractProgram prog = parser.parseProgramAndManageErrors(System.err);
+        switch (args[0]) {
             case "-p":
-                String[] file_name = new String[1];
-                file_name[0] = args[1];
-                DecaLexer lex = AbstractDecaLexer.createLexerFromArgs(file_name);
-                CommonTokenStream tokens = new CommonTokenStream(lex);
-                DecaParser parser = new DecaParser(tokens);
-                File file = null;
-                if (lex.getSourceName() != null) {
-                    file = new File(lex.getSourceName());
-                }
-                sourceFiles.add(file);
-                final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
-                parser.setDecacCompiler(decacCompiler);
-                Program prog = (Program)parser.parseProgramAndManageErrors(System.err);
                 if (prog == null) {
                     System.exit(1);
                 } else {
                     prog.decompile(System.out);
-                } break;
+                    System.exit(1);
+                }
+                break;
+            case "-v":
+                if (prog == null) {
+                    System.exit(1);
+                } else {
+                    try {
+                        prog.verifyProgram(decacCompiler);
+                        System.exit(1);
+                    } catch (LocationException e) {
+                        e.display(System.err);
+                        System.exit(1);
+                    }
+                }
+                break;
             default:
                 File srcFile = new File(args[0]);
-                sourceFiles.add(srcFile);
         }
-
-        Logger logger = Logger.getRootLogger();
+//        Logger logger = Logger.getRootLogger();
         // map command-line debug option to log4j's level.
-        switch (getDebug()) {
-        case QUIET: break; // keep default
-        case INFO:
-            logger.setLevel(Level.INFO); break;
-        case DEBUG:
-            logger.setLevel(Level.DEBUG); break;
-        case TRACE:
-            logger.setLevel(Level.TRACE); break;
-        default:
-            logger.setLevel(Level.ALL); break;
-        }
-        logger.info("Application-wide trace level set to " + logger.getLevel());
+//        switch (getDebug()) {
+//        case QUIET: break; // keep default
+//        case INFO:
+//            logger.setLevel(Level.INFO); break;
+//        case DEBUG:
+//            logger.setLevel(Level.DEBUG); break;
+//        case TRACE:
+//            logger.setLevel(Level.TRACE); break;
+//        default:
+//            logger.setLevel(Level.ALL); break;
+//        }
+//        logger.info("Application-wide trace level set to " + logger.getLevel());
 
-        boolean assertsEnabled = false;
-        assert assertsEnabled = true; // Intentional side effect!!!
-        if (assertsEnabled) {
-            logger.info("Java assertions enabled");
-        } else {
-            logger.info("Java assertions disabled");
-        }
+//        boolean assertsEnabled = false;
+//        assert assertsEnabled = true; // Intentional side effect!!!
+//        if (assertsEnabled) {
+//            logger.info("Java assertions enabled");
+//        } else {
+//            logger.info("Java assertions disabled");
+//        }
 
         //throw new UnsupportedOperationException("not yet implemented");
 
