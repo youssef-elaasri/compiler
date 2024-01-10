@@ -2,6 +2,7 @@ package fr.ensimag.deca;
 
 import fr.ensimag.deca.codegen.ErrorHandler;
 import fr.ensimag.deca.codegen.Stack;
+import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentType;
 import fr.ensimag.deca.syntax.DecaLexer;
 import fr.ensimag.deca.syntax.DecaParser;
@@ -149,6 +150,7 @@ public class DecacCompiler {
         // A FAIRE: fichier .deca.
         PrintStream err = System.err;
         PrintStream out = System.out;
+
         LOG.debug("Compiling file " + sourceFile + " to assembly file " + destFile);
         try {
             return doCompile(sourceFile, destFile, out, err);
@@ -195,11 +197,20 @@ public class DecacCompiler {
             LOG.info("Parsing failed");
             return true;
         }
-        assert(prog.checkAllLocations());
 
-
-        prog.verifyProgram(this);
+        try {
+            prog.verifyProgram(this);
+        } catch (ContextualError e){
+            System.err.println("Error during program verification:\n"
+                    + e.getMessage());
+        }
+        if(getCompilerOptions().getVerification()){ System.exit(1);}
         assert(prog.checkAllDecorations());
+
+        if(getCompilerOptions().getParse()){
+            prog.decompile(out);
+            System.exit(1);
+        }
 
         addComment("start main program");
         prog.codeGenProgram(this);
