@@ -512,27 +512,39 @@ list_classes returns[ListDeclClass tree]
          $tree = new ListDeclClass();
     }
     :  (c1=class_decl {
-    
+        $tree.add($c1.tree);
         }
       )*
     ;
 
-class_decl
+class_decl returns[AbstractDeclClass tree]
     : CLASS name=ident superclass=class_extension OBRACE class_body CBRACE {
+        assert($class_body.list_field != null);
+        assert($class_body.list_method != null);
+        $tree = new DeclClass($name.tree, $superclass.tree, $class_body.list_field, $class_body.list_method);
+        setLocation($tree, $name.start);
         }
     ;
 
 class_extension returns[AbstractIdentifier tree]
     : EXTENDS ident {
+        assert($ident.tree != null);
+        $tree = $ident.tree;
+        setLocation($tree, $ident.start);
         }
     | /* epsilon */ {
+        $tree = new Identifier(symbolTable.create("Object"));
         }
     ;
 
-class_body
+class_body returns[ListDeclField list_field, ListDeclMethod list_method]
+    @init {
+        $list_field = new ListDeclField();
+        $list_method = new ListDeclMethod();
+    }
     : (m=decl_method {
         }
-      | decl_field_set
+      | f=decl_field_set
       )*
     ;
 

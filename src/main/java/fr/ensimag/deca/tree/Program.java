@@ -40,6 +40,7 @@ public class Program extends AbstractProgram {
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
         LOG.debug("verify program: start");
         //throw new UnsupportedOperationException("not yet implemented");
+        classes.verifyListClass(compiler);
         main.verifyMain(compiler);
         LOG.debug("verify program: end");
     }
