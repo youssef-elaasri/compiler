@@ -2,6 +2,7 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.*;
 
 import org.apache.log4j.Logger;
 
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
 public class DecacMain {
     private static Logger LOG = Logger.getLogger(DecacMain.class);
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         // example log4j message.
         LOG.info("Decac compiler started");
         boolean error = false;
@@ -42,7 +43,21 @@ public class DecacMain {
             // compiler, et lancer l'exécution des méthodes compile() de chaque
             // instance en parallèle. Il est conseillé d'utiliser
             // java.util.concurrent de la bibliothèque standard Java.
-            throw new UnsupportedOperationException("Parallel build not yet implemented");
+            //throw new UnsupportedOperationException("Parallel build not yet implemented");
+
+            //creating worker threads
+            ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            for (File source : options.getSourceFiles()) {
+                Callable<Boolean> task = () -> {
+                    DecacCompiler compiler = new DecacCompiler(options, source);
+                    return compiler.compile();
+                };
+                Future<Boolean> future = executorService.submit(task);
+                if (future.get()){
+                    error = true;
+                }
+            }
+            executorService.shutdown();
         } else {
             for (File source : options.getSourceFiles()) {
                 DecacCompiler compiler = new DecacCompiler(options, source);
