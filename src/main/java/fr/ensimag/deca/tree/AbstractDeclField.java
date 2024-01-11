@@ -7,8 +7,8 @@ import fr.ensimag.deca.tools.SymbolTable;
 
 public abstract class AbstractDeclField extends Tree{
 
-    protected abstract ExpDefinition verifyDeclField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId);
+    protected abstract ExpDefinition verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId);
 
-    protected abstract void verifyDeclFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId);
+    protected abstract void verifyFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId);
 
 }

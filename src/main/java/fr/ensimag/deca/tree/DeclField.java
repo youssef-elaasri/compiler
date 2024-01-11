@@ -23,13 +23,14 @@ public class DeclField extends AbstractDeclField{
 
     }
 
+
     @Override
-    protected ExpDefinition verifyDeclField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) {
+    protected ExpDefinition verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) {
         return null;
     }
 
     @Override
-    protected void verifyDeclFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
+    protected void verifyFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
 
     }
 }

@@ -5,7 +5,7 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ExpDefinition;
 
 public abstract class AbstractDeclMethod extends Tree {
-    protected abstract ExpDefinition verifyDeclMethod(DecacCompiler compiler, AbstractIdentifier superId);
+    protected abstract ExpDefinition verifyMethod(DecacCompiler compiler, AbstractIdentifier superId);
 
     protected abstract void verifyMethodBody(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId);
 

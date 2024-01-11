@@ -24,7 +24,7 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected ExpDefinition verifyDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) {
+    protected ExpDefinition verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) {
         return null;
     }
 
