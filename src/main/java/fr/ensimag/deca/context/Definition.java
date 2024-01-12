@@ -1,6 +1,7 @@
 package fr.ensimag.deca.context;
 
 import fr.ensimag.deca.tree.Location;
+import fr.ensimag.ima.pseudocode.DAddr;
 
 /**
  * Definition of an identifier.
@@ -79,5 +80,14 @@ public abstract class Definition {
     }
 
     public abstract boolean isExpression();
+
+    public void setOperand(DAddr operand) {
+        this.operand = operand;
+    }
+
+    public DAddr getOperand() {
+        return operand;
+    }
+    private DAddr operand;
 
 }

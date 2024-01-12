@@ -54,16 +54,18 @@ public class ListDeclClass extends TreeList<AbstractDeclClass> {
     }
 
     public void codeGenListDeclClass(DecacCompiler compiler) {
-        if ( !getList().isEmpty() ) {
-            compiler.addInstruction(new LOAD(new NullOperand(), Register.R0));
-            compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
-            compiler.getStack().increaseAddrCounter();
-            compiler.getStack().increaseCounterTSTO();
+        if (getList().isEmpty()) return;
+        compiler.addComment("construction of object method");
+        compiler.addInstruction(new LOAD(new NullOperand(), Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
 
-            Program.setOperandEquals(compiler);
+        Program.setOperandEquals(compiler);
 
-        }
         for (AbstractDeclClass abstractDeclClass : getList()) {
+            DeclClass declClass = (DeclClass) abstractDeclClass;
+            compiler.addComment("construction of " + declClass.getClassName().getName() + " method");
             abstractDeclClass.codeGenDeclClass(compiler);
         }
     }

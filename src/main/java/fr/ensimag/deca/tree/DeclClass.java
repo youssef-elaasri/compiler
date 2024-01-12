@@ -73,7 +73,7 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void codeGenDeclClass(DecacCompiler compiler) {
-        className.getExpDefinition().setOperand(new RegisterOffset(compiler.getStack().getAddrCounter(), Register.GB));
+        className.getDefinition().setOperand(new RegisterOffset(compiler.getStack().getAddrCounter(), Register.GB));
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
 
@@ -82,9 +82,9 @@ public class DeclClass extends AbstractDeclClass {
             compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
 
         else
-            compiler.addInstruction(new LEA(superName.getExpDefinition().getOperand(),Register.R0));
+            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(),Register.R0));
 
-        compiler.addInstruction(new STORE(Register.R0,className.getExpDefinition().getOperand()));
+        compiler.addInstruction(new STORE(Register.R0,className.getDefinition().getOperand()));
 
         // define methods
 
@@ -112,4 +112,7 @@ public class DeclClass extends AbstractDeclClass {
         listMethod.iter(f);
     }
 
+    public AbstractIdentifier getClassName() {
+        return className;
+    }
 }

@@ -68,7 +68,15 @@ public class Program extends AbstractProgram {
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
         compiler.addInstruction(new ADDSP(SPimmediateInteger));
 
-        compiler.addComment("Main program");
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("         Construction of Method Tables            ");
+        compiler.addComment("--------------------------------------------------");
+
+        classes.codeGenListDeclClass(compiler);
+
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("                  Main program                    ");
+        compiler.addComment("--------------------------------------------------");
         main.codeGenMain(compiler);
 
         // Halt the program execution
