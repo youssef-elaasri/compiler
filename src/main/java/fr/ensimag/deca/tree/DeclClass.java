@@ -7,6 +7,8 @@ import fr.ensimag.deca.tools.SymbolTable;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Declaration of a class (<code>class name extends superClass {members}<code>).
@@ -59,7 +61,15 @@ public class DeclClass extends AbstractDeclClass {
     @Override
     protected void verifyClassMembers(DecacCompiler compiler)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
+        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(envExpf.getExpDefinitionMap());
+        mergedMap.putAll(envExpm.getExpDefinitionMap());
+        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
+        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+        classDef.getMembers().setExpDefinitionMap(mergedMap);
+        compiler.environmentType.put(className.getName(), classDef);
     }
     
     @Override

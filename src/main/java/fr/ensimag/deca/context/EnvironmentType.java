@@ -55,6 +55,10 @@ public class EnvironmentType {
         envTypes.put(id.getName(), classDef);
     }
 
+    public void put(Symbol symb, TypeDefinition typeD) {
+        envTypes.put(symb, typeD);
+    }
+
     public TypeDefinition defOfType(Symbol s) {
         return envTypes.get(s);
     }
