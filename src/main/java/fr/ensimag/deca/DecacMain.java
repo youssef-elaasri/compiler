@@ -30,10 +30,12 @@ public class DecacMain {
             System.out.println("Error: File not found");
         }
         if (options.getPrintBanner()) {
-            throw new UnsupportedOperationException("decac -b not yet implemented");
+            System.out.println("GL g22");
+            System.exit(1);
         }
         if (options.getSourceFiles().isEmpty()) {
-            throw new UnsupportedOperationException("decac without argument not yet implemented");
+            //throw new UnsupportedOperationException("decac without argument not yet implemented");
+            throw new UnsupportedOperationException("Source file must be specified with the given options");
         }
         if (options.getParallel()) {
             // A FAIRE : instancier DecacCompiler pour chaque fichier à
