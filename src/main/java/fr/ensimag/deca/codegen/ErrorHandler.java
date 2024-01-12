@@ -85,6 +85,15 @@ public class ErrorHandler {
         return label;
     }
 
+    public Label addOverflow(){
+        Label label = new Label("overflow");
+        errors.putIfAbsent(
+                "\"Error: Overflow\"",
+                label
+        );
+        return label;
+    }
+
     public Label getLabel(String errorMessage){
         return errors.get((errorMessage));
     }
