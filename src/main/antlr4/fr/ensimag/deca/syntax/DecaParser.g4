@@ -522,7 +522,7 @@ class_decl returns[AbstractDeclClass tree]
         assert($class_body.list_field != null);
         assert($class_body.list_method != null);
         $tree = new DeclClass($name.tree, $superclass.tree, $class_body.list_field, $class_body.list_method);
-        setLocation($tree, $name.start);
+        setLocation($tree, $CLASS);
         }
     ;
 
@@ -534,6 +534,7 @@ class_extension returns[AbstractIdentifier tree]
         }
     | /* epsilon */ {
         $tree = new Identifier(symbolTable.create("Object"));
+        setLocation($tree);
         }
     ;
 

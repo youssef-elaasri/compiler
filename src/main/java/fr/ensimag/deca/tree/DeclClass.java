@@ -21,10 +21,10 @@ public class DeclClass extends AbstractDeclClass {
     final private ListDeclMethod listMethod;
 
     public DeclClass(AbstractIdentifier className, AbstractIdentifier superName, ListDeclField listField, ListDeclMethod listMethod) {
-//        Validate.notNull(className);
-//        Validate.notNull(superName);
-//        Validate.notNull(listField);
-//        Validate.notNull(listMethod);
+        Validate.notNull(className);
+        Validate.notNull(superName);
+        Validate.notNull(listField);
+        Validate.notNull(listMethod);
         this.className = className;
         this.superName = superName;
         this.listField = listField;
@@ -52,7 +52,8 @@ public class DeclClass extends AbstractDeclClass {
             throw new ContextualError("Class " + classSymb + " is already defined !", this.getLocation());
         }
         compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
-
+        className.setDefinition(compiler.environmentType.defOfType(classSymb));
+        superName.setDefinition(compiler.environmentType.defOfType(superSymb));
     }
 
     @Override
