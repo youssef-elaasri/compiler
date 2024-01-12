@@ -82,20 +82,9 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                                    boolean isDiv, boolean isLoad) {
         if (compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()) {
             getRightOperand().codeGenInst(compiler);
-            if (isDiv) {
-
-                if(getRightOperand().getType().isInt())
-                    compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-
-                else
-                    compiler.addInstruction(new CMP((float) 0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-
-                compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDivisionByZero()));
-
-
-            }
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(binaryInstructionDValToReg);
+
             compiler.getStack().decreaseRegister();
             if (isLoad)
                 compiler.addInstruction(new LOAD(Register.getR(compiler.getStack().getCurrentRegister()),

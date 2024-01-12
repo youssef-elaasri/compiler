@@ -4,9 +4,7 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.DIV;
-import fr.ensimag.ima.pseudocode.instructions.QUO;
-import fr.ensimag.ima.pseudocode.instructions.SUB;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 /**
  *
@@ -54,6 +52,8 @@ public class Divide extends AbstractOpArith {
         }
 
         codeGenInstOpArith(compiler, binaryInstructionDValToReg, true, true);
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
+
 
     }
 
