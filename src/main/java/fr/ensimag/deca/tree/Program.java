@@ -7,6 +7,8 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.ImmediateInteger;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
@@ -95,5 +97,14 @@ public class Program extends AbstractProgram {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         classes.prettyPrint(s, prefix, false);
         main.prettyPrint(s, prefix, true);
+    }
+
+    private static final  Label equalsLabel = new Label("code.Object.equals");
+
+    public static void setOperandEquals(DecacCompiler compiler) {
+        compiler.addInstruction(new LOAD(equalsLabel, Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
     }
 }
