@@ -85,6 +85,9 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(binaryInstructionDValToReg);
 
+            if(getLeftOperand().getType().isFloat() || getRightOperand().getType().isFloat())
+                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
             compiler.getStack().decreaseRegister();
             if (isLoad)
                 compiler.addInstruction(new LOAD(Register.getR(compiler.getStack().getCurrentRegister()),

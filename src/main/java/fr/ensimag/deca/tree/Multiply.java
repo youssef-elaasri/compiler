@@ -50,7 +50,6 @@ public class Multiply extends AbstractOpArith {
                     Register.getR(compiler.getStack().getCurrentRegister() + registerDec));
             codeGenInstOpArith(compiler,binaryInstructionDValToReg, false, true);
         }
-        if(getLeftOperand().getType().isFloat() || getRightOperand().getType().isFloat())
-            compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
     }
 }
