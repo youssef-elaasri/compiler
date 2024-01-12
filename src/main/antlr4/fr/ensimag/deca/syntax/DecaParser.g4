@@ -545,13 +545,15 @@ class_body returns[ListDeclField list_field, ListDeclMethod list_method]
     }
     : (m=decl_method {
         }
-      | f=decl_field_set
+      | f=decl_field_set[$list_field]+ {
+      }
       )*
     ;
 
-decl_field_set
-    : v=visibility t=type list_decl_field
-      SEMI
+decl_field_set[ListDeclField list_field]
+    : v=visibility t=type list_decl_field[$list_field, $t.tree]
+    SEMI {
+    }
     ;
 
 visibility
@@ -561,14 +563,24 @@ visibility
         }
     ;
 
-list_decl_field
-    : dv1=decl_field
-        (COMMA dv2=decl_field
+list_decl_field[ListDeclField list_field, AbstractIdentifier t]
+    : dv1=decl_field[$t] {
+        assert($dv1.tree != null);
+        $list_field.add($dv1.tree);
+    }
+        (COMMA dv2=decl_field[$t] {
+            assert($dv2.tree != null);
+            $list_field.add($dv2.tree);
+        }
       )*
     ;
 
-decl_field
+decl_field[AbstractIdentifier t] returns[AbstractDeclField tree]
+@init {
+    NoInitialization noInitialization = new NoInitialization();
+}
     : i=ident {
+        $tree = new DeclField($t, $i.tree, noInitialization);
         }
       (EQUALS e=expr {
         }

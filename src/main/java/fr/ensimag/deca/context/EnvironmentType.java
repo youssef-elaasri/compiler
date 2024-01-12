@@ -57,8 +57,8 @@ public class EnvironmentType {
         envTypes.put(id.getName(), classDef);
     }
 
-    public void declareField(AbstractIdentifier id, FieldDefinition superClass){
-        // A Implementer 
+    public void put(Symbol symb, TypeDefinition typeD) {
+        envTypes.put(symb, typeD);
     }
 
     public TypeDefinition defOfType(Symbol s) {
