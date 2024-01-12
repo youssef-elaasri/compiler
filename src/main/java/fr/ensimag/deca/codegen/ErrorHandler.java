@@ -58,6 +58,15 @@ public class ErrorHandler {
         return label;
     }
 
+    public Label addModuloByZero(){
+        Label label = new Label("modulo_by_zero");
+        errors.putIfAbsent(
+                "\"Error: Modulo by Zero\"",
+                label
+        );
+        return label;
+    }
+
     public Label getLabel(String errorMessage){
         return errors.get((errorMessage));
     }
