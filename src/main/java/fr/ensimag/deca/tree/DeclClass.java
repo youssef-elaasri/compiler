@@ -67,6 +67,11 @@ public class DeclClass extends AbstractDeclClass {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    @Override
+    public void codeGenDeclClass(DecacCompiler compiler) {
+
+    }
+
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
