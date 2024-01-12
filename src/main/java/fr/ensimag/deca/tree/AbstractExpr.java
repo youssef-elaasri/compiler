@@ -200,7 +200,6 @@ public abstract class AbstractExpr extends AbstractInst {
         }
     }
 
-    /** ADDED CODE **/
 
     /**
      * Get the DVal (Data Value) representation for a given expression.

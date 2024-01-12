@@ -23,8 +23,6 @@ public class Plus extends AbstractOpArith {
         return "+";
     }
 
-    /** ADDED CODE**/
-
     /**
      * Overrides the instruction code generation method for a specific expression.
      * Generates instructions to perform addition operation based on the types of operands.

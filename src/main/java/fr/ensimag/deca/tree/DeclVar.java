@@ -87,7 +87,6 @@ public class DeclVar extends AbstractDeclVar {
         initialization.prettyPrint(s, prefix, true);
     }
 
-    /** ADDED CODE **/
 
     /**
      * Implements code generation logic for the declaration of a variable.

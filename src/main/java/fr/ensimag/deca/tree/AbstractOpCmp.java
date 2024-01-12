@@ -73,7 +73,6 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         return (type.isInt() || type.isFloat());
     }
 
-    /** ADDED CODE **/
 
     /**
      * Generate general code for comparison operations with a branch instruction.

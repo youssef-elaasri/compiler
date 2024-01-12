@@ -41,7 +41,6 @@ public class ReadFloat extends AbstractReadExpr {
         // leaf node => nothing to do
     }
 
-    /** ADDED CODE **/
 
     /**
      * Overrides the instruction code generation method for a specific expression.

@@ -227,7 +227,6 @@ public class Identifier extends AbstractIdentifier {
             s.println();
         }
     }
-    /** ADDED CODE **/
 
     /**
      * Overrides the instruction code generation method for a specific expression.

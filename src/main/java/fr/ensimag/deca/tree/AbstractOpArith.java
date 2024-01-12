@@ -66,7 +66,6 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
         throw new ContextualError(op + " operation cannot occur between " + type1 + " and " + type2 + " !", this.getLocation());
     }
 
-    /** ADDED CODE**/
 
     /**
      * Generate code for arithmetic operations involving two operands.

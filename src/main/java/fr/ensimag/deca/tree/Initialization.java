@@ -64,7 +64,6 @@ public class Initialization extends AbstractInitialization {
         expression.prettyPrint(s, prefix, true);
     }
 
-    /** ADDED CODE **/
 
     /**
      * Overrides the code generation initialization method for a specific variable.

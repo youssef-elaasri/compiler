@@ -260,7 +260,6 @@ public class DecacCompiler {
         return parser.parseProgramAndManageErrors(err);
     }
 
-    /** ADDED CODE **/
 
     private final Stack stack;
     /**
