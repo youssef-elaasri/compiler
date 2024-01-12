@@ -4,6 +4,10 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -69,6 +73,23 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void codeGenDeclClass(DecacCompiler compiler) {
+        className.getExpDefinition().setOperand(new RegisterOffset(compiler.getStack().getAddrCounter(), Register.GB));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+
+        // define the supper class
+        if (superName.getName().equals(compiler.createSymbol("Object")))
+            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
+
+        else
+            compiler.addInstruction(new LEA(superName.getExpDefinition().getOperand(),Register.R0));
+
+        compiler.addInstruction(new STORE(Register.R0,className.getExpDefinition().getOperand()));
+
+        // define methods
+
+        Program.setOperandEquals(compiler);
+
 
     }
 
