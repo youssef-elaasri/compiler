@@ -33,7 +33,17 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("class { ... A FAIRE ... }");
+        s.print("class");
+        className.decompile(s);
+        s.print("extends");
+        superName.decompile(s);
+        s.print(" {");
+        this.listField.decompile(s);
+        this.listMethod.decompile(s);
+        s.print("}");
+
+
+
     }
 
     @Override
@@ -51,16 +61,13 @@ public class DeclClass extends AbstractDeclClass {
         if (compiler.environmentType.defOfType(classSymb) != null) {
             throw new ContextualError("Class " + classSymb + " is already defined !", this.getLocation());
         }
-        compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
         className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
     }
 
     @Override
-    protected void verifyClassMembers(DecacCompiler compiler)
-            throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
-    }
+    protected void verifyClassMembers(DecacCompiler compiler){
+     }
     
     @Override
     protected void verifyClassBody(DecacCompiler compiler) throws ContextualError {

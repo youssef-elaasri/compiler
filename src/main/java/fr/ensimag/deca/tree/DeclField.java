@@ -8,8 +8,20 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 
 public class DeclField extends AbstractDeclField{
+    private AbstractIdentifier type;
+    private AbstractIdentifier field;
+    private AbstractInitialization init;
+
+
     @Override
     public void decompile(IndentPrintStream s) {
+        // this.visib.decompile...
+        s.print(" ");
+        type.decompile(s);
+        s.print(" ");
+        field.decompile(s);
+        init.decompile(s);
+        s.print(";");
 
     }
 
