@@ -82,6 +82,14 @@ public class Program extends AbstractProgram {
         // Halt the program execution
         compiler.addInstruction(new HALT());
 
+        // Object.equals
+        LOG.info("Generate the code for code.Object.equals ...");
+        putObjectDotEquals(compiler);
+
+        // Classes constructors
+
+        classes.codeGenInitListDeclClass(compiler);
+
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
 
@@ -114,5 +122,11 @@ public class Program extends AbstractProgram {
         compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
+    }
+
+    private void putObjectDotEquals(DecacCompiler compiler){
+        compiler.addLabel(equalsLabel);
+        //TODO complete this
+        compiler.addInstruction(new RTS());
     }
 }
