@@ -40,19 +40,35 @@ public class Multiply extends AbstractOpArith {
         if (dVal != null) {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new MUL(dVal,
-                    Register.getR(compiler.getStack().getCurrentRegister()-1)));
-        }
-        else {
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        } else {
             int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
                     1 : 0;
-            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() + registerDec -1),
+            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() + registerDec - 1),
                     Register.getR(compiler.getStack().getCurrentRegister() + registerDec));
-            codeGenInstOpArith(compiler,binaryInstructionDValToReg, false, true);
+            codeGenInstOpArith(compiler, binaryInstructionDValToReg, false, true);
         }
     }
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+
+        AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+        AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (rightValue instanceof IntLiteral) {
+            if (leftValue instanceof IntLiteral) {
+                return new IntLiteral(((IntLiteral) leftValue).getValue()*((IntLiteral) rightValue).getValue());
+            } else if (leftValue instanceof FloatLiteral) {
+                return new FloatLiteral(((FloatLiteral) leftValue).getValue() * ((IntLiteral) rightValue).getValue());
+            }
+        } else if (rightValue instanceof FloatLiteral) {
+            if (leftValue instanceof IntLiteral) {
+                return new FloatLiteral(((IntLiteral) leftValue).getValue() * ((FloatLiteral) rightValue).getValue());
+            }
+            else if (leftValue instanceof FloatLiteral) {
+                return new FloatLiteral(((FloatLiteral) leftValue).getValue()*((FloatLiteral) rightValue).getValue());
+            }
+        }
         return null;
     }
 }

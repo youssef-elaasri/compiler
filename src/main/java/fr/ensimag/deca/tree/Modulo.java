@@ -63,6 +63,26 @@ public class Modulo extends AbstractOpArith {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        try {
+            AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+            AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+            if (rightValue instanceof IntLiteral) {
+                if (leftValue instanceof IntLiteral) {
+                    return new IntLiteral(((IntLiteral) leftValue).getValue() % ((IntLiteral) rightValue).getValue());
+                } else if (leftValue instanceof FloatLiteral) {
+                    return new FloatLiteral(((FloatLiteral) leftValue).getValue() % ((IntLiteral) rightValue).getValue());
+                }
+            } else if (rightValue instanceof FloatLiteral) {
+                if (leftValue instanceof IntLiteral) {
+                    return new FloatLiteral(((IntLiteral) leftValue).getValue() % ((FloatLiteral) rightValue).getValue());
+                } else if (leftValue instanceof FloatLiteral) {
+                    return new FloatLiteral(((FloatLiteral) leftValue).getValue() % ((FloatLiteral) rightValue).getValue());
+                }
+            }
+        } catch (ArithmeticException e) {
+            System.out.println("Modulo by zero is not allowed. " + getRightOperand().getLocation());
+            System.exit(1);
+        }
         return null;
     }
 
