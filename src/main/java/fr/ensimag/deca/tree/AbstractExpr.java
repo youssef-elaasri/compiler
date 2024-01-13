@@ -186,7 +186,7 @@ public abstract class AbstractExpr extends AbstractInst {
     @Override
     protected void decompileInst(IndentPrintStream s) {
         decompile(s);
-        // s.print(";");
+        s.print(";");
     }
 
     @Override
