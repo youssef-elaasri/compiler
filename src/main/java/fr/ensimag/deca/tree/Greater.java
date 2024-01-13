@@ -45,6 +45,11 @@ public class Greater extends AbstractOpIneq {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
     public void increaseCounter() {
         counter++;
     }

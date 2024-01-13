@@ -70,4 +70,9 @@ public class Assign extends AbstractBinaryExpr {
         }
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
 }

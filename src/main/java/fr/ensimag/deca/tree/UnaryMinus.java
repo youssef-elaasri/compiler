@@ -75,4 +75,18 @@ public class UnaryMinus extends AbstractUnaryExpr {
             ));
         }
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
+        if (value instanceof IntLiteral) {
+            return new IntLiteral(-((IntLiteral) value).getValue());
+        }
+        else if (value instanceof FloatLiteral) {
+            return new FloatLiteral(-((FloatLiteral) value).getValue());
+        }
+        else {
+            return null;
+        }
+    }
 }

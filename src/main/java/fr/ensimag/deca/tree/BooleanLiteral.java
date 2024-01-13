@@ -77,6 +77,12 @@ public class BooleanLiteral extends AbstractExpr {
         ));
         compiler.getStack().increaseRegister();
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return this;
+    }
+
     @Override
     protected void codeGenPrint(DecacCompiler compiler) {
        if(value)

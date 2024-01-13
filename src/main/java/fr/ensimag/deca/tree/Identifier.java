@@ -227,6 +227,11 @@ public class Identifier extends AbstractIdentifier {
             s.println();
         }
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return getExpDefinition().getValue();
+    }
     /** ADDED CODE **/
 
     /**
@@ -241,5 +246,4 @@ public class Identifier extends AbstractIdentifier {
         compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }
-
 }

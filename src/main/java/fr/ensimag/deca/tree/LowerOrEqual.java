@@ -43,6 +43,11 @@ public class LowerOrEqual extends AbstractOpIneq {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
     public void increaseCounter() {
         counter++;
     }

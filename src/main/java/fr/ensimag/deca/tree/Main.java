@@ -42,6 +42,11 @@ public class Main extends AbstractMain {
 //        throw new UnsupportedOperationException("not yet implemented");
     }
 
+    @Override
+    protected void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        declVariables.ConstantFoldingAndPropagation(compiler);
+    }
+
     /**
      * Overrides the main code generation method for a specific component.
      * Generates instructions for declaring variables and executing main instructions.

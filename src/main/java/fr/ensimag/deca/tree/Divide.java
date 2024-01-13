@@ -57,4 +57,9 @@ public class Divide extends AbstractOpArith {
 
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
 }

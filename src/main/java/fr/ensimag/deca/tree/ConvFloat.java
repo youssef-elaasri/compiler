@@ -66,4 +66,15 @@ public class ConvFloat extends AbstractUnaryExpr {
         }
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
+        if (value instanceof IntLiteral) {
+            return new FloatLiteral(((IntLiteral) value).getValue());
+        }
+        else {
+            return null;
+        }
+    }
+
 }

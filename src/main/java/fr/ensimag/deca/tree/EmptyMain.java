@@ -51,4 +51,8 @@ public class EmptyMain extends AbstractMain {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         // leaf node => nothing to do
     }
+
+    protected void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        // Nothing to do
+    }
 }

@@ -69,6 +69,11 @@ public class And extends AbstractOpBool {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return ConstantFoldingAndPropagationopBool(compiler,true);
+    }
+
+    @Override
     public void increaseCounter() {
         counter++;
     }

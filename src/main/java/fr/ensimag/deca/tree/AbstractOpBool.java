@@ -84,4 +84,19 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
 
     public abstract void increaseCounter();
 
+    protected AbstractExpr ConstantFoldingAndPropagationopBool(DecacCompiler compiler, boolean isAnd) {
+        AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+        AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (leftValue instanceof BooleanLiteral && rightValue instanceof BooleanLiteral) {
+            if (isAnd)
+            return new BooleanLiteral(((BooleanLiteral) leftValue).getValue() && ((BooleanLiteral) rightValue).getValue());
+            else {
+                return new BooleanLiteral(((BooleanLiteral) leftValue).getValue() || ((BooleanLiteral) rightValue).getValue());
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
 }

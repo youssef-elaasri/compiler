@@ -61,4 +61,9 @@ public class Modulo extends AbstractOpArith {
         codeGenInstOpArith(compiler,binaryInstructionDValToReg, true, true);
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
 }

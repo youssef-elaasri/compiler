@@ -50,5 +50,10 @@ public class Minus extends AbstractOpArith {
             codeGenInstOpArith(compiler,binaryInstructionDValToReg, false, true);
         }
     }
-    
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
 }

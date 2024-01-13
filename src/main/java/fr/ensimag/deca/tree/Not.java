@@ -74,6 +74,17 @@ public class Not extends AbstractUnaryExpr {
         compiler.addLabel(endNot);
 
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
+        if (value instanceof BooleanLiteral) {
+            return new BooleanLiteral(!((BooleanLiteral) value).getValue());
+        }
+        else {
+            return null;
+        }
+    }
 //    @Override
 //    protected void codeGenPrint(DecacCompiler compiler) {
 //        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){

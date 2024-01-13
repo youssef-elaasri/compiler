@@ -52,6 +52,10 @@ public class Program extends AbstractProgram {
      * This method is called during the code generation phase for the main program.
      * @param compiler The {@link DecacCompiler} instance managing the compilation process.
      */
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        main.ConstantFoldingAndPropagation(compiler);
+    }
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
 

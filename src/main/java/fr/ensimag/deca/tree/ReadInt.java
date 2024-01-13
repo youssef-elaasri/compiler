@@ -62,6 +62,11 @@ public class ReadInt extends AbstractReadExpr {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new RINT());
         compiler.addInstruction(new WINT());

@@ -472,11 +472,14 @@ literal returns[AbstractExpr tree]
         }
     | fd=FLOAT {
             try {
-                $tree = new FloatLiteral(Float.parseFloat($fd.text));
+                float myFloat = Float.parseFloat($fd.text);
+                if (Float.isInfinite(myFloat)) throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
+                else if ( Float.isNaN(myFloat)) throw new DecaRecognitionException("invalid float",this,$ctx);
+                $tree = new FloatLiteral(myFloat);
                 setLocation($tree, $fd);
                 }
             catch (NumberFormatException e) {
-                throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
+                throw new DecaRecognitionException("Invalid float",this,$ctx);
             }
         }
     | s=STRING {

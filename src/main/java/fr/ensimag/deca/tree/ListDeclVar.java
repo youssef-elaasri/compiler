@@ -59,5 +59,11 @@ public class ListDeclVar extends TreeList<AbstractDeclVar> {
         }
     }
 
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractDeclVar abstractDeclVar : getList()) {
+            abstractDeclVar.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
 
 }

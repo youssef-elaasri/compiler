@@ -45,6 +45,11 @@ public class StringLiteral extends AbstractStringLiteral {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
     public void decompile(IndentPrintStream s) {
         s.print(this.getValue());
     }

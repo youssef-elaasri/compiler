@@ -70,6 +70,11 @@ public class IntLiteral extends AbstractExpr {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return this;
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new LOAD(value , Register.R1));
         compiler.addInstruction(new WINT());

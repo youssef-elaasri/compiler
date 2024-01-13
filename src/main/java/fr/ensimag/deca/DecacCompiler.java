@@ -211,6 +211,8 @@ public class DecacCompiler {
             prog.decompile(out);
             System.exit(1);
         }
+        // passe 1 of OPTIM
+        prog.ConstantFoldingAndPropagation(this);
 
         addComment("start main program");
         prog.codeGenProgram(this);

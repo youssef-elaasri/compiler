@@ -60,6 +60,11 @@ public class ReadFloat extends AbstractReadExpr {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new RFLOAT());
         compiler.addInstruction(new WFLOAT());
