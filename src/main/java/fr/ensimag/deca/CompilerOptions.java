@@ -52,6 +52,10 @@ public class CompilerOptions {
      */
     public boolean getVerification() { return verification; }
 
+    public boolean getNoCheck(){
+        return noCheck;
+    }
+
     public List<File> getSourceFiles() {
         return Collections.unmodifiableList(sourceFiles);
     }
@@ -61,6 +65,7 @@ public class CompilerOptions {
     private boolean printBanner = false;
     private boolean parse = false;
     private boolean verification = false;
+    private boolean noCheck = false;
 
     private List<File> sourceFiles = new ArrayList<File>();
 
@@ -95,6 +100,9 @@ public class CompilerOptions {
                         break;
                     case "-d":
                         this.debug++;
+                        break;
+                    case "-n":
+                        noCheck=true;
                         break;
                     default:
                         throw new CLIException("the option: " + arg + " does not exist");
