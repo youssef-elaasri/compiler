@@ -52,7 +52,8 @@ public class ReadFloat extends AbstractReadExpr {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new RFLOAT());
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().addInvalidFloatInput()));
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addInvalidFloatInput()));
         super.moveToRegister(compiler);
     }
 

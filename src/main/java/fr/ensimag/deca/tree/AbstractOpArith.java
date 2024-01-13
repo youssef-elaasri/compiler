@@ -90,7 +90,8 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
              if(this.getType().isFloat() && !isDiv) {
                  LOG.debug("I BOV therefore I exist");
-                 compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+                 if (!compiler.getCompilerOptions().getNoCheck())
+                    compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
              }
 
             compiler.getStack().decreaseRegister();

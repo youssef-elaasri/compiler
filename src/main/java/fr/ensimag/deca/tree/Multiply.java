@@ -42,7 +42,8 @@ public class Multiply extends AbstractOpArith {
             compiler.addInstruction(new MUL(dVal,
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
             if(this.getType().isFloat())
-                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+                if (!compiler.getCompilerOptions().getNoCheck())
+                    compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
 
         }
         else {

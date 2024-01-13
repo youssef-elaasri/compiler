@@ -62,7 +62,8 @@ public class Modulo extends AbstractOpArith {
         );
 
         codeGenInstOpArith(compiler,binaryInstructionDValToReg, true, true);
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().addModuloByZero()));
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addModuloByZero()));
     }
 
 }

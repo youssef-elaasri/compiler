@@ -51,7 +51,8 @@ public class Divide extends AbstractOpArith {
         }
 
         codeGenInstOpArith(compiler, binaryInstructionDValToReg, true, true);
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
 
 
     }
