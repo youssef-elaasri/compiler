@@ -2,6 +2,7 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.tools.IndentPrintStream;
@@ -15,7 +16,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
        }
 
     }
-    public void verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId){
+    public void verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError{
         for(AbstractDeclMethod meth:this.getList()){
             meth.verifyMethod(compiler, superId);
         }

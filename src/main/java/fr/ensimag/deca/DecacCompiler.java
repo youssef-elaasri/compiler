@@ -152,6 +152,7 @@ public class DecacCompiler {
         PrintStream out = System.out;
 
         LOG.debug("Compiling file " + sourceFile + " to assembly file " + destFile);
+        if(getCompilerOptions().getNoCheck()){}
         try {
             return doCompile(sourceFile, destFile, out, err);
         } catch (LocationException e) {
