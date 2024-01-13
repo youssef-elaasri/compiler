@@ -200,9 +200,9 @@ public class DecacCompiler {
 
         try {
             prog.verifyProgram(this);
-        } catch (ContextualError e){
-            System.err.println("Error during program verification:\n"
-                    + e.getMessage());
+        } catch (ContextualError e) {
+            e.display(System.err);
+            return true;
         }
         if(getCompilerOptions().getVerification()){ System.exit(1);}
         assert(prog.checkAllDecorations());
