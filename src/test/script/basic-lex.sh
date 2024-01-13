@@ -24,9 +24,10 @@ RESET='\e[0m'
 echo "\033[33mTesting Lexer synthax\033[0m"
 
 # Testing  synthax
-if ! test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 \
-            | grep -q  -e 'while' 
+if ! test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 | \
+             grep -q  -e 'while' 
 then
+
     echo "${RED}FAILED${RESET}"
     exit 1
 fi
@@ -34,7 +35,7 @@ fi
 
 # Testing  include
 
-if ! test_lex "./src/test/deca/syntax/valid/provided/Include_test.deca" 2>&1 \
+if ! test_lex "./src/test/deca/syntax/valid/provided/test_includeMyFILE.deca" 2>&1 \
             | grep -q -e 'println'
 then
     echo "${RED}FAILED${RESET}"

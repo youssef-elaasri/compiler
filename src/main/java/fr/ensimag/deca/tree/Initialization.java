@@ -50,7 +50,7 @@ public class Initialization extends AbstractInitialization {
     public void decompile(IndentPrintStream s) {
         String st=" = ";
         s.print(st);
-        this.getExpression().decompileInst(s);
+        this.getExpression().decompile(s);
     }
 
     @Override

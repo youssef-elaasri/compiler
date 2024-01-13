@@ -30,7 +30,9 @@ public abstract class AbstractUnaryExpr extends AbstractExpr {
   
     @Override
     public void decompile(IndentPrintStream s) {
-        throw new UnsupportedOperationException("not yet implemented");
+        s.print("(");
+        this.decompile(s);
+        s.print(")");
     }
 
     @Override
