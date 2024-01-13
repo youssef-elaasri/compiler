@@ -266,7 +266,7 @@ and_expr returns[AbstractExpr tree]
             setLocation($tree, $e.start);
         }
     |  e1=and_expr AND e2=eq_neq_expr {
-            assert($e1.tree != null);                         
+            assert($e1.tree != null);
             assert($e2.tree != null);
             $tree = new And($e1.tree,$e2.tree);
             setLocation($tree, $e1.start);
@@ -357,19 +357,19 @@ mult_expr returns[AbstractExpr tree]
             setLocation($tree, $e.start);
         }
     | e1=mult_expr TIMES e2=unary_expr {
-            assert($e1.tree != null);                                         
+            assert($e1.tree != null);
             assert($e2.tree != null);
             $tree = new Multiply($e1.tree,$e2.tree);
             setLocation($tree,$e1.start);
         }
     | e1=mult_expr SLASH e2=unary_expr {
-            assert($e1.tree != null);                                         
+            assert($e1.tree != null);
             assert($e2.tree != null);
             $tree = new Divide($e1.tree, $e2.tree);
             setLocation($tree,$e1.start);
         }
     | e1=mult_expr PERCENT e2=unary_expr {
-            assert($e1.tree != null);                                                                          
+            assert($e1.tree != null);
             assert($e2.tree != null);
             $tree = new Modulo($e1.tree, $e2.tree);
             setLocation($tree,$e1.start);
@@ -471,14 +471,17 @@ literal returns[AbstractExpr tree]
             }
         }
     | fd=FLOAT {
-            try {
-                $tree = new FloatLiteral(Float.parseFloat($fd.text));
-                setLocation($tree, $fd);
-                }
-            catch (NumberFormatException e) {
-                throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
-            }
-        }
+                  try {
+                      float myFloat = Float.parseFloat($fd.text);
+                      if (Float.isInfinite(myFloat)) throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
+                      else if ( Float.isNaN(myFloat)) throw new DecaRecognitionException("invalid float",this,$ctx);
+                      $tree = new FloatLiteral(myFloat);
+                      setLocation($tree, $fd);
+                      }
+                  catch (NumberFormatException e) {
+                      throw new DecaRecognitionException("Invalid float",this,$ctx);
+                  }
+              }
     | s=STRING {
             $tree = new StringLiteral($s.text);
             setLocation($tree, $s);

@@ -54,6 +54,19 @@ public class Stack {
     }
 
     /**
+     * Set Number of Registers that needs to be between 4 and 16 
+     * @param nbre
+     */
+    public void setNumberOfRegisters(int nbre){
+        if(nbre >= 4 && nbre <= 16){
+        this.numberOfRegisters=nbre;
+        }
+        else{
+            System.err.println("Number of registers needs to be between 4 and 16 ");
+        }
+    }
+
+    /**
      * Returns the current counter TSTO value.
      *
      * @return The counter TSTO.
