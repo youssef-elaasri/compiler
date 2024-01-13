@@ -2,6 +2,7 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.*;
+import fr.ensimag.deca.context.EnvironmentExp.DoubleDefException;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import org.apache.commons.lang.Validate;
 
@@ -22,6 +23,13 @@ public class DeclField extends AbstractDeclField{
     }
     @Override
     public void decompile(IndentPrintStream s) {
+        // this.visib.decompile...
+        s.print(" ");
+        type.decompile(s);
+        s.print(" ");
+        FieldName.decompile(s);
+        initialization.decompile(s);
+        s.print(";");
 
     }
 
@@ -37,7 +45,7 @@ public class DeclField extends AbstractDeclField{
 
 
     @Override
-    protected EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) throws ContextualError {
+    protected EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) throws ContextualError{
         Type typeF = type.verifyType(compiler);
         if (typeF.isVoid()) {
             throw new ContextualError("Type of field must not be of Void type !", this.getLocation());

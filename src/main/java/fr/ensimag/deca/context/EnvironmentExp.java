@@ -79,9 +79,9 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
      *
      */
     public void declare(Symbol name, ExpDefinition def) {
-//        if (expDefinitionMap.containsKey(name)) {
-//            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
-//        }
+    //    if (expDefinitionMap.containsKey(name)) {
+    //        throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
+    //    }
         expDefinitionMap.put(name, def);
     }
 

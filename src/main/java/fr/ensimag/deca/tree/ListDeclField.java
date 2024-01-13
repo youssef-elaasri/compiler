@@ -13,7 +13,10 @@ import java.util.Map;
 public class ListDeclField extends TreeList<AbstractDeclField>{
     @Override
     public void decompile(IndentPrintStream s) {
-        throw new UnsupportedOperationException("not yet implemented");
+        for(AbstractDeclField f: getList()){
+            f.decompile(s);
+            s.println();
+        }
     }
 
     public EnvironmentExp verifyListDeclField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) throws ContextualError{

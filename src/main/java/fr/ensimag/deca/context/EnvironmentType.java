@@ -47,6 +47,8 @@ public class EnvironmentType {
         OBJECT = new ClassType(objectSymb, Location.BUILTIN,null);
         ClassDefinition objectDef = new ClassDefinition(OBJECT,Location.BUILTIN, null);
         envTypes.put(objectSymb, objectDef);
+
+        
     }
 
     public void declareClass(AbstractIdentifier id, ClassDefinition superClass) {
@@ -69,4 +71,5 @@ public class EnvironmentType {
     public final StringType  STRING;
     public final BooleanType BOOLEAN;
     public final ClassType OBJECT;
+
 }
