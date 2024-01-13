@@ -41,6 +41,9 @@ public class Multiply extends AbstractOpArith {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new MUL(dVal,
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            if(this.getType().isFloat())
+                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
         }
         else {
             int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?

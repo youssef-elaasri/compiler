@@ -7,6 +7,7 @@ import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
+import org.apache.log4j.Logger;
 
 import java.util.function.Supplier;
 
@@ -21,6 +22,8 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
     public AbstractOpArith(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
+    private static final Logger LOG = Logger.getLogger(AbstractOpArith.class);
+
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
@@ -83,9 +86,12 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
             getRightOperand().codeGenInst(compiler);
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(binaryInstructionDValToReg);
+            LOG.debug("I'm this and my type is " + this.getType().isFloat());
 
-            if(getLeftOperand().getType().isFloat() || getRightOperand().getType().isFloat())
-                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+             if(this.getType().isFloat() && !isDiv) {
+                 LOG.debug("I BOV therefore I exist");
+                 compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+             }
 
             compiler.getStack().decreaseRegister();
             if (isLoad)
