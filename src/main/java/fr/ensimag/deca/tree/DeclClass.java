@@ -4,9 +4,11 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.RTS;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
@@ -90,6 +92,20 @@ public class DeclClass extends AbstractDeclClass {
 
         Program.setOperandEquals(compiler);
 
+
+    }
+
+    @Override
+    public void codeGenInitListDeclClass(DecacCompiler compiler) {
+        compiler.addComment("Initialize " + this.className.getName() + "'s fields");
+
+        Label init = new Label("init." + this.className.getName());
+        compiler.addLabel(init);
+
+        for(AbstractDeclField abstractDeclField : listField.getList()){
+            abstractDeclField.codeGenInitListDeclClass(compiler);
+        }
+        compiler.addInstruction(new RTS());
 
     }
 

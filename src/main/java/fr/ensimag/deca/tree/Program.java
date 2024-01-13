@@ -82,13 +82,19 @@ public class Program extends AbstractProgram {
         // Halt the program execution
         compiler.addInstruction(new HALT());
 
-        // Object.equals
-        LOG.info("Generate the code for code.Object.equals ...");
-        putObjectDotEquals(compiler);
+
 
         // Classes constructors
 
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("                  Constructors                    ");
+        compiler.addComment("--------------------------------------------------");
         classes.codeGenInitListDeclClass(compiler);
+
+
+        // Object.equals
+        LOG.info("Generate the code for code.Object.equals ...");
+        putObjectDotEquals(compiler);
 
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
