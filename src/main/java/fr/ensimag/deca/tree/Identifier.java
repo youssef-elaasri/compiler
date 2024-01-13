@@ -185,10 +185,10 @@ public class Identifier extends AbstractIdentifier {
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
         TypeDefinition tDef = compiler.environmentType.defOfType(name);
         if (tDef == null) {
-            throw new ContextualError("Type: "+ name +" is undefined !", Location.BUILTIN);
+            throw new ContextualError("Type: "+ name +" is undefined !", this.getLocation());
         }
         if (tDef.getType() == null) {
-            throw new ContextualError("Name: "+ name +" is undefined !", Location.BUILTIN);
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
         return tDef.getType();
     }
