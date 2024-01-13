@@ -15,7 +15,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
        }
 
     }
-    public void verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId){
+    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId){
         for(AbstractDeclMethod meth:this.getList()){
             meth.verifyMethod(compiler, superId);
         }
