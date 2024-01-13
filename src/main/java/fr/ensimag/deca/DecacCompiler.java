@@ -212,6 +212,10 @@ public class DecacCompiler {
             System.exit(1);
         }
 
+        if(getCompilerOptions().doChangeRegisterNumber()){
+            stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
+        }
+
         addComment("start main program");
         prog.codeGenProgram(this);
         addComment("end main program");
