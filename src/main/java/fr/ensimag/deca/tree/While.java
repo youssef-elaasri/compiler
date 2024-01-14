@@ -25,7 +25,7 @@ public class While extends AbstractInst {
     private AbstractExpr condition;
     private ListInst body;
 
-    HashSet<AbstractIdentifier> liveVariables;
+    HashSet<AbstractIdentifier> liveVariables = new HashSet<>();
 
     private static int counter = 0;
 
