@@ -186,7 +186,7 @@ public abstract class AbstractExpr extends AbstractInst {
     @Override
     protected void decompileInst(IndentPrintStream s) {
         decompile(s);
-        // s.print(";");
+        s.print(";");
     }
 
     @Override
@@ -200,7 +200,6 @@ public abstract class AbstractExpr extends AbstractInst {
         }
     }
 
-    /** ADDED CODE **/
 
     /**
      * Get the DVal (Data Value) representation for a given expression.

@@ -20,7 +20,6 @@ public class ImmediateInteger extends DVal {
     }
 
 
-    /** ADDED CODE **/
 
     public void setValue(int value) {
         this.value = value;

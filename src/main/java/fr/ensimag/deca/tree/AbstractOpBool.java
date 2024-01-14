@@ -46,7 +46,6 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         throw new ContextualError(this.getOperatorName() + " operation cannot occur between " + type1 + " and " + type2 + " !", this.getLocation());
     }
 
-    /** ADDED CODE **/
 
 
     /**

@@ -5,6 +5,8 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
 import fr.ensimag.ima.pseudocode.instructions.MUL;
 
@@ -23,7 +25,6 @@ public class Multiply extends AbstractOpArith {
         return "*";
     }
 
-    /** ADDED CODE**/
 
     /**
      * Overrides the instruction code generation method for a specific expression.
@@ -40,14 +41,20 @@ public class Multiply extends AbstractOpArith {
         if (dVal != null) {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new MUL(dVal,
-                    Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-        } else {
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            if(this.getType().isFloat())
+                if (!compiler.getCompilerOptions().getNoCheck())
+                    compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
+        }
+        else {
             int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
                     1 : 0;
-            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() + registerDec - 1),
+            BinaryInstructionDValToReg binaryInstructionDValToReg = new MUL(Register.getR(compiler.getStack().getCurrentRegister() + registerDec -1),
                     Register.getR(compiler.getStack().getCurrentRegister() + registerDec));
-            codeGenInstOpArith(compiler, binaryInstructionDValToReg, false, true);
+            codeGenInstOpArith(compiler,binaryInstructionDValToReg, false, true);
         }
+
     }
 
     @Override

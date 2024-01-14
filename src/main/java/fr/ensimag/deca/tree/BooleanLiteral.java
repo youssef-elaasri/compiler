@@ -59,7 +59,6 @@ public class BooleanLiteral extends AbstractExpr {
         return "BooleanLiteral (" + value + ")";
     }
 
-    /** ADDED CODE **/
 
     /**
      * Generates assembly code to load a constant value onto the stack.

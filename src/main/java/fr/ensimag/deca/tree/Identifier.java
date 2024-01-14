@@ -185,10 +185,10 @@ public class Identifier extends AbstractIdentifier {
     public Type verifyType(DecacCompiler compiler) throws ContextualError {
         TypeDefinition tDef = compiler.environmentType.defOfType(name);
         if (tDef == null) {
-            throw new ContextualError("Type: "+ name +" is undefined !", Location.BUILTIN);
+            throw new ContextualError("Type: "+ name +" is undefined !", this.getLocation());
         }
         if (tDef.getType() == null) {
-            throw new ContextualError("Name: "+ name +" is undefined !", Location.BUILTIN);
+            throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
         return tDef.getType();
     }
@@ -232,7 +232,6 @@ public class Identifier extends AbstractIdentifier {
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         return getExpDefinition().getValue();
     }
-    /** ADDED CODE **/
 
     /**
      * Overrides the instruction code generation method for a specific expression.
@@ -246,4 +245,5 @@ public class Identifier extends AbstractIdentifier {
         compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }
+
 }

@@ -56,7 +56,6 @@ public class IntLiteral extends AbstractExpr {
         // leaf node => nothing to do
     }
 
-    /** ADDED CODE **/
     /**
      * Generates code to load a constant value onto the stack.
      * This code is specific to the implementation of the generated instruction.

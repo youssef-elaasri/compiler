@@ -66,7 +66,8 @@ public class Program extends AbstractProgram {
 
 
         // Check for stack overflow and branch to the specified label if overflow occurs
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
         // Set the stack pointer (SP) to 0
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
@@ -85,6 +86,20 @@ public class Program extends AbstractProgram {
 
         // Halt the program execution
         compiler.addInstruction(new HALT());
+
+
+
+        // Classes constructors
+
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("                  Constructors                    ");
+        compiler.addComment("--------------------------------------------------");
+        classes.codeGenInitListDeclClass(compiler);
+
+
+        // Object.equals
+        LOG.info("Generate the code for code.Object.equals ...");
+        putObjectDotEquals(compiler);
 
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
@@ -118,5 +133,11 @@ public class Program extends AbstractProgram {
         compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
+    }
+
+    private void putObjectDotEquals(DecacCompiler compiler){
+        compiler.addLabel(equalsLabel);
+        //TODO complete this
+        compiler.addInstruction(new RTS());
     }
 }

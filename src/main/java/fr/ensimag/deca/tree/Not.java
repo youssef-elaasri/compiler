@@ -39,7 +39,6 @@ public class Not extends AbstractUnaryExpr {
     }
 
 
-    /** ADDED CODE **/
 
     /**
      * Generates code for a logical NOT operation.

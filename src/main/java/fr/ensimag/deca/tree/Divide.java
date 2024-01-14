@@ -4,9 +4,7 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.DIV;
-import fr.ensimag.ima.pseudocode.instructions.QUO;
-import fr.ensimag.ima.pseudocode.instructions.SUB;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 /**
  *
@@ -24,7 +22,6 @@ public class Divide extends AbstractOpArith {
         return "/";
     }
 
-    /** ADDED CODE**/
 
     /**
      * Overrides the instruction code generation method for a specific expression.
@@ -54,6 +51,9 @@ public class Divide extends AbstractOpArith {
         }
 
         codeGenInstOpArith(compiler, binaryInstructionDValToReg, true, true);
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
+
 
     }
 
