@@ -65,5 +65,10 @@ public class New extends AbstractExpr{
         compiler.getStack().increaseRegister();
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
 
 }
