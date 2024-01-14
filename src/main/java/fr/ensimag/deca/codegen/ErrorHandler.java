@@ -91,6 +91,7 @@ public class ErrorHandler {
                 "\"Error: Overflow\"",
                 label
         );
+        return label;
     }
     
     public Label addFullStack() {
