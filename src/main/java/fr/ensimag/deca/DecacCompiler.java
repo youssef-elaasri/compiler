@@ -9,7 +9,9 @@ import fr.ensimag.deca.syntax.DecaParser;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.SymbolTable;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.tree.AbstractIdentifier;
 import fr.ensimag.deca.tree.AbstractProgram;
+import fr.ensimag.deca.tree.DeclClass;
 import fr.ensimag.deca.tree.LocationException;
 import fr.ensimag.ima.pseudocode.AbstractLine;
 import fr.ensimag.ima.pseudocode.IMAProgram;
@@ -20,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
@@ -264,7 +268,6 @@ public class DecacCompiler {
         return parser.parseProgramAndManageErrors(err);
     }
 
-
     private final Stack stack;
     /**
      * Gets stack of the compiler
@@ -282,5 +285,11 @@ public class DecacCompiler {
      */
     public ErrorHandler getErrorHandler() {
         return errorHandler;
+    }
+
+    private final HashMap<AbstractIdentifier, DeclClass> classManager = new HashMap<>();
+
+    public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
+        return classManager;
     }
 }

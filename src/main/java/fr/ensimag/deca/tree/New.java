@@ -6,6 +6,10 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.io.PrintStream;
 
@@ -36,6 +40,29 @@ public class New extends AbstractExpr{
     @Override
     protected void iterChildren(TreeFunction f) {
 
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        compiler.addInstruction(new NEW(
+                compiler.getClassManager().get(classNanme).getListField().getList().size(),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addFullStack()));
+        compiler.addInstruction(
+                new LEA(compiler.getClassManager().get(classNanme).getClassName().getExpDefinition().getOperand(),
+                Register.R0
+                ));
+        compiler.addInstruction(
+                new STORE(Register.R0,new RegisterOffset(0,
+                        Register.getR(compiler.getStack().getCurrentRegister()))
+                ));
+        compiler.addInstruction(
+                new BSR(new Label("init."
+                        + compiler.getClassManager().get(classNanme).getClassName().getName())
+                ));
+
+        compiler.getStack().increaseRegister();
     }
 
 

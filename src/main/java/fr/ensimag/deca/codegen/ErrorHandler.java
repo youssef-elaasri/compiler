@@ -91,6 +91,13 @@ public class ErrorHandler {
                 "\"Error: Overflow\"",
                 label
         );
+    }
+    
+    public Label addFullStack() {
+        Label label = new Label("full_stack");
+        errors.putIfAbsent(
+                "\"Error : The Stack is Full\"",
+                label);
         return label;
     }
 
