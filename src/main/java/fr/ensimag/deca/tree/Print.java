@@ -4,6 +4,8 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.instructions.WNL;
 
+import java.util.HashSet;
+
 /**
  * @author gl22
  * @date 01/01/2024

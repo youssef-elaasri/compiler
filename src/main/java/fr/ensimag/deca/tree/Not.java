@@ -9,6 +9,8 @@ import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
+import java.util.HashSet;
+
 /**
  *
  * @author gl22
@@ -88,6 +90,12 @@ public class Not extends AbstractUnaryExpr {
     @Override
     public void checkAliveVariables() {
         // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getOperand() instanceof Identifier)
+            liveVariable.add((Identifier) getOperand());
     }
 //    @Override
 //    protected void codeGenPrint(DecacCompiler compiler) {

@@ -9,6 +9,8 @@ import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
 import fr.ensimag.ima.pseudocode.instructions.SUB;
 
+import java.util.HashSet;
+
 /**
  * @author gl22
  * @date 01/01/2024

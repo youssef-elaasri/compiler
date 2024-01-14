@@ -8,6 +8,8 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 
+import java.util.HashSet;
+
 /**
  * 
  * @author gl22
@@ -76,5 +78,11 @@ public class ListInst extends TreeList<AbstractInst> {
                 listInst.add(i);
         }
         return listInst;
+    }
+
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        for (AbstractInst i : getList()) {
+            i.addLiveVariable(liveVariable);
+        }
     }
 }

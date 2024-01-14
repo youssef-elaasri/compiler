@@ -6,6 +6,7 @@ import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import java.io.PrintStream;
+import java.util.HashSet;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
@@ -236,6 +237,11 @@ public class Identifier extends AbstractIdentifier {
     @Override
     public void checkAliveVariables() {
         //nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        liveVariable.add(this);
     }
 
     /**

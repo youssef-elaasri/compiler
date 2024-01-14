@@ -9,6 +9,8 @@ import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 
+import java.util.HashSet;
+
 /**
  * Conversion of an int into a float. Used for implicit conversions.
  *
@@ -79,6 +81,12 @@ public class ConvFloat extends AbstractUnaryExpr {
     @Override
     public void checkAliveVariables() {
         // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getOperand() instanceof Identifier)
+            liveVariable.add((Identifier) getOperand());
     }
 
 }

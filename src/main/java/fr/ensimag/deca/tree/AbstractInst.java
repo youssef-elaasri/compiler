@@ -8,6 +8,8 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 
+import java.util.HashSet;
+
 /**
  * Instruction
  *
@@ -48,4 +50,6 @@ public abstract class AbstractInst extends Tree {
     protected abstract AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler);
 
     public abstract void checkAliveVariables();
+
+    public abstract void addLiveVariable(HashSet<AbstractIdentifier> liveVariable);
 }

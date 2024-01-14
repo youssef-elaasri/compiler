@@ -12,6 +12,7 @@ import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 public class New extends AbstractExpr{
     AbstractIdentifier classNanme;
@@ -72,6 +73,11 @@ public class New extends AbstractExpr{
 
     @Override
     public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
         // nothing to do
     }
 

@@ -8,6 +8,7 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 import java.io.PrintStream;
+import java.util.HashSet;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
@@ -23,6 +24,8 @@ import org.apache.commons.lang.Validate;
 public class While extends AbstractInst {
     private AbstractExpr condition;
     private ListInst body;
+
+    HashSet<AbstractIdentifier> liveVariables;
 
     private static int counter = 0;
 
@@ -81,6 +84,8 @@ public class While extends AbstractInst {
         for (AbstractInst abstractInst : body.getList()) {
             abstractInst.ConstantFoldingAndPropagation(compiler);
         }
+        if (compiler.isPass3())
+            body.addLiveVariable(liveVariables);
         return null;
     }
 
@@ -96,6 +101,11 @@ public class While extends AbstractInst {
     @Override
     public void checkAliveVariables() {
         body.checkAliveVariables();
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        body.addLiveVariable(liveVariable);
     }
 
     @Override

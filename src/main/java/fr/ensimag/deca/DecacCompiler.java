@@ -223,6 +223,7 @@ public class DecacCompiler {
         prog.DeadCodeElimination();
 
         // pass 3 of OPTIM
+        isPass3 = true;
         prog.ConstantFoldingAndPropagation(this);
 
         if(getCompilerOptions().doChangeRegisterNumber()){
@@ -320,5 +321,11 @@ public class DecacCompiler {
 
     public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
         return classManager;
+    }
+
+    private boolean isPass3 = false;
+
+    public boolean isPass3() {
+        return isPass3;
     }
 }

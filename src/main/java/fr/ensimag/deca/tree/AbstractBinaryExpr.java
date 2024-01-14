@@ -2,6 +2,8 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.HashSet;
+
 import org.apache.commons.lang.Validate;
 
 /**
@@ -62,6 +64,16 @@ public abstract class AbstractBinaryExpr extends AbstractExpr {
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         leftOperand.prettyPrint(s, prefix, false);
         rightOperand.prettyPrint(s, prefix, true);
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getLeftOperand() instanceof Identifier) {
+            liveVariable.add((Identifier) getLeftOperand());
+        }
+        else if (getRightOperand() instanceof Identifier) {
+            liveVariable.add((Identifier) getRightOperand());
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 /**
  * Integer literal
@@ -75,6 +76,11 @@ public class IntLiteral extends AbstractExpr {
 
     @Override
     public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
         // nothing to do
     }
 

@@ -10,6 +10,8 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 import java.io.PrintStream;
+import java.util.HashSet;
+
 import org.apache.commons.lang.Validate;
 
 /**
@@ -92,6 +94,13 @@ public abstract class AbstractPrint extends AbstractInst {
         }
         setArguments(listExpr);
         return null;
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        for (AbstractExpr expr : getArguments().getList()) {
+            expr.addLiveVariable(liveVariable);
+        }
     }
 
 }

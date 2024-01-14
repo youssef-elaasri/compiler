@@ -7,6 +7,8 @@ import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BLT;
 
+import java.util.HashSet;
+
 /**
  *
  * @author gl22
@@ -50,6 +52,11 @@ public class Lower extends AbstractOpIneq {
     @Override
     public void checkAliveVariables() {
         // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+
     }
 
     @Override

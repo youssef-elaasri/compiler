@@ -9,6 +9,8 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.ImmediateString;
 import fr.ensimag.ima.pseudocode.instructions.WSTR;
 import java.io.PrintStream;
+import java.util.HashSet;
+
 import org.apache.commons.lang.Validate;
 
 /**
@@ -51,6 +53,11 @@ public class StringLiteral extends AbstractStringLiteral {
 
     @Override
     public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
         // nothing to do
     }
 

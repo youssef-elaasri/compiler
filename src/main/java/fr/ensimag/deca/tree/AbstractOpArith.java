@@ -9,6 +9,7 @@ import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.function.Supplier;
 
 /**

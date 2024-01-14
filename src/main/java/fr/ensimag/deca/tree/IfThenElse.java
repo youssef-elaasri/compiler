@@ -8,6 +8,7 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import fr.ensimag.ima.pseudocode.Label;
@@ -140,6 +141,12 @@ public class IfThenElse extends AbstractInst {
     public void checkAliveVariables() {
         thenBranch.checkAliveVariables();
         elseBranch.checkAliveVariables();
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        thenBranch.addLiveVariable(liveVariable);
+        elseBranch.addLiveVariable(liveVariable);
     }
 
     public ListInst DeadCodeElimination() {

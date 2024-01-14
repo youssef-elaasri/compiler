@@ -1,21 +1,22 @@
 {
-   // Initialize a counter
-        int INITIAL_VALUE = 10;
-        int MULTIPLIER = 2;
-        int THRESHOLD = 25;
-        int currentValue = INITIAL_VALUE;
 
-        while (currentValue * MULTIPLIER < THRESHOLD) {
-            // If statement with constant folding and propagation
-            if (currentValue % 2 == 0) {
-                println("Even value: ", currentValue);
-            } else {
-                println("Odd value: ", currentValue);
-            }
+        // Initial value
+        int counter = 6;
 
-            // Update the current value within the loop
-            currentValue = currentValue * MULTIPLIER;
+        // Using a while loop to print numbers from 1 to 5
+        println("Numbers from 1 to 5 using a while loop:");
+
+        if (counter <= 5) {
+          counter = 1; 
+        } else {
+          counter = 2;
         }
+        
+        counter = counter +1;
+        println(counter);
+
+        // Display a message after the loop
+        println("Loop completed!");
         
 }
 

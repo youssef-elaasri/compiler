@@ -11,6 +11,8 @@ import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 import fr.ensimag.ima.pseudocode.instructions.MUL;
 import fr.ensimag.ima.pseudocode.instructions.OPP;
 
+import java.util.HashSet;
+
 /**
  * @author gl22
  * @date 01/01/2024
@@ -92,5 +94,11 @@ public class UnaryMinus extends AbstractUnaryExpr {
     @Override
     public void checkAliveVariables() {
         // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getOperand() instanceof Identifier)
+            liveVariable.add((Identifier) getOperand());
     }
 }
