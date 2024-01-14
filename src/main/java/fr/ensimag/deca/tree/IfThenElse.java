@@ -7,6 +7,7 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.ensimag.ima.pseudocode.Label;
@@ -24,8 +25,8 @@ import org.apache.commons.lang.Validate;
  */
 public class IfThenElse extends AbstractInst {
     
-    private final AbstractExpr condition; 
-    private final ListInst thenBranch;
+    private AbstractExpr condition;
+    private ListInst thenBranch;
     private ListInst elseBranch;
 
     public IfThenElse(AbstractExpr condition, ListInst thenBranch, ListInst elseBranch) {
@@ -92,6 +93,53 @@ public class IfThenElse extends AbstractInst {
 
 
 
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        boolean isCritical = compiler.getIsCritical();
+
+        //constant folding and propagation for the condition
+        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
+        if (conditionValue != null)
+            condition = conditionValue;
+
+        compiler.setIsCritical(true);
+
+        //constant folding and propagation for then branch
+        for (AbstractInst abstractInst : thenBranch.getList()) {
+            abstractInst.ConstantFoldingAndPropagation(compiler);
+        }
+
+        // restoring all variables before if
+        for (AbstractIdentifier var : compiler.getIfManager().keySet()) {
+            var.getExpDefinition().setValue(
+                    compiler.getIfManager().get(var)
+            );
+        }
+
+        //constant folding and propagation for else branch
+        for (AbstractInst abstractInst : elseBranch.getList()) {
+            abstractInst.ConstantFoldingAndPropagation(compiler);
+        }
+
+        // setting all variables in if to null
+        for (AbstractIdentifier var : compiler.getIfManager().keySet()) {
+            var.getExpDefinition().setValue(
+                    null
+            );
+        }
+        compiler.setIfManager(new HashMap<>());
+
+
+        compiler.setIsCritical(isCritical);
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        thenBranch.checkAliveVariables();
+        elseBranch.checkAliveVariables();
     }
 
     @Override

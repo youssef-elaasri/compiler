@@ -71,4 +71,9 @@ public class Plus extends AbstractOpArith {
         }
         return null;
     }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
 }

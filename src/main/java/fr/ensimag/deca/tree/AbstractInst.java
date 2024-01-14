@@ -45,5 +45,7 @@ public abstract class AbstractInst extends Tree {
         decompile(s);
     }
 
+    protected abstract AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler);
 
+    public abstract void checkAliveVariables();
 }

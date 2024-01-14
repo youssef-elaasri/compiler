@@ -86,4 +86,9 @@ public class Modulo extends AbstractOpArith {
         return null;
     }
 
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
 }

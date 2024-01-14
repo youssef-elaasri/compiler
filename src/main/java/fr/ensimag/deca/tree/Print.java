@@ -31,6 +31,16 @@ public class Print extends AbstractPrint {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return super.ConstantFoldingAndPropagation(compiler);
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     String getSuffix() {
         return "";
     }

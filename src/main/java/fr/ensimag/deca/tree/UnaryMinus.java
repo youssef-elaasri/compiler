@@ -89,4 +89,9 @@ public class UnaryMinus extends AbstractUnaryExpr {
             return null;
         }
     }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
 }

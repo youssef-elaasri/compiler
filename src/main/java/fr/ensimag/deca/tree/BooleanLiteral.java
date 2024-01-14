@@ -84,6 +84,11 @@ public class BooleanLiteral extends AbstractExpr {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
        if(value)
            compiler.addInstruction(new WSTR("true"));

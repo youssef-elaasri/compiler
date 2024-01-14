@@ -67,6 +67,11 @@ public class ReadInt extends AbstractReadExpr {
     }
 
     @Override
+    public void checkAliveVariables() {
+        //nothing to do
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new RINT());
         compiler.addInstruction(new WINT());

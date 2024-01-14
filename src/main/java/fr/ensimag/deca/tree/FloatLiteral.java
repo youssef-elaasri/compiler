@@ -90,6 +90,11 @@ public class FloatLiteral extends AbstractExpr {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new LOAD(value , Register.R1));
         compiler.addInstruction(new WFLOAT());

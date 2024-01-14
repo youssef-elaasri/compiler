@@ -50,6 +50,11 @@ public class StringLiteral extends AbstractStringLiteral {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     public void decompile(IndentPrintStream s) {
         s.print(this.getValue());
     }

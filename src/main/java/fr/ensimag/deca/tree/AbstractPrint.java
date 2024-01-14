@@ -35,6 +35,10 @@ public abstract class AbstractPrint extends AbstractInst {
         return arguments;
     }
 
+    public void setArguments(ListExpr arguments) {
+        this.arguments = arguments;
+    }
+
     @Override
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
@@ -72,6 +76,22 @@ public abstract class AbstractPrint extends AbstractInst {
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         arguments.prettyPrint(s, prefix, true);
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        ListExpr listExpr = new ListExpr();
+        for (AbstractExpr expr : getArguments().getList()) {
+            AbstractExpr value = expr.ConstantFoldingAndPropagation(compiler);
+            if (value != null) {
+                listExpr.add(value);
+            }
+            else {
+                listExpr.add(expr);
+            }
+        }
+        setArguments(listExpr);
+        return null;
     }
 
 }

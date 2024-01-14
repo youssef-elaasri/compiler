@@ -72,7 +72,20 @@ public class Assign extends AbstractBinaryExpr {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        if (compiler.getIsCritical()) {
+            compiler.getIfManager().putIfAbsent((Identifier) getLeftOperand(),
+                    ((Identifier) getLeftOperand()).getExpDefinition().getValue());
+        };
+        AbstractExpr value = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (value != null)
+            setRightOperand(value);
         return null;
     }
+
+    @Override
+    public void checkAliveVariables() {
+        ((Identifier) getLeftOperand()).getExpDefinition().setValue(null);
+    }
+
 
 }

@@ -85,6 +85,11 @@ public class Not extends AbstractUnaryExpr {
             return null;
         }
     }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
 //    @Override
 //    protected void codeGenPrint(DecacCompiler compiler) {
 //        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){

@@ -65,6 +65,11 @@ public class ReadFloat extends AbstractReadExpr {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     protected void codeGenPrint(DecacCompiler compiler) {
         compiler.addInstruction(new RFLOAT());
         compiler.addInstruction(new WFLOAT());

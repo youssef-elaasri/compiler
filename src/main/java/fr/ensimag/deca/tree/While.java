@@ -73,6 +73,23 @@ public class While extends AbstractInst {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        body.checkAliveVariables();
+        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
+        if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
+            condition = conditionValue;
+        for (AbstractInst abstractInst : body.getList()) {
+            abstractInst.ConstantFoldingAndPropagation(compiler);
+        }
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        body.checkAliveVariables();
+    }
+
+    @Override
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
             throws ContextualError {

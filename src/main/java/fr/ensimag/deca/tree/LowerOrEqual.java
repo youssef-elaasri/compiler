@@ -48,6 +48,11 @@ public class LowerOrEqual extends AbstractOpIneq {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     public void increaseCounter() {
         counter++;
     }

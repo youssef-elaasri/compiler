@@ -71,4 +71,9 @@ public class Multiply extends AbstractOpArith {
         }
         return null;
     }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
 }

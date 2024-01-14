@@ -77,4 +77,9 @@ public class ConvFloat extends AbstractUnaryExpr {
         }
     }
 
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
 }

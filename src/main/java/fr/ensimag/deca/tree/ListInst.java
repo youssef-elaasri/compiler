@@ -46,4 +46,16 @@ public class ListInst extends TreeList<AbstractInst> {
             s.println();
         }
     }
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractInst i : getList()) {
+            i.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
+    public void checkAliveVariables() {
+        for (AbstractInst i : getList()) {
+            i.checkAliveVariables();
+        }
+    }
 }

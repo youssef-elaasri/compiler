@@ -1,12 +1,22 @@
 {
-   // Declare and initialize variables
-        int a = 5;
-        int b = 10;
-	boolean isGreaterThan = a > b;
-	boolean isGreaterThanOrEqual = a >= b;
-	boolean isLessThan = a < b;
-	boolean isLessThanOrEqual = a <= b;
-	
+   // Initialize a counter
+        int INITIAL_VALUE = 10;
+        int MULTIPLIER = 2;
+        int THRESHOLD = 25;
+        int currentValue = INITIAL_VALUE;
+
+        while (currentValue * MULTIPLIER < THRESHOLD) {
+            // If statement with constant folding and propagation
+            if (currentValue % 2 == 0) {
+                println("Even value: ", currentValue);
+            } else {
+                println("Odd value: ", currentValue);
+            }
+
+            // Update the current value within the loop
+            currentValue = currentValue * MULTIPLIER;
+        }
+        
 }
 
 

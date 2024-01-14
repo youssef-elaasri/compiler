@@ -24,6 +24,17 @@ public class Println extends AbstractPrint {
         super.codeGenInst(compiler);
         compiler.addInstruction(new WNL());
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return super.ConstantFoldingAndPropagation(compiler);
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
         String st = this.getPrintHex() ? "printlnx(" : "println(";

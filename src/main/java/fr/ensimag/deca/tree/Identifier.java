@@ -232,6 +232,11 @@ public class Identifier extends AbstractIdentifier {
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         return getExpDefinition().getValue();
     }
+
+    @Override
+    public void checkAliveVariables() {
+        //nothing to do
+    }
     /** ADDED CODE **/
 
     /**

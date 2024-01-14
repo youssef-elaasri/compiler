@@ -9,6 +9,8 @@ import fr.ensimag.deca.syntax.DecaParser;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.SymbolTable;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.tree.AbstractExpr;
+import fr.ensimag.deca.tree.AbstractIdentifier;
 import fr.ensimag.deca.tree.AbstractProgram;
 import fr.ensimag.deca.tree.LocationException;
 import fr.ensimag.ima.pseudocode.AbstractLine;
@@ -20,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
@@ -281,5 +285,25 @@ public class DecacCompiler {
      */
     public ErrorHandler getErrorHandler() {
         return errorHandler;
+    }
+
+    private boolean isCritical;
+
+    public boolean getIsCritical() {
+        return isCritical;
+    }
+
+    public void setIsCritical(boolean isCritical) {
+        this.isCritical = isCritical;
+    }
+
+    public HashMap<AbstractIdentifier, AbstractExpr> ifManager = new HashMap<>();
+
+    public HashMap<AbstractIdentifier, AbstractExpr> getIfManager() {
+        return ifManager;
+    }
+
+    public void setIfManager(HashMap<AbstractIdentifier, AbstractExpr> ifManager) {
+        this.ifManager = ifManager;
     }
 }

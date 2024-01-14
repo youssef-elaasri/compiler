@@ -222,6 +222,4 @@ public abstract class AbstractExpr extends AbstractInst {
         }
         return null;
     }
-
-    protected abstract AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler);
 }

@@ -50,6 +50,11 @@ public class Greater extends AbstractOpIneq {
     }
 
     @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     public void increaseCounter() {
         counter++;
     }

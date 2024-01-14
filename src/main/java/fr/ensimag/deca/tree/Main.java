@@ -45,6 +45,7 @@ public class Main extends AbstractMain {
     @Override
     protected void ConstantFoldingAndPropagation(DecacCompiler compiler) {
         declVariables.ConstantFoldingAndPropagation(compiler);
+        insts.ConstantFoldingAndPropagation(compiler);
     }
 
     /**

@@ -29,6 +29,16 @@ public class NoOperation extends AbstractInst {
     }
 
     @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
     public void decompile(IndentPrintStream s) {
         s.print(";");
     }
