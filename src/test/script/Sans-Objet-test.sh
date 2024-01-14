@@ -2,7 +2,7 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo -e "\033[33mTesting Sans Object Sript \033[0m"
+echo  "\033[33mTesting Sans Object Sript \033[0m"
 
 rm -f ./src/test/deca/codegen/valid/provided/Sans-Objet.ass  2>/dev/null
 decac ./src/test/deca/codegen/valid/provided/Sans-Objet.deca || exit 1
@@ -25,4 +25,4 @@ fi
 
 
 
-echo -e "\033[32mPASSED\033[0m"
+echo "\033[32mPASSED\033[0m"

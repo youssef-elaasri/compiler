@@ -11,7 +11,7 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo -e "\033[33mTesting ifelse\033[0m"
+echo   "\033[33mTesting ifelse\033[0m"
 
 expected_text="\[3, 4\] IfThenElse"
 
@@ -33,7 +33,7 @@ expected_text="\[3, 7\] Equals"
 if test_context ./src/test/deca/context/valid/provided/ifelse/test_ifelse_assign.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -46,7 +46,7 @@ expected_text="\[3, 7\] NotEquals"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelse_notEqual.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -59,7 +59,7 @@ expected_text="\[3, 7\] Greater"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelse_greater.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -73,7 +73,7 @@ expected_text="\[3, 7\] Lower"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelse_lower.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -85,7 +85,7 @@ expected_text="\[3, 7\] GreaterOrEqual"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelse_greaterEqual.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -98,7 +98,7 @@ expected_text="\[3, 7\] LowerOrEqual"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelse_lowerEqual.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -111,7 +111,7 @@ expected_text="\[8, 8\] IfThenElse"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelseif.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -122,7 +122,7 @@ expected_text="\[4, 4\] IfThenElse"
 if test_context src/test/deca/context/valid/provided/ifelse/test_ifelseif.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
@@ -134,7 +134,7 @@ expected_text="Condition in ifThenElse loop must be of type boolean: int was giv
 if test_context src/test/deca/context/invalid/provided/ifelse_not_working.deca 2>&1 | \
     grep -q "$expected_text"; 
 then
-    echo -e "\033[32mPASSED\033[0m"
+    echo   "\033[32mPASSED\033[0m"
 else
     echo "FAILED"
     exit 1
