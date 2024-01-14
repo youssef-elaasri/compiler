@@ -58,6 +58,14 @@ public class ErrorHandler {
         return label;
     }
 
+    public Label addFullStack() {
+        Label label = new Label("Full_stack");
+        errors.putIfAbsent(
+                "\"Error : the stack is full\"",
+                label);
+        return label;
+    }
+
     public Label getLabel(String errorMessage){
         return errors.get((errorMessage));
     }

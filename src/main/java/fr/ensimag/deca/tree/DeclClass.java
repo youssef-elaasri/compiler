@@ -75,6 +75,7 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void codeGenDeclClass(DecacCompiler compiler) {
+        compiler.getClassManager().put(className,this);
         className.getDefinition().setOperand(new RegisterOffset(compiler.getStack().getAddrCounter(), Register.GB));
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
@@ -130,5 +131,9 @@ public class DeclClass extends AbstractDeclClass {
 
     public AbstractIdentifier getClassName() {
         return className;
+    }
+
+    public ListDeclField getListField() {
+        return listField;
     }
 }
