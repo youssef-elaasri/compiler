@@ -89,7 +89,9 @@ public class DeclClass extends AbstractDeclClass {
         // define methods
 
         Program.setOperandEquals(compiler);
-        for()
+        for(AbstractDeclMethod method : this.listMethod.getList()){
+            Program.setOperandMethod(compiler, method.getMethodName().getMethodDefinition().getLabel());
+        }
 
 
     }
