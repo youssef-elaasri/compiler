@@ -4,10 +4,25 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
 
 public class DeclField extends AbstractDeclField{
+
+    final private AbstractIdentifier type;
+    final private AbstractIdentifier FieldName;
+    final private AbstractInitialization initialization;
+
+    public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization) {
+        Validate.notNull(type);
+        Validate.notNull(FieldName);
+        Validate.notNull(initialization);
+        this.type = type;
+        this.FieldName = FieldName;
+        this.initialization = initialization;
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
 
