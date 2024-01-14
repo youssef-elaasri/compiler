@@ -39,11 +39,6 @@ public class TestPlusWithoutMock {
         }
 
         @Override
-        protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-            return null;
-        }
-
-        @Override
         public void decompile(IndentPrintStream s) {
             throw new UnsupportedOperationException("Should not be called.");
         }
@@ -63,6 +58,16 @@ public class TestPlusWithoutMock {
          */
         public void checkProperUse() {
             assertTrue(hasBeenVerified, "verifyExpr has not been called");
+        }
+
+        @Override
+        protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+            return null;
+        }
+
+        @Override
+        public void checkAliveVariables() {
+
         }
     }
 
