@@ -70,5 +70,10 @@ public class New extends AbstractExpr{
         return null;
     }
 
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
 
 }
