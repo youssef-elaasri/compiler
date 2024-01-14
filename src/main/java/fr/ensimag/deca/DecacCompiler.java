@@ -222,6 +222,9 @@ public class DecacCompiler {
         // pass 2 of OPTIM
         prog.DeadCodeElimination();
 
+        // pass 3 of OPTIM
+        prog.ConstantFoldingAndPropagation(this);
+
         if(getCompilerOptions().doChangeRegisterNumber()){
             stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
         }

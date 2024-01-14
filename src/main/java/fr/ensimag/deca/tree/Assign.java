@@ -74,11 +74,14 @@ public class Assign extends AbstractBinaryExpr {
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         if (compiler.getIsCritical()) {
             compiler.getIfManager().putIfAbsent((Identifier) getLeftOperand(),
-                    ((Identifier) getLeftOperand()).getExpDefinition().getValue());
+                    ((Identifier) getLeftOperand()).getExpDefinition().getValue()
+            );
         };
-        AbstractExpr value = getRightOperand().ConstantFoldingAndPropagation(compiler);
-        if (value != null)
-            setRightOperand(value);
+        AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (rightValue != null) {
+            setRightOperand(rightValue);
+            ((Identifier) getLeftOperand()).getExpDefinition().setValue(rightValue);
+        }
         return null;
     }
 
