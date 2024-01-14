@@ -12,6 +12,7 @@ import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import fr.ensimag.deca.tree.AbstractExpr;
 import fr.ensimag.deca.tree.AbstractIdentifier;
 import fr.ensimag.deca.tree.AbstractProgram;
+import fr.ensimag.deca.tree.DeclClass;
 import fr.ensimag.deca.tree.LocationException;
 import fr.ensimag.ima.pseudocode.AbstractLine;
 import fr.ensimag.ima.pseudocode.IMAProgram;
@@ -148,7 +149,7 @@ public class DecacCompiler {
     public boolean compile() {
         String sourceFile = source.getAbsolutePath();
         String fileName=sourceFile.substring(0, sourceFile.length()-5);
-        String destFile = fileName+".ass"; //TODO
+        String destFile = fileName+".ass";
 
         // A FAIRE: calculer le nom du fichier .ass à partir du nom du
         // A FAIRE: fichier .deca.
@@ -204,9 +205,9 @@ public class DecacCompiler {
 
         try {
             prog.verifyProgram(this);
-        } catch (ContextualError e){
-            System.err.println("Error during program verification:\n"
-                    + e.getMessage());
+        } catch (ContextualError e) {
+            e.display(System.err);
+            return true;
         }
         if(getCompilerOptions().getVerification()){ System.exit(1);}
         assert(prog.checkAllDecorations());
@@ -217,6 +218,10 @@ public class DecacCompiler {
         }
         // passe 1 of OPTIM
         prog.ConstantFoldingAndPropagation(this);
+
+        if(getCompilerOptions().doChangeRegisterNumber()){
+            stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
+        }
 
         addComment("start main program");
         prog.codeGenProgram(this);
@@ -266,8 +271,6 @@ public class DecacCompiler {
         return parser.parseProgramAndManageErrors(err);
     }
 
-    /** ADDED CODE **/
-
     private final Stack stack;
     /**
      * Gets stack of the compiler
@@ -305,5 +308,11 @@ public class DecacCompiler {
 
     public void setIfManager(HashMap<AbstractIdentifier, AbstractExpr> ifManager) {
         this.ifManager = ifManager;
+    }
+    
+    private final HashMap<AbstractIdentifier, DeclClass> classManager = new HashMap<>();
+
+    public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
+        return classManager;
     }
 }

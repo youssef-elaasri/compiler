@@ -6,6 +6,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.io.IOException;
 
 import fr.ensimag.deca.context.ContextualError;
@@ -40,6 +41,14 @@ public class CompilerOptions {
         return printBanner;
     }
 
+    public boolean doChangeRegisterNumber(){
+        return changeRegisterNumber;
+    }
+
+    public int getReigsterNumberEntered(){
+        return numberOfRegistersEntered;
+    }
+
     /**
      * verifie if we should decompile the file or not (option -p)
      * @return
@@ -52,6 +61,10 @@ public class CompilerOptions {
      */
     public boolean getVerification() { return verification; }
 
+    public boolean getNoCheck(){
+        return noCheck;
+    }
+
     public List<File> getSourceFiles() {
         return Collections.unmodifiableList(sourceFiles);
     }
@@ -61,12 +74,19 @@ public class CompilerOptions {
     private boolean printBanner = false;
     private boolean parse = false;
     private boolean verification = false;
+    private boolean noCheck = false;
+    private boolean changeRegisterNumber=false;
+    private int numberOfRegistersEntered;
 
     private List<File> sourceFiles = new ArrayList<File>();
 
     
     public void parseArgs(String[] args) throws CLIException, IOException {
         // A FAIRE : parcourir args pour positionner les options correctement.
+
+        // Regular Expression to detect the -X argument with the option -r that represents the Number of Registers
+        String numberRegex = "^\\d+$";
+        Pattern pattern = Pattern.compile(numberRegex);
 
         for (String arg : args){
             if (arg.startsWith("-")){
@@ -96,12 +116,28 @@ public class CompilerOptions {
                     case "-d":
                         this.debug++;
                         break;
+                    case "-n":
+                        noCheck=true;
+                        break;
+                    case "-r":
+                        changeRegisterNumber=true;
+                        break;
+
                     default:
                         throw new CLIException("the option: " + arg + " does not exist");
+                    }
                 }
-            } else{
-                this.sourceFiles.add(new File(arg));
+                else{
+                        if(pattern.matcher(arg).matches() && doChangeRegisterNumber()){
+                            numberOfRegistersEntered=Integer.parseInt(arg);
+                        }else{
+                            this.sourceFiles.add(new File(arg));
+                        }
+                }
             }
+
+        if(changeRegisterNumber){
+            numberOfRegistersEntered=Integer.parseInt(args[1]);
         }
 
 //        String[] file_name = new String[1];

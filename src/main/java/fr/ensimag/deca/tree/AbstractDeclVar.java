@@ -31,7 +31,6 @@ public abstract class AbstractDeclVar extends Tree {
             throws ContextualError;
 
 
-    /** ADDED CODE **/
 
     /**
      * Perform code generation for the declaration of a variable.

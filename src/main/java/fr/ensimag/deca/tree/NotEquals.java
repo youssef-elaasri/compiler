@@ -26,7 +26,6 @@ public class NotEquals extends AbstractOpExactCmp {
         return "!=";
     }
 
-    /** ADDED CODE **/
 
     /**
      * Overrides the instruction code generation method for a specific expression.

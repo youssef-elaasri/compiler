@@ -47,7 +47,7 @@ public class FloatLiteral extends AbstractExpr {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print(java.lang.Float.toHexString(value));
+        s.print(java.lang.Float.toString(value));
     }
 
     @Override
@@ -65,7 +65,6 @@ public class FloatLiteral extends AbstractExpr {
         // leaf node => nothing to do
     }
 
-    /** ADDED CODE **/
     /**
      * Generates assembly code to load a constant value onto the stack.
      * The constant value is loaded into the current register,

@@ -9,4 +9,5 @@
 .metadata
 .settings
 .idea
+.gitignore
 gen

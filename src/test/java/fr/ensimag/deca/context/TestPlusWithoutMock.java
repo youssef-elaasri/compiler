@@ -39,6 +39,11 @@ public class TestPlusWithoutMock {
         }
 
         @Override
+        protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+            return null;
+        }
+
+        @Override
         public void decompile(IndentPrintStream s) {
             throw new UnsupportedOperationException("Should not be called.");
         }

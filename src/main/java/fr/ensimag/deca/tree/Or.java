@@ -22,7 +22,6 @@ public class Or extends AbstractOpBool {
         return "||";
     }
 
-    /** ADDED CODE **/
 
     /**
      * Generates code for a logical OR operation.

@@ -42,7 +42,6 @@ public class UnaryMinus extends AbstractUnaryExpr {
         return "-";
     }
 
-    /** ADDED CODE **/
 
     /**
      * Generates code for the negation (opposite) of an operand.

@@ -58,6 +58,50 @@ public class ErrorHandler {
         return label;
     }
 
+    public Label addInvalidIntegerInput(){
+        Label label = new Label("invalid_integer_input");
+        errors.putIfAbsent(
+                "\"Error: Invalid Integer Input\"",
+                label
+        );
+        return label;
+    }
+
+    public Label addInvalidFloatInput(){
+        Label label = new Label("invalid_float_input");
+        errors.putIfAbsent(
+                "\"Error: Invalid Float Input\"",
+                label
+        );
+        return label;
+    }
+
+    public Label addModuloByZero(){
+        Label label = new Label("modulo_by_zero");
+        errors.putIfAbsent(
+                "\"Error: Modulo by Zero\"",
+                label
+        );
+        return label;
+    }
+
+    public Label addOverflow(){
+        Label label = new Label("overflow");
+        errors.putIfAbsent(
+                "\"Error: Overflow\"",
+                label
+        );
+        return label;
+    }
+    
+    public Label addFullStack() {
+        Label label = new Label("full_stack");
+        errors.putIfAbsent(
+                "\"Error : The Stack is Full\"",
+                label);
+        return label;
+    }
+
     public Label getLabel(String errorMessage){
         return errors.get((errorMessage));
     }
