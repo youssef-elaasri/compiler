@@ -48,6 +48,11 @@ public class Main extends AbstractMain {
         insts.ConstantFoldingAndPropagation(compiler);
     }
 
+    @Override
+    protected void DeadCodeElimination() {
+        insts = insts.DeadCodeElimination();
+    }
+
     /**
      * Overrides the main code generation method for a specific component.
      * Generates instructions for declaring variables and executing main instructions.

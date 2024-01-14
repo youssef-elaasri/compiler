@@ -142,6 +142,19 @@ public class IfThenElse extends AbstractInst {
         elseBranch.checkAliveVariables();
     }
 
+    public ListInst DeadCodeElimination() {
+        if (condition instanceof BooleanLiteral ) {
+            if (((BooleanLiteral) condition).getValue())
+                return thenBranch.DeadCodeElimination();
+            else
+                return elseBranch.DeadCodeElimination();
+        } else {
+            ListInst listInst = new ListInst();
+            listInst.add(this);
+            return listInst;
+        }
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
        String st = "if";

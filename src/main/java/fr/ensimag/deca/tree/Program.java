@@ -56,6 +56,12 @@ public class Program extends AbstractProgram {
     public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
         main.ConstantFoldingAndPropagation(compiler);
     }
+
+    @Override
+    public void DeadCodeElimination() {
+        main.DeadCodeElimination();
+    }
+
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
 

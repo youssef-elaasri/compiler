@@ -74,14 +74,23 @@ public class While extends AbstractInst {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        body.checkAliveVariables();
         AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
         if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
             condition = conditionValue;
+        body.checkAliveVariables();
         for (AbstractInst abstractInst : body.getList()) {
             abstractInst.ConstantFoldingAndPropagation(compiler);
         }
         return null;
+    }
+
+    public ListInst DeadCodeElimination() {
+        ListInst listInst = new ListInst();
+        if (condition instanceof BooleanLiteral && !((BooleanLiteral) condition).getValue()) {
+            return listInst;
+        }
+        listInst.add(this);
+        return listInst;
     }
 
     @Override

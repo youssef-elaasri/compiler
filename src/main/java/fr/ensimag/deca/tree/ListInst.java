@@ -58,4 +58,23 @@ public class ListInst extends TreeList<AbstractInst> {
             i.checkAliveVariables();
         }
     }
+
+    public ListInst DeadCodeElimination() {
+        ListInst listInst = new ListInst();
+        for (AbstractInst i : getList()) {
+            if (i instanceof IfThenElse ) {
+                for (AbstractInst inst : ((IfThenElse) i).DeadCodeElimination().getList()) {
+                    listInst.add(inst);
+                }
+            }
+            else if (i instanceof While ) {
+                for (AbstractInst inst : ((While) i).DeadCodeElimination().getList()) {
+                    listInst.add(inst);
+                }
+            }
+            else
+                listInst.add(i);
+        }
+        return listInst;
+    }
 }

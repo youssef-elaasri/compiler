@@ -55,4 +55,9 @@ public class EmptyMain extends AbstractMain {
     protected void ConstantFoldingAndPropagation(DecacCompiler compiler) {
         // Nothing to do
     }
+
+    @Override
+    protected void DeadCodeElimination() {
+        // Nothing to do
+    }
 }
