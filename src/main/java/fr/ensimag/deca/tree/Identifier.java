@@ -257,4 +257,15 @@ public class Identifier extends AbstractIdentifier {
         compiler.getStack().increaseRegister();
     }
 
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Identifier)
+            return ((Identifier) obj).getName() == getName();
+        return super.equals(obj);
+    }
 }
