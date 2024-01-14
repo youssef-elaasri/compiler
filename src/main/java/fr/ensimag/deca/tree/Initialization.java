@@ -95,8 +95,11 @@ public class Initialization extends AbstractInitialization {
 
     @Override
     public AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        expression = expression.ConstantFoldingAndPropagation(compiler);
-        return expression;
+        AbstractExpr value = expression.ConstantFoldingAndPropagation(compiler);
+        if (value != null) {
+            expression = value;
+        }
+        return value;
     }
 
 }

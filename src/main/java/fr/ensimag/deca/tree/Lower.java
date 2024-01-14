@@ -45,7 +45,7 @@ public class Lower extends AbstractOpIneq {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        return null;
+        return ConstantFoldingAndPropagationOpIn(compiler,false);
     }
 
     @Override

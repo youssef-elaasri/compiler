@@ -47,7 +47,7 @@ public class GreaterOrEqual extends AbstractOpIneq {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        return null;
+        return ConstantFoldingAndPropagationOpEq(compiler,true);
     }
 
     @Override

@@ -1,7 +1,12 @@
 {
-   int x = 1;
-   int z = 2;
-   boolean y = x != z;
+   // Declare and initialize variables
+        int a = 5;
+        int b = 10;
+	boolean isGreaterThan = a > b;
+	boolean isGreaterThanOrEqual = a >= b;
+	boolean isLessThan = a < b;
+	boolean isLessThanOrEqual = a <= b;
+	
 }
 
 

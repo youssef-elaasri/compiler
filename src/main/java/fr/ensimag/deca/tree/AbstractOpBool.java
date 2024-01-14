@@ -84,7 +84,7 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
 
     public abstract void increaseCounter();
 
-    protected AbstractExpr ConstantFoldingAndPropagationopBool(DecacCompiler compiler, boolean isAnd) {
+    protected AbstractExpr ConstantFoldingAndPropagationBool(DecacCompiler compiler, boolean isAnd) {
         AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
         AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
         if (leftValue instanceof BooleanLiteral && rightValue instanceof BooleanLiteral) {

@@ -2,11 +2,7 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.BEQ;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
 
 /**
  *
@@ -68,7 +64,7 @@ public class Or extends AbstractOpBool {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        return ConstantFoldingAndPropagationopBool(compiler,true);
+        return ConstantFoldingAndPropagationBool(compiler,false);
     }
 
     @Override
