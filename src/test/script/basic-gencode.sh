@@ -162,6 +162,29 @@ fi
 
 
 
+# Tester 
+
+rm -f src/test/deca/context/valid/provided/test_AND.ass 2>/dev/null
+decac src/test/deca/context/valid/provided/test_AND.deca || exit 1
+if [ ! -f src/test/deca/context/valid/provided/test_AND.deca ]; then
+    echo "Fichier test_op_arithmettest_AND.ass non généré."
+    exit 1
+fi
+
+resultat=$(ima src/test/deca/context/valid/provided/test_AND.ass) || exit 1
+rm -f src/test/deca/context/valid/provided/test_AND.ass
+
+# On code en dur la valeur attendue.
+attendu="hey let's go"
+
+if [ "$resultat" != "$attendu" ]; then
+    echo "FAILED"
+    echo "expected $attendu but got instead $resultat"
+    exit 1
+fi
+
+
+
 echo "\033[32mPASSED\033[0m"
 
 
