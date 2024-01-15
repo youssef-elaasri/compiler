@@ -26,9 +26,11 @@ public class New extends AbstractExpr{
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
         return null;
     }
-
     @Override
     public void decompile(IndentPrintStream s) {
+        s.print("new");
+        classNanme.decompile(s);
+        s.print("()");
 
     }
 
