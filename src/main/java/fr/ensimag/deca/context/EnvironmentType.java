@@ -47,12 +47,18 @@ public class EnvironmentType {
         OBJECT = new ClassType(objectSymb, Location.BUILTIN,null);
         ClassDefinition objectDef = new ClassDefinition(OBJECT,Location.BUILTIN, null);
         envTypes.put(objectSymb, objectDef);
+
+        
     }
 
     public void declareClass(AbstractIdentifier id, ClassDefinition superClass) {
         ClassType classType = new ClassType(id.getName(), id.getLocation(), superClass);
         TypeDefinition classDef = new ClassDefinition(classType, id.getLocation(), superClass);
         envTypes.put(id.getName(), classDef);
+    }
+
+    public void put(Symbol symb, TypeDefinition typeD) {
+        envTypes.put(symb, typeD);
     }
 
     public TypeDefinition defOfType(Symbol s) {
@@ -65,4 +71,5 @@ public class EnvironmentType {
     public final StringType  STRING;
     public final BooleanType BOOLEAN;
     public final ClassType OBJECT;
+
 }

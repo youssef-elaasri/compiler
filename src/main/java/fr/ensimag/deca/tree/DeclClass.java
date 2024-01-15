@@ -11,6 +11,8 @@ import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Declaration of a class (<code>class name extends superClass {members}<code>).
@@ -37,7 +39,17 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("class { ... A FAIRE ... }");
+        s.print("class");
+        className.decompile(s);
+        s.print("extends");
+        superName.decompile(s);
+        s.print(" {");
+        this.listField.decompile(s);
+        this.listMethod.decompile(s);
+        s.print("}");
+
+
+
     }
 
     @Override
@@ -55,7 +67,6 @@ public class DeclClass extends AbstractDeclClass {
         if (compiler.environmentType.defOfType(classSymb) != null) {
             throw new ContextualError("Class " + classSymb + " is already defined !", this.getLocation());
         }
-        compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
         className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
     }
@@ -63,11 +74,23 @@ public class DeclClass extends AbstractDeclClass {
     @Override
     protected void verifyClassMembers(DecacCompiler compiler)
             throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
+        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(envExpf.getExpDefinitionMap());
+        mergedMap.putAll(envExpm.getExpDefinitionMap());
+        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
+        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+        classDef.getMembers().setExpDefinitionMap(mergedMap);
+        compiler.environmentType.put(className.getName(), classDef);
     }
     
     @Override
     protected void verifyClassBody(DecacCompiler compiler) throws ContextualError {
+//        ClassDefinition superClassDefinition = superName.getClassDefinition();
+//        this.listField.verifyListDeclField(compiler, superName, className);
+//        this.listMethod.verifyListDeclMethod(compiler, superName);
+//        ClassType classType = new ClassType(className.getName(), className.getLocation(), superClassDefinition);
         throw new UnsupportedOperationException("not yet implemented");
     }
 

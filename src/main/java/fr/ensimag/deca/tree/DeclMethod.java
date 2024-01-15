@@ -21,7 +21,7 @@ public class DeclMethod extends AbstractDeclMethod{
         this.name=name;
         this.sig=sig;
 
-
+        
     }
     @Override
     public void decompile(IndentPrintStream s) {
@@ -39,28 +39,37 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError, EnvironmentExp.DoubleDefException {
+    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError {
+        ClassDefinition envSup = superId.getClassDefinition();
+        Type typeM=type.verifyType(compiler);
+        if(envSup==null){
+            throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
+        }
+        ExpDefinition envExpSuper= envSup.getMembers().getExpDefinitionMap().get(name.getName());
+        if(envExpSuper == null){
+            throw new ContextualError(name.getName() + " is not defined !", name.getLocation());
+        }
 
-        return null;
+        MethodDefinition methDef =superId.getMethodDefinition();
+        Signature sig2=methDef.getSignature();
+        Type type2=methDef.getType();
+        if(!sig2.equals(sig)){
+            throw new ContextualError(name.getName()+" not same signature", getLocation());
+        }
+        
+        // A completer plus tard dans Type pr verifier le sous typage
+        // if(! type2.isSubType(env,type)){
+        //     throw new ContextualError(name.getName()+" not subtype ", getLocation());
+        // }
+        EnvironmentExp envExp=new EnvironmentExp(null);
+        envSup.incNumberOfMethods();
+        MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), sig,envSup.getNumberOfMethods());
+        envExp.declare(name.getName(), methDefReturned);
+        return envExp;
     }
 
     @Override
     protected void verifyMethodBody(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
 
-    }
-
-    @Override
-    protected AbstractIdentifier getMethodName() {
-        return this.name;
-    }
-
-    @Override
-    protected AbstractIdentifier getMethodType() {
-        return this.type;
-    }
-
-    @Override
-    protected Signature getMethodSignature() {
-        return this.sig;
     }
 }

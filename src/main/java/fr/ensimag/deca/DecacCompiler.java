@@ -202,7 +202,10 @@ public class DecacCompiler {
             prog.verifyProgram(this);
         } catch (ContextualError e){
             System.err.println("Error during program verification:\n"
+                    + e.getLocation().getFilename() + ":" + e.getLocation().getLine()
+                    + ":" + e.getLocation().getPositionInLine() + ": \n"
                     + e.getMessage());
+            return true;
         }
         if(getCompilerOptions().getVerification()){ System.exit(1);}
         assert(prog.checkAllDecorations());
