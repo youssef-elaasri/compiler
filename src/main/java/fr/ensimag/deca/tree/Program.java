@@ -135,4 +135,18 @@ public class Program extends AbstractProgram {
         //TODO complete this
         compiler.addInstruction(new RTS());
     }
+    
+    /**
+     * This function adds the method label to class methods table
+     * @param compiler
+     * @param methodLabel
+     */
+    public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
+        Label codeMethodLabel = new Label("code." + methodLabel);
+        compiler.addInstruction(new LOAD(methodLabel, Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+    }
+
 }
