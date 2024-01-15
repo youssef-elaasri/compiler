@@ -12,6 +12,7 @@ import java.util.HashSet;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BNE;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import org.apache.commons.lang.Validate;
@@ -73,6 +74,54 @@ public class While extends AbstractInst {
             codeGenInst(compiler);
             compiler.getStack().popRegister(compiler);
         }
+    }
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+            //Loop inversion
+            int num = counter;
+            increaseCounter();
+            Label endOfWile = new Label("end_of_while_" + num);
+            Label startOfWile = new Label("start_while_" + num);
+
+            // if (condition)
+            this.condition.codeGenInstOP(compiler);
+            compiler.addInstruction(new CMP(
+                    0,
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)
+            ));
+            compiler.getStack().decreaseRegister();
+
+            compiler.addInstruction(new BEQ(endOfWile));
+
+            // Start + Body
+            compiler.addLabel(startOfWile);
+
+            for (AbstractInst abstractInst : body.getList()) {
+                abstractInst.codeGenInst(compiler);
+            }
+
+            // while (cond)
+            this.condition.codeGenInstOP(compiler);
+            compiler.addInstruction(new CMP(
+                    0,
+                    Register.getR(compiler.getStack().getCurrentRegister() - 1)
+            ));
+            compiler.getStack().decreaseRegister();
+
+
+            compiler.addInstruction(new BNE(startOfWile));
+            compiler.addLabel(endOfWile);
+        }
+        else {
+            compiler.getStack().pushRegister(compiler);
+            codeGenInstOP(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
+
+
+
     }
 
     @Override
@@ -142,4 +191,7 @@ public class While extends AbstractInst {
     private void increaseCounter() {
         counter++;
     }
+
+
+
 }
