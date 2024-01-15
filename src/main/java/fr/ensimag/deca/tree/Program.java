@@ -115,6 +115,8 @@ public class Program extends AbstractProgram {
         SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
 
+
+
     @Override
     public void decompile(IndentPrintStream s) {
         getClasses().decompile(s);
