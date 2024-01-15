@@ -32,7 +32,7 @@ public class New extends AbstractExpr{
     }
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("new");
+        s.print("new ");
         classNanme.decompile(s);
         s.print("()");
 
