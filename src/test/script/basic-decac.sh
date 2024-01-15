@@ -48,6 +48,7 @@ if [ "$resultat" != "$attendu" ]; then
     echo "expected $attendu but got instead $resultat"
     exit 1
 fi
+rm -f ./src/test/deca/syntax/valid/provided/test_noCheck_option.ass
 
 
 echo "Testing decac -r X"
@@ -63,6 +64,7 @@ if [ "$resultat1" != "$attendu1" ] || [ "$resultat2" != "$attendu2" ] || [ "$res
     echo "expected $attendu but got instead $resultat"
     exit 1
 fi
+rm -f ./src/test/deca/syntax/valid/provided/helloWorld.ass
 
 echo "Testing decac -d"
 expected_text="Writing assembler file ..."
@@ -86,7 +88,8 @@ if [ ! -f ./src/test/deca/syntax/valid/provided/helloWorld.ass ] && [ ! -f ./src
     echo "FAILED"
     exit 1
 fi
-
+rm -f ./src/test/deca/syntax/valid/provided/helloWorld.ass 2>/dev/null
+rm -f ./src/test/deca/syntax/valid/provided/MyFILE.ass 2>/dev/null
 
 
 echo "Testing decac -p -v"
