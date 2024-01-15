@@ -67,16 +67,18 @@ public class Multiply extends AbstractOpArith {
         int rightExponent = -1;
         int leftExponent = -1;
         if (getRightOperand() instanceof IntLiteral &&
-                ((IntLiteral) getRightOperand()).getValue() > 0 &&
-                (((IntLiteral) getRightOperand()).getValue() &
-                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0) {
+                ((((IntLiteral) getRightOperand()).getValue() &
+                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0||
+                (-((IntLiteral) getRightOperand()).getValue() &
+                        (-((IntLiteral) getRightOperand()).getValue() -1) )== 0)) {
 
             rightExponent = getExponent(((IntLiteral) getRightOperand()).getValue());
         }
         if (getLeftOperand() instanceof IntLiteral &&
-                ((IntLiteral) getLeftOperand()).getValue() > 0 &&
-                (((IntLiteral) getLeftOperand()).getValue() &
-                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0) {
+                ((((IntLiteral) getLeftOperand()).getValue() &
+                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0  ||
+                (-((IntLiteral) getLeftOperand()).getValue() &
+                        (-((IntLiteral) getLeftOperand()).getValue() -1) )== 0 )) {
             leftExponent = getExponent(((IntLiteral) getLeftOperand()).getValue());
         }
         if (rightExponent == -1 && leftExponent == -1
@@ -88,21 +90,25 @@ public class Multiply extends AbstractOpArith {
         if (rightExponent != -1 ) {
             if (leftExponent != -1) {
                 if (rightExponent > leftExponent) {
-                    shift(compiler, leftExponent,getRightOperand());
+                    boolean isNegative = ((IntLiteral) getLeftOperand()).getValue() < 0;
+                    shift(compiler, leftExponent,getRightOperand(), isNegative);
                 }
                 else {
-                    shift(compiler, rightExponent, getLeftOperand());
+                    boolean isNegative = ((IntLiteral) getRightOperand()).getValue() < 0;
+                    shift(compiler, rightExponent, getLeftOperand(), isNegative);
                 }
             } else {
-                shift(compiler,rightExponent, getLeftOperand());
+                boolean isNegative = ((IntLiteral) getRightOperand()).getValue() < 0;
+                shift(compiler,rightExponent, getLeftOperand(), isNegative);
             }
         } else {
-            shift(compiler,rightExponent, getLeftOperand());
+            boolean isNegative = ((IntLiteral) getLeftOperand()).getValue() < 0;
+            shift(compiler,leftExponent, getRightOperand(), isNegative);
         }
 
     }
 
-    private void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr) {
+    private void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr, boolean isNegative) {
         expr.codeGenInstOP(compiler);
         for (int i = 0; i<leftExponent; i++) {
             compiler.addInstruction(
@@ -113,9 +119,16 @@ public class Multiply extends AbstractOpArith {
                     )
             );
         }
+        if (isNegative)
+            compiler.addInstruction(new OPP(
+                    Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)
+            ));
     }
 
     private int getExponent (int num) {
+        if (num < 0)
+            num = -num;
         int exponent = 0;
         while ((num & 1) == 0) {
             num >>= 1;
@@ -129,6 +142,10 @@ public class Multiply extends AbstractOpArith {
 
         AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
         AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (leftValue != null)
+            setLeftOperand(leftValue);
+        if (rightValue != null)
+            setRightOperand(rightValue);
         if (rightValue instanceof IntLiteral) {
             if (leftValue instanceof IntLiteral) {
                 return new IntLiteral(((IntLiteral) leftValue).getValue()*((IntLiteral) rightValue).getValue());
