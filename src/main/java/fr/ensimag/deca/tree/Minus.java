@@ -5,6 +5,7 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
 import fr.ensimag.ima.pseudocode.instructions.SUB;
 
@@ -23,7 +24,6 @@ public class Minus extends AbstractOpArith {
         return "-";
     }
 
-    /** ADDED CODE**/
 
     /**
      * Overrides the instruction code generation method for a specific expression.
@@ -41,6 +41,9 @@ public class Minus extends AbstractOpArith {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new SUB(dVal,
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            if(this.getType().isFloat())
+                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
         }
         else {
             int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?

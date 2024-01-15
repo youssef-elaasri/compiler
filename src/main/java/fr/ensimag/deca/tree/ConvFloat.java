@@ -32,7 +32,6 @@ public class ConvFloat extends AbstractUnaryExpr {
         return "/* conv float */";
     }
 
-    /** ADDED CODE **/
 
     /**
      * Generates code for the conversion of an operand to a floating-point value.

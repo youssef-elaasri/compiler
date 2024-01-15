@@ -62,7 +62,8 @@ public class Program extends AbstractProgram {
 
 
         // Check for stack overflow and branch to the specified label if overflow occurs
-        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
+        if (!compiler.getCompilerOptions().getNoCheck())
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
         // Set the stack pointer (SP) to 0
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
