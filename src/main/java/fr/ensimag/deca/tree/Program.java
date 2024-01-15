@@ -7,6 +7,8 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.ImmediateInteger;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
@@ -40,6 +42,7 @@ public class Program extends AbstractProgram {
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
         LOG.debug("verify program: start");
         //throw new UnsupportedOperationException("not yet implemented");
+        classes.verifyListClass(compiler);
         main.verifyMain(compiler);
         LOG.debug("verify program: end");
     }
@@ -66,7 +69,15 @@ public class Program extends AbstractProgram {
         ImmediateInteger SPimmediateInteger = new ImmediateInteger(0);
         compiler.addInstruction(new ADDSP(SPimmediateInteger));
 
-        compiler.addComment("Main program");
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("         Construction of Method Tables            ");
+        compiler.addComment("--------------------------------------------------");
+
+        classes.codeGenListDeclClass(compiler);
+
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("                  Main program                    ");
+        compiler.addComment("--------------------------------------------------");
         main.codeGenMain(compiler);
 
         // Halt the program execution
@@ -96,4 +107,27 @@ public class Program extends AbstractProgram {
         classes.prettyPrint(s, prefix, false);
         main.prettyPrint(s, prefix, true);
     }
+
+    private static final  Label equalsLabel = new Label("code.Object.equals");
+
+    public static void setOperandEquals(DecacCompiler compiler) {
+        compiler.addInstruction(new LOAD(equalsLabel, Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+    }
+
+    /**
+     * This function adds the method label to class methods table
+     * @param compiler
+     * @param methodLabel
+     */
+    public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
+        Label codeMethodLabel = new Label("code." + methodLabel);
+        compiler.addInstruction(new LOAD(methodLabel, Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+    }
+
 }

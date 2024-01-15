@@ -78,12 +78,16 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
      *             if the symbol is already defined at the "current" dictionary
      *
      */
-    public void declare(Symbol name, ExpDefinition def) throws DoubleDefException {
-        if (expDefinitionMap.containsKey(name)) {
-            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
-        }
+    public void declare(Symbol name, ExpDefinition def) {
+    //    if (expDefinitionMap.containsKey(name)) {
+    //        throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
+    //    }
         expDefinitionMap.put(name, def);
-
     }
+
+    public void setExpDefinitionMap(Map<Symbol, ExpDefinition> expDefinitionMap) {
+        this.expDefinitionMap = expDefinitionMap;
+    }
+
 
 }

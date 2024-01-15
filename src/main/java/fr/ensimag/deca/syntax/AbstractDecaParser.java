@@ -72,6 +72,7 @@ public abstract class AbstractDecaParser extends Parser {
         tree.setLocation(tokenLocation(token));
     }
 
+    protected void setLocation(Tree tree) {tree.setLocation(Location.BUILTIN);}
     /**
      * Create a new parser instance, pre-supplying the input token stream.
      *

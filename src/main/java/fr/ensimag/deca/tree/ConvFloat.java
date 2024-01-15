@@ -42,7 +42,7 @@ public class ConvFloat extends AbstractUnaryExpr {
      */
 
     @Override
-    protected void codeGenInst(DecacCompiler compiler) {
+    public void codeGenInst(DecacCompiler compiler) {
 
         DVal dVal = getDval(getOperand());
         // Check if the operand is a constant (DVal)
