@@ -9,6 +9,7 @@
 	STORE R2, 2(GB)
 	FLOAT 1(GB), R2
 	ADD 2(GB), R2
+	BOV overflow
 	STORE R2, 3(GB)
 	LOAD #1, R2
 	STORE R2, 4(GB)
@@ -92,6 +93,10 @@ end_of_while_0:
 	HALT
 stack_overflow_error:
 	WSTR "Error: Stack Overflow"
+	WNL
+	ERROR
+overflow:
+	WSTR "Error: Overflow"
 	WNL
 	ERROR
 ; end main program
