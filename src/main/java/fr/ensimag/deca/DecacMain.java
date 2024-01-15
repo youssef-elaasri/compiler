@@ -41,17 +41,16 @@ public class DecacMain {
             System.out.println("Error: File not found");
         }
         if (options.getPrintBanner()) {
-            if(options.getSourceFiles().size() == 0){
-            System.out.println("GL g22");
-            System.exit(1);
+            if(!options.getOtherThanBOption()){
+                System.out.println("GL g22");
+                System.exit(0);
             }
             else{
                 System.err.println("Error: decac -b works only without arguments !");
             }
         }
         if (options.getSourceFiles().isEmpty()) {
-            //throw new UnsupportedOperationException("decac without argument not yet implemented");
-            throw new UnsupportedOperationException("Source file must be specified with the given options");
+            options.displayUsage();
         }
         if (options.getParallel()) {
             // A FAIRE : instancier DecacCompiler pour chaque fichier à
@@ -66,31 +65,30 @@ public class DecacMain {
                 decacCompilerFiles.add(new DecacCompiler(options, file)); 
             }
 
-            List<Future<Void>> futures = new ArrayList<>();
+            List<Future<Boolean>> futures = new ArrayList<>();
 
             // Parallel execution of DecacCompiler.compile()
             ExecutorService executorService = Executors.newFixedThreadPool(files.size());
 
             for(DecacCompiler toBeCompiledFile : decacCompilerFiles){
                 // We are creating the task to be assign for each thread later on
-                Callable<Void> compilationTask = ()->{
-                    toBeCompiledFile.compile();
-                    return null;
+                Callable<Boolean> compilationTask = ()->{
+                    return toBeCompiledFile.compile();
                 };
                 // Assigning the task to out thread pool
                 futures.add(executorService.submit(compilationTask));
             }
 
             // Waiting for all tasks to complete
-            for(Future<Void> future : futures){
+            for(Future<Boolean> future : futures){
                 try{
-                    future.get();
+                   if(future.get());
+                   error=true;
                 }
                 catch( InterruptedException | ExecutionException e){
                     e.printStackTrace();
                 }
             }
-
 
 
 

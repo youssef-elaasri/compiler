@@ -199,18 +199,21 @@ public class DecacCompiler {
             return true;
         }
 
+        if(getCompilerOptions().getParse()){
+            prog.decompile(out);
+            System.exit(0);
+        }
+
         try {
             prog.verifyProgram(this);
         } catch (ContextualError e) {
             e.display(System.err);
             return true;
         }
-        if(getCompilerOptions().getVerification()){ System.exit(1);}
+        if(getCompilerOptions().getVerification()){ System.exit(0);}
         assert(prog.checkAllDecorations());
 
-        if(getCompilerOptions().getParse()){
-            prog.decompile(out);
-        }
+
 
         if(getCompilerOptions().doChangeRegisterNumber()){
             stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
