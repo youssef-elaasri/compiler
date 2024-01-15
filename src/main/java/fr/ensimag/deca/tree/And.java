@@ -38,7 +38,10 @@ public class And extends AbstractOpBool {
         Label endAnd = new Label("end_and_"+i);
 
         // Generate code for the left operand
-        super.getLeftOperand().codeGenInst(compiler);
+        if (compiler.getCompilerOptions().getOPTIM())
+            getLeftOperand().codeGenInstOP(compiler);
+        else
+            getLeftOperand().codeGenInst(compiler);
 
         // Compare the result of the left operand with 0 and jump to endAnd if equal (false)
         super.compareAndJump(0, compiler.getStack().getCurrentRegister() - 1, endAnd, compiler);
@@ -47,7 +50,10 @@ public class And extends AbstractOpBool {
         compiler.getStack().decreaseRegister();
 
         // Generate code for the right operand
-        super.getRightOperand().codeGenInst(compiler);
+        if (compiler.getCompilerOptions().getOPTIM())
+            getRightOperand().codeGenInstOP(compiler);
+        else
+            getRightOperand().codeGenInst(compiler);
 
         // Compare the result of the right operand with 0 and jump to isFalse if equal (false)
         super.compareAndJump(0, compiler.getStack().getCurrentRegister() - 1, isFalse, compiler);

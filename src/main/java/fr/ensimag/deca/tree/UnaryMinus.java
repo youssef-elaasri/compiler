@@ -68,7 +68,10 @@ public class UnaryMinus extends AbstractUnaryExpr {
         }
         else {
             // Operand is not a constant, generate code for the operand
-            getOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                getOperand().codeGenInstOP(compiler);
+            else
+                getOperand().codeGenInst(compiler);
             // Load the value from the operand into a register and then perform the negation
             compiler.addInstruction(new OPP(
                     Register.getR(compiler.getStack().getCurrentRegister()-1),

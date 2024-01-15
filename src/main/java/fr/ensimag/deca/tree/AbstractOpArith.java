@@ -2,7 +2,10 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.ima.pseudocode.*;
+import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
+import fr.ensimag.ima.pseudocode.DVal;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.log4j.Logger;
 
@@ -82,12 +85,7 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                                    boolean isDiv, boolean isLoad) {
         if (compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()) {
             getRightOperand().codeGenInst(compiler);
-            if(getDval(getLeftOperand()) instanceof GPRegister)
-                compiler.getStack().increaseRegister();
-            else{
-                getLeftOperand().codeGenInst(compiler);
-            }
-
+            getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(binaryInstructionDValToReg);
             LOG.debug("I'm this and my type is " + this.getType().isFloat());
 
@@ -98,21 +96,9 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
              }
 
             compiler.getStack().decreaseRegister();
-            if (isLoad){
-                if(getDval(getLeftOperand()) instanceof GPRegister){
-                    compiler.addInstruction(new LOAD(
-                            Register.getR(compiler.getStack().getCurrentRegister()),
-                            (GPRegister) getDval(getLeftOperand())
-                    ));
-                    return;
-                }
-
-                compiler.addInstruction(new LOAD(
-                        Register.getR(compiler.getStack().getCurrentRegister()),
-                        Register.getR(compiler.getStack().getCurrentRegister() - 1)
-                ));
-                }
-
+            if (isLoad)
+                compiler.addInstruction(new LOAD(Register.getR(compiler.getStack().getCurrentRegister()),
+                        Register.getR(compiler.getStack().getCurrentRegister() - 1)));
         } else {
             compiler.getStack().pushRegister(compiler);
             codeGenInstOpArith(compiler, binaryInstructionDValToReg, isDiv, false);

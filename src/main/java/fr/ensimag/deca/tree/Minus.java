@@ -40,7 +40,10 @@ public class Minus extends AbstractOpArith {
     protected void codeGenInst(DecacCompiler compiler) {
         DVal dVal = getDval(getRightOperand());
         if (dVal != null) {
-            getLeftOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                getLeftOperand().codeGenInstOP(compiler);
+            else
+                getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new SUB(dVal,
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
             if(this.getType().isFloat())

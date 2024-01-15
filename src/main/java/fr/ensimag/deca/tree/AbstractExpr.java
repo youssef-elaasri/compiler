@@ -137,7 +137,10 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     protected void codeGenPrint(DecacCompiler compiler) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
-            codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                codeGenInstOP(compiler);
+            else
+                codeGenInst(compiler);
             compiler.addInstruction(new LOAD(
                     Register.getR(compiler.getStack().getCurrentRegister() - 1),
                     Register.R1
