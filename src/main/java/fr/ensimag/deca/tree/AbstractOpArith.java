@@ -84,8 +84,15 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
     public void codeGenInstOpArith(DecacCompiler compiler, BinaryInstructionDValToReg binaryInstructionDValToReg,
                                    boolean isDiv, boolean isLoad) {
         if (compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()) {
-            getRightOperand().codeGenInst(compiler);
-            getLeftOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM()) {
+                getRightOperand().codeGenInstOP(compiler);
+                getLeftOperand().codeGenInstOP(compiler);
+            }
+            else {
+                getRightOperand().codeGenInst(compiler);
+                getLeftOperand().codeGenInst(compiler);
+            }
+
             compiler.addInstruction(binaryInstructionDValToReg);
             LOG.debug("I'm this and my type is " + this.getType().isFloat());
 

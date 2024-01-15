@@ -58,7 +58,10 @@ public class ConvFloat extends AbstractUnaryExpr {
         }
         else {
             // Operand is not a constant, generate code for the operand
-            super.getOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                getOperand().codeGenInstOP(compiler);
+            else
+                getOperand().codeGenInst(compiler);
             // Load the value from the operand into a register and then convert to a floating-point value
             compiler.addInstruction(new FLOAT(
                     Register.getR(compiler.getStack().getCurrentRegister() - 1),

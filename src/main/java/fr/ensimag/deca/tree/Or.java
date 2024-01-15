@@ -37,7 +37,10 @@ public class Or extends AbstractOpBool {
         Label endOr = new Label("end_Or");
 
         // Generate code for the left operand
-        getLeftOperand().codeGenInst(compiler);
+        if (compiler.getCompilerOptions().getOPTIM())
+            getLeftOperand().codeGenInstOP(compiler);
+        else
+            getLeftOperand().codeGenInst(compiler);
 
         // Compare the result of the left operand with 1 and jump to trueLabel if equal
         compareAndJump(1, compiler.getStack().getCurrentRegister() - 1, trueLabel, compiler);
@@ -46,7 +49,10 @@ public class Or extends AbstractOpBool {
         compiler.getStack().decreaseRegister();
 
         // Generate code for the right operand
-        getRightOperand().codeGenInst(compiler);
+        if (compiler.getCompilerOptions().getOPTIM())
+            getRightOperand().codeGenInstOP(compiler);
+        else
+            getRightOperand().codeGenInst(compiler);
 
         // Compare the result of the right operand with 1 and jump to trueLabel if equal
         compareAndJump(1, compiler.getStack().getCurrentRegister() - 1, trueLabel, compiler);
