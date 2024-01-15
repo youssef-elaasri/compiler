@@ -120,4 +120,3 @@ fi
 
 
 echo "\033[32mPASSED\033[0m"
-exit 0

@@ -86,3 +86,18 @@ if [ ! -f ./src/test/deca/syntax/valid/provided/helloWorld.ass ] && [ ! -f ./src
     echo "FAILED"
     exit 1
 fi
+
+
+
+echo "Testing decac -p -v"
+resultat=$(decac -p -v ./src/test/deca/syntax/valid/provided/test_noCheck_option.deca 2>&1)
+
+# On code en dur la valeur attendue.
+attendu="Error during option parsing:
+option -p and -v cannot be taken together"
+
+if [ "$resultat" != "$attendu" ]; then
+    echo "FAILED"
+    echo "expected $attendu but got instead $resultat"
+    exit 1
+fi

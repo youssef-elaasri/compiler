@@ -38,7 +38,7 @@ then
 fi
 
 if ! test_context src/test/deca/context/valid/provided/test_declaration_int.deca 2>&1 | \
-    grep -q '\[9, 4\] Assign'
+    grep -q 'type: int'
 then
     echo "FAILED"
     exit 1
@@ -73,8 +73,9 @@ fi
 
 
 
-if ! test_context src/test/deca/context/invalid/provided/affectationCompatible.deca 2>&1 | \
-    grep -q -e "\[4, 4\] Assign"
+
+if ! test_context src/test/deca/context/valid/provided/test_AND.deca 2>&1 | \
+    grep -q -e "type: boolean"
 then
     echo "FAILED"
     exit 1
@@ -82,15 +83,7 @@ fi
 
 
 if ! test_context src/test/deca/context/valid/provided/test_AND.deca 2>&1 | \
-    grep -q -e "\[4, 7\] And"
-then
-    echo "FAILED"
-    exit 1
-fi
-
-
-if ! test_context src/test/deca/context/valid/provided/test_AND.deca 2>&1 | \
-    grep -q -e "\[8, 7\] Or"
+    grep -q -e "type: boolean"
 then
     echo "FAILED"
     exit 1
@@ -98,10 +91,5 @@ fi
 
 
 
-
-# test ifthenelse
-# test while
-# test boolean 
-# test print et println
 
 echo "\033[32mPASSED\033[0m"

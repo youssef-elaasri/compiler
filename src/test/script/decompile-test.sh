@@ -94,8 +94,33 @@ fi
 
 
 
+# Tester la decompilation de unary expression
+input_file="./src/test/deca/syntax/valid/provided/unary_expr_decompile.deca"
+decac -p "$input_file" > "$result_file"
+decac -p "$result_file" > "$result_file2"
 
-# Tester la decompilation de 
+if diff "$result_file" "$result_file2" &> /dev/null; then
+echo  -e "\033[32m Decompile test #7 PASSED\033[0m"
+else
+  echo -e "\e[31mTest Failed\e[0m"
+  exit 1
+fi
+
+
+
+
+# Tester la decompilation de binary expression
+input_file="./src/test/deca/syntax/valid/provided/binary_expr_decompile.deca"
+decac -p "$input_file" > "$result_file"
+decac -p "$result_file" > "$result_file2"
+
+if diff "$result_file" "$result_file2" &> /dev/null; then
+echo  -e "\033[32m Decompile test #8 PASSED\033[0m"
+else
+  echo -e "\e[31mTest Failed\e[0m"
+  exit 1
+fi
+
 
 
 
