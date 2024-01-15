@@ -144,7 +144,7 @@ public class DecacCompiler {
     public boolean compile() {
         String sourceFile = source.getAbsolutePath();
         String fileName=sourceFile.substring(0, sourceFile.length()-5);
-        String destFile = fileName+".ass"; //TODO
+        String destFile = fileName+".ass";
 
         // A FAIRE: calculer le nom du fichier .ass à partir du nom du
         // A FAIRE: fichier .deca.
@@ -176,6 +176,7 @@ public class DecacCompiler {
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
+        
     }
 
     /**
@@ -199,21 +200,24 @@ public class DecacCompiler {
             return true;
         }
 
-        try {
-            prog.verifyProgram(this);
-        } catch (ContextualError e){
-            System.err.println("Error during program verification:\n"
-                    + e.getLocation().getFilename() + ":" + e.getLocation().getLine()
-                    + ":" + e.getLocation().getPositionInLine() + ": \n"
-                    + e.getMessage());
-            return true;
-        }
-        if(getCompilerOptions().getVerification()){ System.exit(1);}
-        assert(prog.checkAllDecorations());
-
         if(getCompilerOptions().getParse()){
             prog.decompile(out);
-            System.exit(1);
+            System.exit(0);
+        }
+
+        try {
+            prog.verifyProgram(this);
+        } catch (ContextualError e) {
+            e.display(System.err);
+            return true;
+        }
+        if(getCompilerOptions().getVerification()){ System.exit(0);}
+        assert(prog.checkAllDecorations());
+
+
+
+        if(getCompilerOptions().doChangeRegisterNumber()){
+            stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
         }
 
         addComment("start main program");
@@ -264,7 +268,6 @@ public class DecacCompiler {
         return parser.parseProgramAndManageErrors(err);
     }
 
-    /** ADDED CODE **/
 
     private final Stack stack;
     /**

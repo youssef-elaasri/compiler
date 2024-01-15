@@ -4,6 +4,10 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -90,6 +94,31 @@ public class DeclClass extends AbstractDeclClass {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    @Override
+    public void codeGenDeclClass(DecacCompiler compiler) {
+        className.getDefinition().setOperand(new RegisterOffset(compiler.getStack().getAddrCounter(), Register.GB));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+
+        // define the supper class
+        if (superName.getName().equals(compiler.createSymbol("Object")))
+            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
+
+        else
+            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(),Register.R0));
+
+        compiler.addInstruction(new STORE(Register.R0,className.getDefinition().getOperand()));
+
+        // define methods
+
+        Program.setOperandEquals(compiler);
+        for(AbstractDeclMethod method : this.listMethod.getList()){
+            Program.setOperandMethod(compiler, method.getMethodName().getMethodDefinition().getLabel());
+        }
+
+
+    }
+
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
@@ -109,4 +138,7 @@ public class DeclClass extends AbstractDeclClass {
         listMethod.iter(f);
     }
 
+    public AbstractIdentifier getClassName() {
+        return className;
+    }
 }

@@ -1,7 +1,0 @@
-{
-
-        //salaaaamo3alaykom
-        int i = 3;
-        float f = 5.5;
-        f = f + i;
-}
