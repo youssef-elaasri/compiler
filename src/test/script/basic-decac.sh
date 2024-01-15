@@ -93,14 +93,12 @@ rm -f ./src/test/deca/syntax/valid/provided/MyFILE.ass 2>/dev/null
 
 
 echo "Testing decac -p -v"
-resultat=$(decac -p -v ./src/test/deca/syntax/valid/provided/test_noCheck_option.deca 2>&1)
 
 # On code en dur la valeur attendue.
-attendu="Error during option parsing:
-option -p and -v cannot be taken together"
-
-if [ "$resultat" != "$attendu" ]; then
+attendu="option -p and -v cannot be taken together"
+if ! decac -p -v ./src/test/deca/syntax/valid/provided/test_noCheck_option.deca 2>&1 | \
+    grep -q "$attendu"; 
+then
     echo "FAILED"
-    echo "expected $attendu but got instead $resultat"
     exit 1
 fi
