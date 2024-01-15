@@ -24,7 +24,11 @@ public class New extends AbstractExpr{
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        return null;
+        Type classType = this.classNanme.verifyExpr(compiler, localEnv, currentClass);
+        if (!classType.isClass()){
+            throw new ContextualError("The type " + classType + " is not a class type", this.getLocation());
+        }
+        return classType;
     }
     @Override
     public void decompile(IndentPrintStream s) {
