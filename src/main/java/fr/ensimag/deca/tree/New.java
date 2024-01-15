@@ -14,17 +14,17 @@ import fr.ensimag.ima.pseudocode.instructions.*;
 import java.io.PrintStream;
 
 public class New extends AbstractExpr{
-    AbstractIdentifier classNanme;
+    AbstractIdentifier className;
 
     public New(AbstractIdentifier abstractIdentifier){
         super();
-        classNanme = abstractIdentifier;
+        className = abstractIdentifier;
     }
 
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        Type classType = this.classNanme.verifyExpr(compiler, localEnv, currentClass);
+        Type classType = this.className.verifyExpr(compiler, localEnv, currentClass);
         if (!classType.isClass()){
             throw new ContextualError("The type " + classType + " is not a class type", this.getLocation());
         }
@@ -33,7 +33,7 @@ public class New extends AbstractExpr{
     @Override
     public void decompile(IndentPrintStream s) {
         s.print("new ");
-        classNanme.decompile(s);
+        className.decompile(s);
         s.print("()");
 
     }
