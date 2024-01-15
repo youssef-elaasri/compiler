@@ -1,28 +1,27 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
-import java.io.PrintStream;
-import java.util.HashSet;
-
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.BEQ;
-import fr.ensimag.ima.pseudocode.instructions.BNE;
-import fr.ensimag.ima.pseudocode.instructions.BRA;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
+import java.io.PrintStream;
+import java.util.HashSet;
+import org.apache.log4j.Logger;
 /**
  *
  * @author gl22
  * @date 01/01/2024
  */
 public class While extends AbstractInst {
+
+    private static final Logger LOG = Logger.getLogger(While.class);
     private AbstractExpr condition;
     private ListInst body;
 
@@ -95,11 +94,16 @@ public class While extends AbstractInst {
 
             compiler.addInstruction(new BEQ(endOfWile));
 
+            LOG.info("There are " + liveVariables.size() + " live variables in the while ...");
+
+            // Load live variables
+            loadLiveVariable(compiler);
+
             // Start + Body
             compiler.addLabel(startOfWile);
 
             for (AbstractInst abstractInst : body.getList()) {
-                abstractInst.codeGenInst(compiler);
+                abstractInst.codeGenInstOP(compiler);
             }
 
             // while (cond)
@@ -113,6 +117,9 @@ public class While extends AbstractInst {
 
             compiler.addInstruction(new BNE(startOfWile));
             compiler.addLabel(endOfWile);
+
+            //Store variables
+            storeLiveVariable(compiler);
         }
         else {
             compiler.getStack().pushRegister(compiler);
@@ -120,9 +127,40 @@ public class While extends AbstractInst {
             compiler.getStack().popRegister(compiler);
         }
 
-
-
     }
+
+
+    private void loadLiveVariable(DecacCompiler compiler){
+        LOG.debug("We got to \"loadLiveVariable\"... That's something... ");
+
+        for (AbstractIdentifier abstractIdentifier : liveVariables){
+            LOG.debug("Let's see those variables ...");
+            compiler.addInstruction(new LOAD(
+                    abstractIdentifier.getExpDefinition().getOperand(),
+                    Register.getR(compiler.getStack().getCurrentRegister())
+            ));
+
+            abstractIdentifier.setRegister(Register.getR(compiler.getStack().getCurrentRegister()));
+            compiler.getStack().increaseRegister();
+
+        }
+    }
+
+    private void storeLiveVariable(DecacCompiler compiler){
+        for (AbstractIdentifier abstractIdentifier : liveVariables){
+
+            compiler.addInstruction(new STORE(
+                    abstractIdentifier.getRegister(),
+                    abstractIdentifier.getExpDefinition().getOperand()
+            ));
+
+            abstractIdentifier.setRegisterToNull();
+            compiler.getStack().decreaseRegister();
+
+        }
+    }
+
+
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {

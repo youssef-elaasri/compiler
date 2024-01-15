@@ -11,6 +11,8 @@ import fr.ensimag.deca.context.MethodDefinition;
 import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.context.VariableDefinition;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
 
 /**
  *
@@ -93,4 +95,18 @@ public abstract class AbstractIdentifier extends AbstractLValue {
      *         (corresponds to the "type" attribute)
      */
     public abstract Type verifyType(DecacCompiler compiler) throws ContextualError;
+
+    private GPRegister register = null;
+
+    public void setRegister(GPRegister register) {
+        this.register = register;
+    }
+
+    public void setRegisterToNull() {
+        this.register = null;
+    }
+
+    public GPRegister getRegister() {
+        return register;
+    }
 }
