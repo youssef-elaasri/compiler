@@ -37,16 +37,15 @@ public class DecacMain {
             System.out.println("Error: File not found");
         }
         if (options.getPrintBanner()) {
-            if(options.getSourceFiles().size() == 0){
-            System.out.println("GL g22");
-            System.exit(0);
+            if(!options.getOtherThanBOption()){
+                System.out.println("GL g22");
+                System.exit(0);
             }
             else{
                 System.err.println("Error: decac -b works only without arguments !");
             }
         }
         if (options.getSourceFiles().isEmpty()) {
-            //throw new UnsupportedOperationException("decac without argument not yet implemented");
             options.displayUsage();
         }
         if (options.getParallel()) {
@@ -86,7 +85,6 @@ public class DecacMain {
                     e.printStackTrace();
                 }
             }
-
 
 
 

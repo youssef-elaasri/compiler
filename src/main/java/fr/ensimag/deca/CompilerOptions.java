@@ -37,6 +37,10 @@ public class CompilerOptions {
         return parallel;
     }
 
+    public boolean getOtherThanBOption() {
+        return otherThanBOption;
+    }
+
     public boolean getPrintBanner() {
         return printBanner;
     }
@@ -76,6 +80,7 @@ public class CompilerOptions {
     private boolean verification = false;
     private boolean noCheck = false;
     private boolean changeRegisterNumber=false;
+    private boolean otherThanBOption = false;
     private int numberOfRegistersEntered;
 
     private List<File> sourceFiles = new ArrayList<File>();
@@ -97,6 +102,7 @@ public class CompilerOptions {
                         }
                         else{
                             this.parse = true;
+                            otherThanBOption = true;
                         }
                         break;
                     case "-v":
@@ -105,22 +111,27 @@ public class CompilerOptions {
                         }
                         else{
                             this.verification = true;
+                            otherThanBOption = true;
                         }
                         break;
                     case "-P":
                         this.parallel = true;
+                        otherThanBOption = true;
                         break;
                     case "-b":
                         this.printBanner = true;
                         break;
                     case "-d":
                         this.debug++;
+                        otherThanBOption = true;
                         break;
                     case "-n":
                         noCheck=true;
+                        otherThanBOption = true;
                         break;
                     case "-r":
                         changeRegisterNumber=true;
+                        otherThanBOption = true;
                         break;
 
                     default:
@@ -131,7 +142,11 @@ public class CompilerOptions {
                         if(pattern.matcher(arg).matches() && doChangeRegisterNumber()){
                             numberOfRegistersEntered=Integer.parseInt(arg);
                         }else{
-                            this.sourceFiles.add(new File(arg));
+                            if (arg.endsWith(".deca")) {
+                                this.sourceFiles.add(new File(arg));
+                                otherThanBOption = true;
+                            }
+                            else throw new CLIException("the file " + arg + " does not have the extension .deca");
                         }
                 }
             }
