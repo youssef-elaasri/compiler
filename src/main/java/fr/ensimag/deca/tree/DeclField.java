@@ -7,18 +7,19 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 public class DeclField extends AbstractDeclField{
     final private AbstractIdentifier type;
-    final private AbstractIdentifier FieldName;
+    final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
 
-    public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization) {
+    public DeclField(AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
         Validate.notNull(type);
-        Validate.notNull(FieldName);
+        Validate.notNull(fieldName);
         Validate.notNull(initialization);
         this.type = type;
-        this.FieldName = FieldName;
+        this.fieldName = fieldName;
         this.initialization = initialization;
     }
     @Override
@@ -27,7 +28,7 @@ public class DeclField extends AbstractDeclField{
         s.print(" ");
         type.decompile(s);
         s.print(" ");
-        FieldName.decompile(s);
+        fieldName.decompile(s);
         initialization.decompile(s);
         s.print(";");
 
@@ -35,12 +36,16 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
-
+        type.prettyPrint(s, prefix, false);
+        fieldName.prettyPrint(s, prefix, false);
+        initialization.prettyPrint(s, prefix, true);
     }
 
     @Override
     protected void iterChildren(TreeFunction f) {
-
+        type.iter(f);
+        fieldName.iter(f);
+        initialization.iter(f);
     }
 
 
@@ -54,16 +59,22 @@ public class DeclField extends AbstractDeclField{
         if (envSup == null) {
             throw new ContextualError("Super class " + superId.getName() + " is not defined !", superId.getLocation());
         }
-        ExpDefinition expDef = envSup.getMembers().getExpDefinitionMap().get(FieldName.getName());
+        ExpDefinition expDef = envSup.getMembers().getExpDefinitionMap().get(fieldName.getName());
+        FieldDefinition fieldDef;
         if (expDef == null) {
-            throw new ContextualError(FieldName.getName() + " is not defined !", FieldName.getLocation());
+            fieldDef = new FieldDefinition(typeF, this.getLocation(), Visibility.PUBLIC, classId.getClassDefinition(), 0);
         }
-        if (!expDef.isField()) {
-            throw new ContextualError(FieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", FieldName.getLocation());
+        else {
+            if (!expDef.isField()) {
+                throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
+            }
+            else {
+                fieldDef = (FieldDefinition) expDef;
+            }
         }
-        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), classId.getFieldDefinition().getVisibility(), classId.getClassDefinition(), classId.getFieldDefinition().getIndex());
         EnvironmentExp envExp = new EnvironmentExp(null);
-        envExp.declare(FieldName.getName(), fieldDef);
+        envExp.declare(fieldName.getName(), fieldDef);
+        fieldName.setDefinition(fieldDef);
         return envExp;
     }
 

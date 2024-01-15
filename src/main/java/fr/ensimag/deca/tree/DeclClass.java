@@ -9,6 +9,7 @@ import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ public class DeclClass extends AbstractDeclClass {
     final private AbstractIdentifier superName;
     final private ListDeclField listField;
     final private ListDeclMethod listMethod;
+
+    private static final Logger LOG = Logger.getLogger(ListDeclClass.class);
 
     public DeclClass(AbstractIdentifier className, AbstractIdentifier superName, ListDeclField listField, ListDeclMethod listMethod) {
         Validate.notNull(className);
@@ -55,6 +58,7 @@ public class DeclClass extends AbstractDeclClass {
     @Override
     protected void verifyClass(DecacCompiler compiler) throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
+        LOG.debug("verify verifyClass: start");
         SymbolTable.Symbol superSymb = superName.getName();
         Definition superDef = compiler.environmentType.defOfType(superSymb);
         if (superDef == null) {
@@ -70,12 +74,14 @@ public class DeclClass extends AbstractDeclClass {
         compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
         className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
+        LOG.debug("verify verifyClass: end");
     }
 
     @Override
     protected void verifyClassMembers(DecacCompiler compiler)
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
+        LOG.debug("verify verifyClassMembers: start");
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
         EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
         Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(envExpf.getExpDefinitionMap());
@@ -84,6 +90,7 @@ public class DeclClass extends AbstractDeclClass {
         ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
         classDef.getMembers().setExpDefinitionMap(mergedMap);
         compiler.environmentType.put(className.getName(), classDef);
+        LOG.debug("verify verifyClassMembers: end");
     }
     
     @Override
@@ -113,9 +120,9 @@ public class DeclClass extends AbstractDeclClass {
         // define methods
 
         Program.setOperandEquals(compiler);
-        for(AbstractDeclMethod method : this.listMethod.getList()){
-            Program.setOperandMethod(compiler, method.getMethodName().getMethodDefinition().getLabel());
-        }
+//        for(AbstractDeclMethod method : this.listMethod.getList()){
+//            Program.setOperandMethod(compiler, method.getMethodName().getMethodDefinition().getLabel());
+//        }
 
 
     }

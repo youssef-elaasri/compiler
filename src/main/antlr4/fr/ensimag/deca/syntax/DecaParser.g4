@@ -584,6 +584,7 @@ decl_field[AbstractIdentifier t] returns[AbstractDeclField tree]
 }
     : i=ident {
         $tree = new DeclField($t, $i.tree, noInitialization);
+        setLocation($tree, $i.start);
         }
       (EQUALS e=expr {
         }

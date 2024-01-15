@@ -42,7 +42,11 @@ public class Program extends AbstractProgram {
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
         LOG.debug("verify program: start");
         //throw new UnsupportedOperationException("not yet implemented");
+        /* Passe 1*/
         classes.verifyListClass(compiler);
+        /* Passe 2*/
+        classes.verifyListClassMembers(compiler);
+        /*Passe 3*/
         main.verifyMain(compiler);
         LOG.debug("verify program: end");
     }

@@ -44,8 +44,9 @@ public class DeclVar extends AbstractDeclVar {
 //        localEnv.declare(symb, def);
 
         Type ty = type.verifyType(compiler);
-        TypeDefinition tDef = compiler.environmentType.defOfType(type.getName());
-        type.setDefinition(tDef);
+        if (ty.isVoid()) {
+            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
+        }
         SymbolTable.Symbol name = varName.getName();
         Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
         if (expDef.containsKey(name)) {
@@ -56,9 +57,6 @@ public class DeclVar extends AbstractDeclVar {
         expDef.put(name, varDef);
 
         initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
-        if (ty instanceof VoidType) {
-            throw new ContextualError("Type of variable must not be void", type.getDefinition().getLocation());
-        }
 
     }
 
