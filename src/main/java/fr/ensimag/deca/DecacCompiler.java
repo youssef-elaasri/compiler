@@ -175,6 +175,7 @@ public class DecacCompiler {
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
+        
     }
 
     /**
@@ -209,7 +210,6 @@ public class DecacCompiler {
 
         if(getCompilerOptions().getParse()){
             prog.decompile(out);
-            System.exit(1);
         }
 
         if(getCompilerOptions().doChangeRegisterNumber()){
