@@ -47,7 +47,7 @@ public class DecacMain {
         }
         if (options.getSourceFiles().isEmpty()) {
             //throw new UnsupportedOperationException("decac without argument not yet implemented");
-            throw new UnsupportedOperationException("Source file must be specified with the given options");
+            options.displayUsage();
         }
         if (options.getParallel()) {
             // A FAIRE : instancier DecacCompiler pour chaque fichier à

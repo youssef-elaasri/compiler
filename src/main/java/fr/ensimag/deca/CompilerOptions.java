@@ -220,7 +220,16 @@ public class CompilerOptions {
     }
 
     protected void displayUsage() {
-        //TODO
-        //throw new UnsupportedOperationException("not yet implemented");
+        String optionsDescription = "Usage: decac <options> <source files>\n "+
+        "where possible options include:\n"+
+        "-b (banner): displays a banner indicating the team name.\n" +
+        "-p (parse): stops decac after the tree construction step and displays the decompilation of the tree " +
+        "-v (verification): stops decac after the verification step (produces no output in the absence of errors).\n" +
+        "-n (no check): removes runtime tests specified in points 11.1 and 11.3 of the Deca semantics.\n" +
+        "-r X (registers): limits the available general-purpose registers to R0 ... R{X-1}, with 4 <= X <= 16.\n" +
+        "-d (debug): activates debug traces. Repeat the option several times for more traces.\n" +
+        "-P (parallel): if there are multiple source files, launches the compilation of files in parallel (to speed up compilation)";
+
+        System.out.println(optionsDescription);
     }
 }
