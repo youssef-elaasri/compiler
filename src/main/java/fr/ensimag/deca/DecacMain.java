@@ -39,7 +39,7 @@ public class DecacMain {
         if (options.getPrintBanner()) {
             if(options.getSourceFiles().size() == 0){
             System.out.println("GL g22");
-            System.exit(1);
+            System.exit(0);
             }
             else{
                 System.err.println("Error: decac -b works only without arguments !");

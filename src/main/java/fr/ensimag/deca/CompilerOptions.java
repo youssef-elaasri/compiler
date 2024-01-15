@@ -140,57 +140,6 @@ public class CompilerOptions {
             numberOfRegistersEntered=Integer.parseInt(args[1]);
         }
 
-//        String[] file_name = new String[1];
-//        int argsLength  = args.length;
-//
-//        if (argsLength > 0) {
-//            file_name[0] = args[argsLength-1];
-//        }
-//        else {
-//            throw new CLIException("No options or file name are given.");
-//        }
-//
-//        DecaLexer lex = AbstractDecaLexer.createLexerFromArgs(file_name);
-//        CommonTokenStream tokens = new CommonTokenStream(lex);
-//        DecaParser parser = new DecaParser(tokens);
-//        File file = null;
-//
-//        if (lex.getSourceName() != null) {
-//            file = new File(lex.getSourceName());
-//        }
-//        else{
-//            throw new CLIException("Cannot find file: " + file_name[0]);
-//        }
-//        sourceFiles.add(file);
-//        final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
-//        parser.setDecacCompiler(decacCompiler);
-//        AbstractProgram prog = parser.parseProgramAndManageErrors(System.err);
-//
-//        switch (args[0]) {
-//            case "-p":
-//                if (prog == null) {
-//                    System.exit(1);
-//                } else {
-//                    prog.decompile(System.out);
-//                    System.exit(1);
-//                }
-//                break;
-//            case "-v":
-//                if (prog == null) {
-//                    System.exit(1);
-//                } else {
-//                    try {
-//                        prog.verifyProgram(decacCompiler);
-//                        System.exit(1);
-//                    } catch (LocationException e) {
-//                        e.display(System.err);
-//                        System.exit(1);
-//                    }
-//                }
-//                break;
-//            default:
-//                File srcFile = new File(args[0]);
-//        }
 
         Logger logger = Logger.getRootLogger();
         //map command-line debug option to log4j's level.
