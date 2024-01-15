@@ -62,25 +62,25 @@ public class DecacMain {
                 decacCompilerFiles.add(new DecacCompiler(options, file)); 
             }
 
-            List<Future<Void>> futures = new ArrayList<>();
+            List<Future<Boolean>> futures = new ArrayList<>();
 
             // Parallel execution of DecacCompiler.compile()
             ExecutorService executorService = Executors.newFixedThreadPool(files.size());
 
             for(DecacCompiler toBeCompiledFile : decacCompilerFiles){
                 // We are creating the task to be assign for each thread later on
-                Callable<Void> compilationTask = ()->{
-                    toBeCompiledFile.compile();
-                    return null;
+                Callable<Boolean> compilationTask = ()->{
+                    return toBeCompiledFile.compile();
                 };
                 // Assigning the task to out thread pool
                 futures.add(executorService.submit(compilationTask));
             }
 
             // Waiting for all tasks to complete
-            for(Future<Void> future : futures){
+            for(Future<Boolean> future : futures){
                 try{
-                    future.get();
+                   if(future.get());
+                   error=true;
                 }
                 catch( InterruptedException | ExecutionException e){
                     e.printStackTrace();
