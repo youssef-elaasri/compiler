@@ -40,11 +40,29 @@ public class New extends AbstractExpr{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
+        className.prettyPrint(s, prefix, false);
+
+        
+    }
+
+
+    @Override
+    protected void prettyPrintType(PrintStream s, String prefix) {
+        Type t = className.getType();
+        if (t != null) {
+            s.print(prefix);
+            s.print("type: ");
+            s.print(t);
+            s.println();
+        }
 
     }
 
+
+
     @Override
     protected void iterChildren(TreeFunction f) {
+        className.iter(f);
 
     }
 
