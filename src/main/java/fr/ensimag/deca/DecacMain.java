@@ -2,7 +2,17 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.concurrent.*;
+=======
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+>>>>>>> e26df06e37fe70b4019adf74770abc7a03b9ca96
 
 import org.apache.log4j.Logger;
 
@@ -31,8 +41,13 @@ public class DecacMain {
             System.out.println("Error: File not found");
         }
         if (options.getPrintBanner()) {
+            if(options.getSourceFiles().size() == 0){
             System.out.println("GL g22");
             System.exit(1);
+            }
+            else{
+                System.err.println("Error: decac -b works only without arguments !");
+            }
         }
         if (options.getSourceFiles().isEmpty()) {
             //throw new UnsupportedOperationException("decac without argument not yet implemented");
@@ -43,21 +58,42 @@ public class DecacMain {
             // compiler, et lancer l'exécution des méthodes compile() de chaque
             // instance en parallèle. Il est conseillé d'utiliser
             // java.util.concurrent de la bibliothèque standard Java.
-            //throw new UnsupportedOperationException("Parallel build not yet implemented");
 
-            //creating worker threads
-            ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-            for (File source : options.getSourceFiles()) {
-                Callable<Boolean> task = () -> {
-                    DecacCompiler compiler = new DecacCompiler(options, source);
-                    return compiler.compile();
+            // Collecting the files and turning them to ready to be compiled.
+            List<File> files = options.getSourceFiles();
+            List<DecacCompiler> decacCompilerFiles = new ArrayList<DecacCompiler>();
+            for(File file:files){
+                decacCompilerFiles.add(new DecacCompiler(options, file)); 
+            }
+
+            List<Future<Void>> futures = new ArrayList<>();
+
+            // Parallel execution of DecacCompiler.compile()
+            ExecutorService executorService = Executors.newFixedThreadPool(files.size());
+
+            for(DecacCompiler toBeCompiledFile : decacCompilerFiles){
+                // We are creating the task to be assign for each thread later on
+                Callable<Void> compilationTask = ()->{
+                    toBeCompiledFile.compile();
+                    return null;
                 };
-                Future<Boolean> future = executorService.submit(task);
-                if (future.get()){
-                    error = true;
+                // Assigning the task to out thread pool
+                futures.add(executorService.submit(compilationTask));
+            }
+
+            // Waiting for all tasks to complete
+            for(Future<Void> future : futures){
+                try{
+                    future.get();
+                }
+                catch( InterruptedException | ExecutionException e){
+                    e.printStackTrace();
                 }
             }
-            executorService.shutdown();
+
+
+
+
         } else {
             for (File source : options.getSourceFiles()) {
                 DecacCompiler compiler = new DecacCompiler(options, source);
