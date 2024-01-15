@@ -77,7 +77,7 @@ public class Initialization extends AbstractInitialization {
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
-            this.expression.codeGenInst(compiler);
+            expression.codeGenInst(compiler);
             compiler.addInstruction(
                     new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
                             varName.getExpDefinition().getOperand()

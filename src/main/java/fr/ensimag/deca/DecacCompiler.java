@@ -216,15 +216,17 @@ public class DecacCompiler {
             prog.decompile(out);
             System.exit(1);
         }
-        // pass 1 of OPTIM
-        prog.ConstantFoldingAndPropagation(this);
+        if (compilerOptions.getOPTIM()) {
+            // pass 1 of OPTIM
+            prog.ConstantFoldingAndPropagation(this);
 
-        // pass 2 of OPTIM
-        prog.DeadCodeElimination();
+            // pass 2 of OPTIM
+            prog.DeadCodeElimination();
 
-        // pass 3 of OPTIM
-        isPass3 = true;
-        prog.ConstantFoldingAndPropagation(this);
+            // pass 3 of OPTIM
+            isPass3 = true;
+            prog.ConstantFoldingAndPropagation(this);
+        }
 
         if(getCompilerOptions().doChangeRegisterNumber()){
             stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());

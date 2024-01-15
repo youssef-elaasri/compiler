@@ -33,10 +33,15 @@ public class CompilerOptions {
         return debug;
     }
 
+
+
     public boolean getParallel() {
         return parallel;
     }
 
+    public boolean getOPTIM() {
+        return OPTIM;
+    }
     public boolean getPrintBanner() {
         return printBanner;
     }
@@ -76,6 +81,8 @@ public class CompilerOptions {
     private boolean verification = false;
     private boolean noCheck = false;
     private boolean changeRegisterNumber=false;
+
+    private boolean OPTIM = false;
     private int numberOfRegistersEntered;
 
     private List<File> sourceFiles = new ArrayList<File>();
@@ -122,7 +129,9 @@ public class CompilerOptions {
                     case "-r":
                         changeRegisterNumber=true;
                         break;
-
+                    case "-op":
+                        OPTIM = true;
+                        break;
                     default:
                         throw new CLIException("the option: " + arg + " does not exist");
                     }
