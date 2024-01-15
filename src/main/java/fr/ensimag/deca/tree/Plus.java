@@ -6,6 +6,7 @@ import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.ADD;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
 
 /**
@@ -23,8 +24,6 @@ public class Plus extends AbstractOpArith {
         return "+";
     }
 
-    /** ADDED CODE**/
-
     /**
      * Overrides the instruction code generation method for a specific expression.
      * Generates instructions to perform addition operation based on the types of operands.
@@ -41,6 +40,10 @@ public class Plus extends AbstractOpArith {
             getLeftOperand().codeGenInst(compiler);
             compiler.addInstruction(new ADD(dVal,
                     Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            if(this.getType().isFloat())
+                if (!compiler.getCompilerOptions().getNoCheck())
+                    compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
         }
         else {
             int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?

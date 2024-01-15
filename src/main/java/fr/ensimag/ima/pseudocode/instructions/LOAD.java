@@ -1,5 +1,6 @@
 package fr.ensimag.ima.pseudocode.instructions;
 
+import fr.ensimag.deca.tree.StringLiteral;
 import fr.ensimag.ima.pseudocode.*;
 
 /**
@@ -25,5 +26,9 @@ public class LOAD extends BinaryInstructionDValToReg {
                 value ? 1 : 0,
                 r
         );
+    }
+
+    public LOAD(Label label, GPRegister r) {
+        this(new LabelOperand(label), r);
     }
 }

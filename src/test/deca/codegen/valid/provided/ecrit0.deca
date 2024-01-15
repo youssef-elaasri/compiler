@@ -1,5 +1,21 @@
+class A {}
+class B {}
+
 {
-   println(1) ; 
+   int a = 5;
+   int b = 7; 
+   
+   println("Addition : ", (a + b));
+   println("Soustraction : ", (a - b));
+   println("Multiplication : ", (a * b));
+   println("Division : ", (a / b));
+
+    // Utilisation d'une structure conditionnelle (if-else)
+    if (a > b) {
+        println("Variable 'a' est plus grande que 'b'.");
+    } else {
+        println("Variable 'b' est plus grande que 'a'.");
+        }
 }
 
 
