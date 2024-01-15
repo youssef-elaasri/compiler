@@ -63,6 +63,7 @@ public class DeclClass extends AbstractDeclClass {
         if (compiler.environmentType.defOfType(classSymb) != null) {
             throw new ContextualError("Class " + classSymb + " is already defined !", this.getLocation());
         }
+        compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
         className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
     }
