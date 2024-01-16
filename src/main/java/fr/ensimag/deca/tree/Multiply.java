@@ -63,24 +63,10 @@ public class Multiply extends AbstractOpArith {
 
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
-        // trying to catch the exponent of 2
-        int rightExponent = -1;
-        int leftExponent = -1;
-        if (getRightOperand() instanceof IntLiteral &&
-                ((((IntLiteral) getRightOperand()).getValue() &
-                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0||
-                (-((IntLiteral) getRightOperand()).getValue() &
-                        (-((IntLiteral) getRightOperand()).getValue() -1) )== 0)) {
 
-            rightExponent = getExponent(((IntLiteral) getRightOperand()).getValue());
-        }
-        if (getLeftOperand() instanceof IntLiteral &&
-                ((((IntLiteral) getLeftOperand()).getValue() &
-                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0  ||
-                (-((IntLiteral) getLeftOperand()).getValue() &
-                        (-((IntLiteral) getLeftOperand()).getValue() -1) )== 0 )) {
-            leftExponent = getExponent(((IntLiteral) getLeftOperand()).getValue());
-        }
+        // trying to catch the exponent of 2
+        int rightExponent = getRightExponent();
+        int leftExponent = getLeftExponent();
         if (rightExponent == -1 && leftExponent == -1
                 || rightExponent > 9 || leftExponent > 9) {
             codeGenInst(compiler);
@@ -91,50 +77,21 @@ public class Multiply extends AbstractOpArith {
             if (leftExponent != -1) {
                 if (rightExponent > leftExponent) {
                     boolean isNegative = ((IntLiteral) getLeftOperand()).getValue() < 0;
-                    shift(compiler, leftExponent,getRightOperand(), isNegative);
+                    shift(compiler, leftExponent,getRightOperand(), isNegative, false);
                 }
                 else {
                     boolean isNegative = ((IntLiteral) getRightOperand()).getValue() < 0;
-                    shift(compiler, rightExponent, getLeftOperand(), isNegative);
+                    shift(compiler, rightExponent, getLeftOperand(), isNegative, false);
                 }
             } else {
                 boolean isNegative = ((IntLiteral) getRightOperand()).getValue() < 0;
-                shift(compiler,rightExponent, getLeftOperand(), isNegative);
+                shift(compiler,rightExponent, getLeftOperand(), isNegative, false);
             }
         } else {
             boolean isNegative = ((IntLiteral) getLeftOperand()).getValue() < 0;
-            shift(compiler,leftExponent, getRightOperand(), isNegative);
+            shift(compiler,leftExponent, getRightOperand(), isNegative, false);
         }
 
-    }
-
-    private void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr, boolean isNegative) {
-        expr.codeGenInstOP(compiler);
-        for (int i = 0; i<leftExponent; i++) {
-            compiler.addInstruction(
-                    new SHL(
-                            Register.getR(
-                                    compiler.getStack().getCurrentRegister()-1
-                            )
-                    )
-            );
-        }
-        if (isNegative)
-            compiler.addInstruction(new OPP(
-                    Register.getR(compiler.getStack().getCurrentRegister()-1),
-                    Register.getR(compiler.getStack().getCurrentRegister()-1)
-            ));
-    }
-
-    private int getExponent (int num) {
-        if (num < 0)
-            num = -num;
-        int exponent = 0;
-        while ((num & 1) == 0) {
-            num >>= 1;
-            exponent++;
-        }
-        return exponent;
     }
 
     @Override

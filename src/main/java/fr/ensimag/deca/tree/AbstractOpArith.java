@@ -115,4 +115,72 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
         }
     }
 
+    protected int getExponent (int num) {
+        if (num < 0)
+            num = -num;
+        int exponent = 0;
+        while ((num & 1) == 0) {
+            num >>= 1;
+            exponent++;
+        }
+        return exponent;
+    }
+
+    protected void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr,
+                         boolean isNegative, boolean isDiv) {
+        expr.codeGenInstOP(compiler);
+        if (isDiv) {
+            for (int i = 0; i<leftExponent; i++) {
+                compiler.addInstruction(
+                        new SHR(
+                                Register.getR(
+                                        compiler.getStack().getCurrentRegister()-1
+                                )
+                        )
+                );
+            }
+        } else {
+            for (int i = 0; i<leftExponent; i++) {
+                compiler.addInstruction(
+                        new SHL(
+                                Register.getR(
+                                        compiler.getStack().getCurrentRegister()-1
+                                )
+                        )
+                );
+            }
+        }
+        if (isNegative)
+            compiler.addInstruction(new OPP(
+                    Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)
+            ));
+    }
+
+    protected int getRightExponent() {
+        if (getRightOperand() instanceof IntLiteral &&
+                ((((IntLiteral) getRightOperand()).getValue() &
+                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0||
+                        (-((IntLiteral) getRightOperand()).getValue() &
+                                (-((IntLiteral) getRightOperand()).getValue() -1) )== 0)) {
+
+            return getExponent(((IntLiteral) getRightOperand()).getValue());
+        }
+        else {
+            return -1;
+        }
+    }
+
+    protected int getLeftExponent() {
+        if (getLeftOperand() instanceof IntLiteral &&
+                ((((IntLiteral) getLeftOperand()).getValue() &
+                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0  ||
+                        (-((IntLiteral) getLeftOperand()).getValue() &
+                                (-((IntLiteral) getLeftOperand()).getValue() -1) )== 0 )) {
+            return getExponent(((IntLiteral) getLeftOperand()).getValue());
+        } else {
+            return -1;
+        }
+    }
+
 }
