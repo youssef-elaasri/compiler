@@ -11,17 +11,17 @@ import org.apache.commons.lang.Validate;
 public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
     final private AbstractIdentifier methodName;
-    final private Signature sig;
+    final private ListDeclParam list_param;
+    private Signature sig;
 
-    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, Signature sig){
+    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param) {
         Validate.notNull(type);
-        Validate.notNull(sig);
+        Validate.notNull(list_param);
         Validate.notNull(methodName);
         this.type=type;
         this.methodName = methodName;
-        this.sig=sig;
-
-
+        this.list_param=list_param;
+        this.sig = list_param.getSignature();
 
     }
     @Override

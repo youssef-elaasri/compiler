@@ -7,5 +7,6 @@ import fr.ensimag.deca.context.Type;
 public abstract class AbstractDeclParam extends Tree{
     protected abstract Type verifyParam(DecacCompiler compiler);
     protected abstract ExpDefinition verifyParamName(DecacCompiler compiler);
+    protected abstract Type getType();
 
 }
