@@ -85,9 +85,10 @@ public abstract class AbstractExpr extends AbstractInst {
 //        throw new UnsupportedOperationException("not yet implemented");
         Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
         if (!(expectedType.isFloat() && currentType.isInt())) {
-            if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
-                throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
-            }
+            throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
+        }
+        if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
+            throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
         }
         if (expectedType.isFloat() && currentType.isInt()) {
             AbstractExpr convF = new ConvFloat(this);
