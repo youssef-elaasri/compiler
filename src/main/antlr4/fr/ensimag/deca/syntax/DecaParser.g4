@@ -549,7 +549,7 @@ class_body returns[ListDeclField list_field, ListDeclMethod list_method]
     : (m=decl_method {
            $list_method.add($m.tree);
         }
-      | f=decl_field_set[$list_field]+ {
+      | f=decl_field_set[$list_field] {
       }
       )*
     ;
