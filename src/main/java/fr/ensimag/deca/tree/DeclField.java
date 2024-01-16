@@ -14,6 +14,8 @@ public class DeclField extends AbstractDeclField{
     final private AbstractIdentifier FieldName;
     final private AbstractInitialization initialization;
 
+    private int offset;
+
     public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization) {
         Validate.notNull(type);
         Validate.notNull(FieldName);
@@ -21,6 +23,18 @@ public class DeclField extends AbstractDeclField{
         this.type = type;
         this.FieldName = FieldName;
         this.initialization = initialization;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public AbstractInitialization getInitialization() {
+        return initialization;
     }
 
     @Override

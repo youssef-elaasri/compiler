@@ -8,6 +8,7 @@ import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.RTS;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
@@ -106,9 +107,19 @@ public class DeclClass extends AbstractDeclClass {
 
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
-
+        compiler.addInstruction(new LOAD(0, Register.R0));
+        compiler.addInstruction(new LOAD(new RegisterOffset(-2,Register.LB),Register.R1));
+        int offset = 1;
         for(AbstractDeclField abstractDeclField : listField.getList()){
-            abstractDeclField.codeGenInitListDeclClass(compiler);
+            ((DeclField) abstractDeclField).setOffset(offset);
+            if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
+                compiler.addInstruction(new STORE(Register.R0,new RegisterOffset(offset,Register.R1)));
+            } else {
+                ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
+                compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1)
+                        ,new RegisterOffset(offset,Register.R1)));
+            }
+            offset++;
         }
         compiler.addInstruction(new RTS());
 
