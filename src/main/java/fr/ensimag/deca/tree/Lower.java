@@ -45,6 +45,15 @@ public class Lower extends AbstractOpIneq {
     }
 
     @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        int i = counter;
+        Label label = new Label("lower_"+i);
+        increaseCounter();
+        BranchInstruction branchInstruction = new BLT(label);
+        codeGenInstGeneralOP(compiler,branchInstruction,label,"lower_" + i);
+    }
+
+    @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         return ConstantFoldingAndPropagationOpIn(compiler,false);
     }

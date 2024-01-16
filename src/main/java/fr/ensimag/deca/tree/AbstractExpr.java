@@ -10,6 +10,7 @@ import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 /**
  * Expression, i.e. anything that has a value.
@@ -18,6 +19,10 @@ import org.apache.commons.lang.Validate;
  * @date 01/01/2024
  */
 public abstract class AbstractExpr extends AbstractInst {
+
+    private static final Logger LOG = Logger.getLogger(AbstractExpr.class);
+
+
     /**
      * @return true if the expression does not correspond to any concrete token
      * in the source code (and should be decompiled to the empty string).
@@ -214,9 +219,6 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     protected DVal getDval(AbstractExpr expr) {
         if (expr instanceof Identifier) {
-
-            if(((Identifier) expr).getRegister()!=null)
-                return (GPRegister) ((Identifier) expr).getRegister();
 
             return ((Identifier) expr).getExpDefinition().getOperand();
 

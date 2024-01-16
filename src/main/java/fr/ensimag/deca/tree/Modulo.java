@@ -4,6 +4,7 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
 import fr.ensimag.ima.pseudocode.DVal;
+import fr.ensimag.ima.pseudocode.GPRegister;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
@@ -35,6 +36,11 @@ public class Modulo extends AbstractOpArith {
         else {
             throw new ContextualError( "Modulo operation cannot occur between " + type1 + " and " + type2 + " !", this.getLocation());
         }
+    }
+
+    @Override
+    public BinaryInstructionDValToReg getOperator(DVal op1, GPRegister op2) {
+        return new REM(op1, op2);
     }
 
 

@@ -6,6 +6,7 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
+import fr.ensimag.ima.pseudocode.GPRegister;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
@@ -94,8 +95,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
      * @param trueLabel          The label to branch to when the comparison is true.
      * @param opCmp              A string representation of the comparison operation.
      */
-    protected void codeGenInstGeneral(DecacCompiler compiler,
-                                      BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
+    protected void codeGenInstGeneral(DecacCompiler compiler, BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
         if(compiler.getStack().getCurrentRegister()+1 < compiler.getStack().getNumberOfRegisters()) {
             codeGenInstOpCmp(compiler,2,branchInstruction, trueLabel, opCmp);
         }
@@ -106,6 +106,56 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
             compiler.getStack().popRegister(compiler);
             compiler.getStack().increaseRegister();
         }
+    }
+
+    protected void codeGenInstGeneralOP(DecacCompiler compiler, BranchInstruction branchInstruction, Label trueLabel, String opCmp){
+        String vars = extractVariable(compiler);
+        Label endEqualLabel = new Label("end_" + opCmp);
+
+        GPRegister rightRegister = null;
+        GPRegister leftRegister = null;
+
+
+        switch (vars){
+            case "both":
+                rightRegister = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                leftRegister = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                compiler.getStack().increaseRegister();
+                break;
+
+            case "left":
+                leftRegister = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                getRightOperand().codeGenInstOP(compiler);
+                rightRegister = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            case "right":
+                rightRegister = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                getLeftOperand().codeGenInstOP(compiler);
+                leftRegister = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            default:
+                codeGenInstGeneral(compiler, branchInstruction, trueLabel, opCmp);
+                return;
+
+        }
+
+        compiler.addInstruction(new CMP(
+                rightRegister,
+                leftRegister
+        ));
+
+        compiler.addInstruction(branchInstruction);
+        compiler.addInstruction(new LOAD(0,Register.getR(compiler.getStack().getCurrentRegister()-1)));
+        compiler.addInstruction(new BRA(endEqualLabel));
+        compiler.addLabel(trueLabel);
+        compiler.addInstruction(new LOAD(1,Register.getR(compiler.getStack().getCurrentRegister()-1)));
+        compiler.addLabel(endEqualLabel);
+
+
+
+
     }
 
     /**

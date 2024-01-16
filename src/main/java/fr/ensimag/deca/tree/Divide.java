@@ -3,6 +3,8 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
+import fr.ensimag.ima.pseudocode.DVal;
+import fr.ensimag.ima.pseudocode.GPRegister;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
@@ -14,6 +16,14 @@ import fr.ensimag.ima.pseudocode.instructions.*;
 public class Divide extends AbstractOpArith {
     public Divide(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
+    }
+
+    @Override
+    public BinaryInstructionDValToReg getOperator(DVal op1, GPRegister op2) {
+        if (getType().isFloat()){
+            return new DIV(op1, op2);
+        }
+        return new QUO(op1, op2);
     }
 
 

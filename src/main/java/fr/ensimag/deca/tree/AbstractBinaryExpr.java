@@ -1,5 +1,6 @@
 package fr.ensimag.deca.tree;
 
+import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 import java.util.HashSet;
@@ -74,6 +75,20 @@ public abstract class AbstractBinaryExpr extends AbstractExpr {
         else if (getRightOperand() instanceof Identifier) {
             liveVariable.add((Identifier) getRightOperand());
         }
+    }
+
+    public String extractVariable(DecacCompiler compiler){
+        if(getLeftOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getLeftOperand())){
+            if (getRightOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getRightOperand())){
+                return "both";
+            }
+            return"left";
+        }
+
+        if(getRightOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getRightOperand())){
+            return "right";
+        }
+        return "none";
     }
 
 }

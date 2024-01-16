@@ -2,10 +2,7 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.ima.pseudocode.BinaryInstructionDValToReg;
-import fr.ensimag.ima.pseudocode.DVal;
-import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.log4j.Logger;
 
@@ -107,5 +104,7 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
             compiler.getStack().increaseRegister();
         }
     }
+
+    public abstract BinaryInstructionDValToReg getOperator(DVal op1, GPRegister op2);
 
 }

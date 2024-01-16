@@ -96,13 +96,16 @@ public class While extends AbstractInst {
 
             LOG.info("There are " + liveVariables.size() + " live variables in the while ...");
 
+            Boolean isInWhile = compiler.isInWhile();
             // Load live variables
-            loadLiveVariable(compiler);
+            if(!isInWhile)
+                loadLiveVariable(compiler);
 
             // Start + Body
             compiler.addLabel(startOfWile);
 
             for (AbstractInst abstractInst : body.getList()) {
+                LOG.debug("The instruction is " + abstractInst);
                 abstractInst.codeGenInstOP(compiler);
             }
 
@@ -119,7 +122,8 @@ public class While extends AbstractInst {
             compiler.addLabel(endOfWile);
 
             //Store variables
-            storeLiveVariable(compiler);
+            if(!isInWhile)
+                storeLiveVariable(compiler);
         }
         else {
             compiler.getStack().pushRegister(compiler);
@@ -131,7 +135,13 @@ public class While extends AbstractInst {
 
 
     private void loadLiveVariable(DecacCompiler compiler){
+
+        // Getting into a while is marked by loading all the variables in registers
+        compiler.getInWhile();
+
         LOG.debug("We got to \"loadLiveVariable\"... That's something... ");
+
+        compiler.initVariablesDict();
 
         for (AbstractIdentifier abstractIdentifier : liveVariables){
             LOG.debug("Let's see those variables ...");
@@ -140,24 +150,29 @@ public class While extends AbstractInst {
                     Register.getR(compiler.getStack().getCurrentRegister())
             ));
 
-            abstractIdentifier.setRegister(Register.getR(compiler.getStack().getCurrentRegister()));
+            compiler.addToVariablesDict(abstractIdentifier, Register.getR(compiler.getStack().getCurrentRegister()));
+
             compiler.getStack().increaseRegister();
+            LOG.debug("The current register is " + compiler.getStack().getCurrentRegister());
 
         }
     }
 
     private void storeLiveVariable(DecacCompiler compiler){
+
+        // Getting out of a while is marked by storing all the variables in registers
+        compiler.getOutWhile();
+
         for (AbstractIdentifier abstractIdentifier : liveVariables){
 
             compiler.addInstruction(new STORE(
-                    abstractIdentifier.getRegister(),
+                    compiler.getRegister(abstractIdentifier),
                     abstractIdentifier.getExpDefinition().getOperand()
             ));
-
-            abstractIdentifier.setRegisterToNull();
             compiler.getStack().decreaseRegister();
-
         }
+
+        compiler.initVariablesDict();
     }
 
 

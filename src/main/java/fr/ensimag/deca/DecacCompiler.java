@@ -9,15 +9,9 @@ import fr.ensimag.deca.syntax.DecaParser;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.SymbolTable;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
-import fr.ensimag.deca.tree.AbstractExpr;
-import fr.ensimag.deca.tree.AbstractIdentifier;
-import fr.ensimag.deca.tree.AbstractProgram;
-import fr.ensimag.deca.tree.DeclClass;
-import fr.ensimag.deca.tree.LocationException;
-import fr.ensimag.ima.pseudocode.AbstractLine;
-import fr.ensimag.ima.pseudocode.IMAProgram;
-import fr.ensimag.ima.pseudocode.Instruction;
-import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.deca.tree.*;
+import fr.ensimag.ima.pseudocode.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -330,4 +324,38 @@ public class DecacCompiler {
     public boolean isPass3() {
         return isPass3;
     }
+
+
+    private Boolean inWhile = false;
+
+    public Boolean isInWhile(){
+        return inWhile;
+    }
+
+    public void getInWhile(){
+        inWhile = true;
+    }
+
+    public void getOutWhile(){
+        inWhile = false;
+    }
+
+    private HashMap<AbstractIdentifier, GPRegister> variablesDict = new HashMap<>();
+
+    public void initVariablesDict(){
+        variablesDict = new HashMap<>();
+    }
+
+    public void addToVariablesDict(AbstractIdentifier variable, GPRegister register){
+        variablesDict.putIfAbsent(variable, register);
+    }
+
+    public GPRegister getRegister(AbstractIdentifier variable){
+        return variablesDict.get(variable);
+    }
+
+    public Boolean isVariableInDict(AbstractIdentifier variable){
+        return variablesDict.containsKey(variable);
+    }
+
 }

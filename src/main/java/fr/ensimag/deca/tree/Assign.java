@@ -3,7 +3,9 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
+import org.apache.log4j.Logger;
 
 /**
  * Assignment, i.e. lvalue = expr.
@@ -12,6 +14,9 @@ import fr.ensimag.ima.pseudocode.instructions.STORE;
  * @date 01/01/2024
  */
 public class Assign extends AbstractBinaryExpr {
+
+    private static final Logger LOG = Logger.getLogger(Assign.class);
+
 
     @Override
     public AbstractLValue getLeftOperand() {
@@ -54,10 +59,13 @@ public class Assign extends AbstractBinaryExpr {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
-            if (compiler.getCompilerOptions().getOPTIM())
+            if (compiler.getCompilerOptions().getOPTIM()) {
+                LOG.debug("Let's optimize that assign");
                 getRightOperand().codeGenInstOP(compiler);
+            }
             else
                 getRightOperand().codeGenInst(compiler);
+
             AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
             compiler.addInstruction(
                     new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
@@ -71,6 +79,44 @@ public class Assign extends AbstractBinaryExpr {
             codeGenInst(compiler);
             compiler.getStack().popRegister(compiler);
         }
+    }
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        LOG.debug("This is codeGen assign");
+        if(!compiler.isVariableInDict((AbstractIdentifier) getLeftOperand())){
+            codeGenInst(compiler);
+            return;
+        }
+
+        if(getRightOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getRightOperand())){
+            compiler.addInstruction(new LOAD(
+                    compiler.getRegister((AbstractIdentifier) getRightOperand()),
+                    compiler.getRegister((AbstractIdentifier) getLeftOperand())
+
+            ));
+        }
+
+        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+
+            getRightOperand().codeGenInstOP(compiler);
+
+
+
+            compiler.addInstruction(new LOAD(
+                    Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    compiler.getRegister((AbstractIdentifier) getLeftOperand())
+            ));
+
+            compiler.getStack().decreaseRegister();
+        }
+        else {
+            compiler.getStack().pushRegister(compiler);
+            codeGenInst(compiler);
+            compiler.getStack().popRegister(compiler);
+        }
+
+
     }
 
     @Override

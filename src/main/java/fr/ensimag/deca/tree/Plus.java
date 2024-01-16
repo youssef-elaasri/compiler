@@ -9,6 +9,7 @@ import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.ADD;
 import fr.ensimag.ima.pseudocode.instructions.BOV;
 import fr.ensimag.ima.pseudocode.instructions.DIV;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.log4j.Logger;
 
 /**
@@ -22,7 +23,12 @@ public class Plus extends AbstractOpArith {
     public Plus(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
- 
+
+    @Override
+    public BinaryInstructionDValToReg getOperator(DVal op1, GPRegister op2) {
+        return new ADD(op1, op2);
+    }
+
 
     @Override
     protected String getOperatorName() {
@@ -64,55 +70,75 @@ public class Plus extends AbstractOpArith {
 
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
-        DVal rightDVal = getDval(getRightOperand());
-        DVal lefttDVal = getDval(getLeftOperand());
+        DVal dVal = getDval(getRightOperand());
 
-        LOG.debug("Hey! did you know that rightDVal is" + rightDVal);
-        if (rightDVal != null) {
-            // Call register to optimize variable usage
-            LOG.debug("Hey! did you know that lefttDVal instanceof GPRegister is " + (lefttDVal instanceof GPRegister));
-            if(lefttDVal instanceof GPRegister){
-                LOG.debug("Hey! leftDval is a register" + lefttDVal);
-                compiler.getStack().increaseRegister();
-                compiler.addInstruction(new ADD(
-                        rightDVal,
-                        (GPRegister) lefttDVal
-                ));
-            }else {
-                // no optimization is done here
-                getLeftOperand().codeGenInst(compiler);
-                compiler.addInstruction(new ADD(
-                        rightDVal,
-                        Register.getR(compiler.getStack().getCurrentRegister() - 1)
-                ));
-            }
 
-            if(this.getType().isFloat())
-                if (!compiler.getCompilerOptions().getNoCheck())
-                    compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+        GPRegister registerLeft;
+        DVal registerRight;
+        int offSet = 0;
+        String var = extractVariable(compiler);
+
+
+        switch(var){
+            case "both":
+                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                break;
+
+            case "left":
+                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                if(dVal != null){
+                    registerRight = dVal;
+                    break;
+                }
+                getRightOperand().codeGenInstOP(compiler);
+                offSet++;
+                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            case "right":
+                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                getLeftOperand().codeGenInstOP(compiler);
+                offSet++;
+                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            default:
+                if(compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()){
+                     compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+
+                getLeftOperand().codeGenInstOP(compiler);
+                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                getRightOperand().codeGenInstOP(compiler);
+                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                offSet += 2;
 
         }
-        else {
-            int registerDec = compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters() ?
-                    1 : 0;
 
-            BinaryInstructionDValToReg binaryInstructionDValToReg;
 
-            if(lefttDVal instanceof GPRegister) {
-                 binaryInstructionDValToReg = new ADD(
-                        Register.getR(compiler.getStack().getCurrentRegister() + registerDec - 1),
-                        (GPRegister) lefttDVal
-                );
-            }
-            else {
-                 binaryInstructionDValToReg = new ADD(
-                        Register.getR(compiler.getStack().getCurrentRegister() + registerDec - 1),
-                        Register.getR(compiler.getStack().getCurrentRegister() + registerDec)
-                );
-            }
+        compiler.addInstruction(new LOAD(
+                registerLeft,
+                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
+        ));
 
-            codeGenInstOpArith(compiler,binaryInstructionDValToReg,false, true);
-        }
+        compiler.addInstruction(new ADD(
+                registerRight,
+                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
+        ));
+
+        if (this.getType().isFloat())
+            if (!compiler.getCompilerOptions().getNoCheck())
+                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
+        if(offSet == 2)
+            compiler.getStack().decreaseRegister();
+
+        if(offSet == 0)
+            compiler.getStack().increaseRegister();
+
     }
 
     @Override
