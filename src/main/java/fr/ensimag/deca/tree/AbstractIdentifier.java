@@ -93,4 +93,13 @@ public abstract class AbstractIdentifier extends AbstractLValue {
      *         (corresponds to the "type" attribute)
      */
     public abstract Type verifyType(DecacCompiler compiler) throws ContextualError;
+
+    public Visibility getVisibility(DecacCompiler compiler) {
+        SymbolTable.Symbol publicVisib = compiler.createSymbol("PUBLIC");
+        SymbolTable.Symbol protectedVisib = compiler.createSymbol("PROTECTED");
+        if (this.getName().equals(publicVisib)) {
+            return Visibility.PUBLIC;
+        }
+        return Visibility.PROTECTED;
+    }
 }
