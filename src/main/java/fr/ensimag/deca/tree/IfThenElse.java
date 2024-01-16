@@ -98,14 +98,15 @@ public class IfThenElse extends AbstractInst {
     public void decompile(IndentPrintStream s) {
        String st = "if";
        s.print(st);
+       s.print(" (");
        condition.decompile(s);
-       s.println("{");
+       s.print(") ");
+       s.println(" {");
        thenBranch.decompile(s);
-       s.println("} else {");
+       s.println("}");
+       s.println("else {");
        elseBranch.decompile(s);
        s.println("}");
-
-
     }
 
     @Override

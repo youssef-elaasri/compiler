@@ -48,7 +48,6 @@ public class NoInitialization extends AbstractInitialization {
         // leaf node => nothing to do
     }
 
-    /** ADDED CODE **/
 
     /**
      * Overrides the code generation initialization method for a specific variable.

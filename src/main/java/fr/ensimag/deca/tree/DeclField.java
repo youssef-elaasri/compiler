@@ -48,4 +48,9 @@ public class DeclField extends AbstractDeclField{
     protected void verifyFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
 
     }
+
+    @Override
+    public void codeGenInitListDeclClass(DecacCompiler compiler) {
+        //TODO I can't find the field's type
+    }
 }

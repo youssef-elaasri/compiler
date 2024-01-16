@@ -19,4 +19,6 @@ public class NEW extends BinaryInstructionDValToReg {
         super(new ImmediateInteger(size), op2);
     }
 
+
+
 }
