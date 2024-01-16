@@ -57,7 +57,6 @@ public class DeclMethod extends AbstractDeclMethod{
             throw new ContextualError(name.getName()+" not same signature", getLocation());
         }
         
-        // A completer plus tard dans Type pr verifier le sous typage
         if(! type2.isSubType( compiler.environmentType,typeM)){
             throw new ContextualError(name.getName()+" not subtype ", getLocation());
         }
