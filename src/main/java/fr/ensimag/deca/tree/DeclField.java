@@ -10,14 +10,17 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 public class DeclField extends AbstractDeclField{
+    final private AbstractIdentifier visibility;
     final private AbstractIdentifier type;
     final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
 
-    public DeclField(AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
+    public DeclField(AbstractIdentifier visibility, AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
+        Validate.notNull(visibility);
         Validate.notNull(type);
         Validate.notNull(fieldName);
         Validate.notNull(initialization);
+        this.visibility = visibility;
         this.type = type;
         this.fieldName = fieldName;
         this.initialization = initialization;
@@ -25,6 +28,7 @@ public class DeclField extends AbstractDeclField{
     @Override
     public void decompile(IndentPrintStream s) {
         // this.visib.decompile...
+        visibility.decompile(s);
         s.print(" ");
         type.decompile(s);
         s.print(" ");
@@ -36,6 +40,7 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
+        visibility.prettyPrint(s, prefix, false);
         type.prettyPrint(s, prefix, false);
         fieldName.prettyPrint(s, prefix, false);
         initialization.prettyPrint(s, prefix, true);
@@ -43,6 +48,7 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     protected void iterChildren(TreeFunction f) {
+        visibility.iter(f);
         type.iter(f);
         fieldName.iter(f);
         initialization.iter(f);
@@ -62,7 +68,7 @@ public class DeclField extends AbstractDeclField{
         ExpDefinition expDef = envSup.getMembers().getExpDefinitionMap().get(fieldName.getName());
         FieldDefinition fieldDef;
         if (expDef == null) {
-            fieldDef = new FieldDefinition(typeF, this.getLocation(), Visibility.PUBLIC, classId.getClassDefinition(), 0);
+            fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility.getVisibility(compiler), classId.getClassDefinition(), 0);
         }
         else {
             if (!expDef.isField()) {

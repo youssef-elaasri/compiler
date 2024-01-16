@@ -547,43 +547,46 @@ class_body returns[ListDeclField list_field, ListDeclMethod list_method]
         $list_method = new ListDeclMethod();
     }
     : (m=decl_method {
+           $list_method.add($m.tree);
         }
-      | f=decl_field_set[$list_field]+ {
+      | f=decl_field_set[$list_field] {
       }
       )*
     ;
 
 decl_field_set[ListDeclField list_field]
-    : v=visibility t=type list_decl_field[$list_field, $t.tree]
+    : v=visibility t=type list_decl_field[$list_field, $t.tree, $v.tree]
     SEMI {
     }
     ;
 
-visibility
+visibility returns[AbstractIdentifier tree]
     : /* epsilon */ {
+        $tree = new Identifier(symbolTable.create("PUBLIC"));
         }
-    | PROTECTED {
+    | pr=PROTECTED {
+        $tree = new Identifier(symbolTable.create("PROTECTED"));
         }
     ;
 
-list_decl_field[ListDeclField list_field, AbstractIdentifier t]
-    : dv1=decl_field[$t] {
+list_decl_field[ListDeclField list_field, AbstractIdentifier t, AbstractIdentifier v]
+    : dv1=decl_field[$t, $v] {
         assert($dv1.tree != null);
         $list_field.add($dv1.tree);
     }
-        (COMMA dv2=decl_field[$t] {
+        (COMMA dv2=decl_field[$t, $v] {
             assert($dv2.tree != null);
             $list_field.add($dv2.tree);
         }
       )*
     ;
 
-decl_field[AbstractIdentifier t] returns[AbstractDeclField tree]
+decl_field[AbstractIdentifier t, AbstractIdentifier v] returns[AbstractDeclField tree]
 @init {
     NoInitialization noInitialization = new NoInitialization();
 }
     : i=ident {
-        $tree = new DeclField($t, $i.tree, noInitialization);
+        $tree = new DeclField($v ,$t, $i.tree, noInitialization);
         setLocation($tree, $i.start);
         }
       (EQUALS e=expr {
@@ -592,10 +595,12 @@ decl_field[AbstractIdentifier t] returns[AbstractDeclField tree]
         }
     ;
 
-decl_method
+decl_method returns[AbstractDeclMethod tree]
 @init {
+    ListDeclParam list_param = new ListDeclParam();
 }
-    : type ident OPARENT params=list_params CPARENT (block {
+    : type ident OPARENT params=list_params[list_param] CPARENT (block {
+    $tree = new DeclMethod($type.tree, $ident.tree, list_param);
         }
       | ASM OPARENT code=multi_line_string CPARENT SEMI {
         }
@@ -603,9 +608,13 @@ decl_method
         }
     ;
 
-list_params
+list_params[ListDeclParam list_param]
     : (p1=param {
+        assert($p1.tree != null);
+        $list_param.add($p1.tree);
         } (COMMA p2=param {
+        assert($p2.tree != null);
+        $list_param.add($p2.tree);
         }
       )*)?
     ;
@@ -621,7 +630,10 @@ multi_line_string returns[String text, Location location]
         }
     ;
 
-param
-    : type ident {
+param returns[AbstractDeclParam tree]
+    : t=type i=ident {
+        assert($t.tree != null);
+        assert($i.tree != null);
+        $tree = new DeclParam($t.tree, $i.tree);
         }
     ;
