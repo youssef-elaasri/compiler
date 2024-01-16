@@ -96,17 +96,16 @@ public abstract class AbstractIdentifier extends AbstractLValue {
      */
     public abstract Type verifyType(DecacCompiler compiler) throws ContextualError;
 
-    private GPRegister register = null;
 
-    public void setRegister(GPRegister register) {
-        this.register = register;
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 
-    public void setRegisterToNull() {
-        this.register = null;
-    }
-
-    public GPRegister getRegister() {
-        return register;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractIdentifier)
+            return ((AbstractIdentifier) obj).getName() == getName();
+        return super.equals(obj);
     }
 }
