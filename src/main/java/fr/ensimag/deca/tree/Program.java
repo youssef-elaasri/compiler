@@ -87,6 +87,20 @@ public class Program extends AbstractProgram {
         // Halt the program execution
         compiler.addInstruction(new HALT());
 
+
+
+        // Classes constructors
+
+        compiler.addComment("--------------------------------------------------");
+        compiler.addComment("                  Constructors                    ");
+        compiler.addComment("--------------------------------------------------");
+        classes.codeGenInitListDeclClass(compiler);
+
+
+        // Object.equals
+        LOG.info("Generate the code for code.Object.equals ...");
+        putObjectDotEquals(compiler);
+
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
 
@@ -121,13 +135,18 @@ public class Program extends AbstractProgram {
         compiler.getStack().increaseCounterTSTO();
     }
 
+    private void putObjectDotEquals(DecacCompiler compiler){
+        compiler.addLabel(equalsLabel);
+        //TODO complete this
+        compiler.addInstruction(new RTS());
+    }
+    
     /**
      * This function adds the method label to class methods table
      * @param compiler
      * @param methodLabel
      */
     public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
-        Label codeMethodLabel = new Label("code." + methodLabel);
         compiler.addInstruction(new LOAD(methodLabel, Register.R0));
         compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
         compiler.getStack().increaseAddrCounter();

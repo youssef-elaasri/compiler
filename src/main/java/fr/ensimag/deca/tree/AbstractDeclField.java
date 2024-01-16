@@ -13,4 +13,5 @@ public abstract class AbstractDeclField extends Tree{
 
     protected abstract void verifyFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId);
 
+    public abstract void codeGenInitListDeclClass(DecacCompiler compiler);
 }
