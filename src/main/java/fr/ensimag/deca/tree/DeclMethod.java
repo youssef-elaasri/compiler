@@ -46,16 +46,16 @@ public class DeclMethod extends AbstractDeclMethod{
         if(envSup==null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
         }
-        ExpDefinition envExpSuper= envSup.getMembers().getExpDefinitionMap().get(name.getName());
+        ExpDefinition envExpSuper= envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
         if(envExpSuper == null){
-            throw new ContextualError(name.getName() + " is not defined !", name.getLocation());
+            throw new ContextualError(methodName.getName() + " is not defined !", methodName.getLocation());
         }
 
         MethodDefinition methDef =superId.getMethodDefinition();
         Signature sig2=methDef.getSignature();
         Type type2=methDef.getType();
         if(!sig2.equals(sig)){
-            throw new ContextualError(name.getName()+" not same signature", getLocation());
+            throw new ContextualError(methodName.getName()+" not same signature", getLocation());
         }
 
         // A completer plus tard dans Type pr verifier le sous typage
@@ -65,7 +65,7 @@ public class DeclMethod extends AbstractDeclMethod{
         EnvironmentExp envExp=new EnvironmentExp(null);
         envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), sig,envSup.getNumberOfMethods());
-        envExp.declare(name.getName(), methDefReturned);
+        envExp.declare(methodName.getName(), methDefReturned);
         return envExp;
     }
 
