@@ -68,78 +68,7 @@ public class Plus extends AbstractOpArith {
         }
     }
 
-    @Override
-    protected void codeGenInstOP(DecacCompiler compiler) {
-        DVal dVal = getDval(getRightOperand());
 
-
-        GPRegister registerLeft;
-        DVal registerRight;
-        int offSet = 0;
-        String var = extractVariable(compiler);
-
-
-        switch(var){
-            case "both":
-                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
-                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
-                break;
-
-            case "left":
-                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
-                if(dVal != null){
-                    registerRight = dVal;
-                    break;
-                }
-                getRightOperand().codeGenInstOP(compiler);
-                offSet++;
-                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
-                break;
-
-            case "right":
-                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
-                getLeftOperand().codeGenInstOP(compiler);
-                offSet++;
-                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
-                break;
-
-            default:
-                if(compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()){
-                     compiler.getStack().pushRegister(compiler);
-                    codeGenInstOP(compiler);
-                    compiler.getStack().popRegister(compiler);
-                }
-
-                getLeftOperand().codeGenInstOP(compiler);
-                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
-                getRightOperand().codeGenInstOP(compiler);
-                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
-                offSet += 2;
-
-        }
-
-
-        compiler.addInstruction(new LOAD(
-                registerLeft,
-                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
-        ));
-
-        compiler.addInstruction(new ADD(
-                registerRight,
-                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
-        ));
-
-        if (this.getType().isFloat())
-            if (!compiler.getCompilerOptions().getNoCheck())
-                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
-
-        if(offSet == 2)
-            compiler.getStack().decreaseRegister();
-
-        if(offSet == 0)
-            compiler.getStack().increaseRegister();
-
-    }
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {

@@ -1,5 +1,6 @@
 package fr.ensimag.deca.tree;
 
+import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 
@@ -43,6 +44,10 @@ public abstract class AbstractUnaryExpr extends AbstractExpr {
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         operand.prettyPrint(s, prefix, true);
+    }
+
+    protected boolean isVariable(DecacCompiler compiler){
+        return operand instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) operand);
     }
 
 

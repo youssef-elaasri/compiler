@@ -26,6 +26,11 @@ public class Divide extends AbstractOpArith {
         return new QUO(op1, op2);
     }
 
+    @Override
+    protected boolean isDiv() {
+        return true;
+    }
+
 
     @Override
     protected String getOperatorName() {

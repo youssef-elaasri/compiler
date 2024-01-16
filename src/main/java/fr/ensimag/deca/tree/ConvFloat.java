@@ -71,6 +71,23 @@ public class ConvFloat extends AbstractUnaryExpr {
     }
 
     @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        if(!isVariable(compiler)){
+            codeGenInst(compiler);
+            return;
+        }
+
+        compiler.getStack().increaseRegister();
+
+        // Load the value from the operand into a register and then convert to a floating-point value
+        compiler.addInstruction(new FLOAT(
+                compiler.getRegister((AbstractIdentifier) getOperand()),
+                Register.getR(compiler.getStack().getCurrentRegister() - 1)
+        ));
+
+    }
+
+    @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
         if (value instanceof IntLiteral) {

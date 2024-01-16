@@ -5,6 +5,7 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.GPRegister;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
@@ -64,6 +65,13 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         compiler.addInstruction(new BEQ(label));
     }
 
+    protected void compareAndJump(int val, GPRegister register, Label label, DecacCompiler compiler) {
+        // Compare the specified value with the content of the specified register
+        compiler.addInstruction(new CMP(val, register));
+        // Branch to the specified label if the comparison is true (BEQ)
+        compiler.addInstruction(new BEQ(label));
+    }
+
     /**
      * Generated the assembly code that adds a label and instructions for branching based on a boolean value.
      *
@@ -81,7 +89,6 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
         compiler.addInstruction(new BRA(endlabel));
     }
 
-    public abstract void increaseCounter();
 
     protected AbstractExpr ConstantFoldingAndPropagationBool(DecacCompiler compiler, boolean isAnd) {
         AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
@@ -97,5 +104,98 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
             return null;
         }
     }
+
+    public abstract int isOr();
+
+    private static int counter = 0;
+
+    public void increaseCounter() {
+        counter++;
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        int i = counter;
+        increaseCounter();
+        // Create labels for the end of the AND operation, true condition, and false condition
+        Label isFalse = new Label("is_false_"+i);
+        Label isTrue = new Label("is_true_"+i);
+        Label endAnd = new Label("end_and_"+i);
+
+        // Generate code for the left operand
+        if (compiler.getCompilerOptions().getOPTIM())
+            getLeftOperand().codeGenInstOP(compiler);
+        else
+            getLeftOperand().codeGenInst(compiler);
+
+        // Compare the result of the left operand with 0 and jump to endAnd if equal (false)
+        compareAndJump(isOr(), compiler.getStack().getCurrentRegister() - 1, endAnd, compiler);
+
+        // Decrease the register count for the left operand
+        compiler.getStack().decreaseRegister();
+
+        // Generate code for the right operand
+        if (compiler.getCompilerOptions().getOPTIM())
+            getRightOperand().codeGenInstOP(compiler);
+        else
+            getRightOperand().codeGenInst(compiler);
+
+        // Compare the result of the right operand with 0 and jump to isFalse if equal (false)
+        compareAndJump(isOr(), compiler.getStack().getCurrentRegister() - 1, isFalse, compiler);
+
+        // If both operands are true, jump to isTrue
+        boolLabel(1 - isOr(), isTrue, endAnd, compiler);
+
+        // If either operand is false, jump to isFalse
+        boolLabel(isOr(), isFalse, endAnd, compiler);
+
+        // Add the label for the end of the AND operation
+        compiler.addLabel(endAnd);
+    }
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        String vars = extractVariable(compiler);
+        int i = counter;
+        increaseCounter();
+        // Create labels for the end of the AND operation, true condition, and false condition
+        Label isFalse = new Label("is_false_"+i);
+        Label isTrue = new Label("is_true_"+i);
+        Label endAnd = new Label("end_and_"+i);
+
+
+        switch (vars){
+            case "both":
+                compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getLeftOperand()), endAnd, compiler);
+                compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getRightOperand()), endAnd, compiler);
+                compiler.getStack().increaseRegister();
+                break;
+
+            case "left":
+                compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getLeftOperand()), endAnd, compiler);
+                getRightOperand().codeGenInstOP(compiler);
+                compareAndJump(isOr(), compiler.getStack().getCurrentRegister() - 1, endAnd, compiler);
+                break;
+
+            case "right":
+                compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getRightOperand()), endAnd, compiler);
+                getLeftOperand().codeGenInstOP(compiler);
+                compareAndJump(isOr(), compiler.getStack().getCurrentRegister() - 1, endAnd, compiler);
+                break;
+
+            default:
+                codeGenInst(compiler);
+                return;
+        }
+
+        boolLabel(1 - isOr(), isTrue, endAnd, compiler);
+
+        // If either operand is false, jump to isFalse
+        boolLabel(isOr(), isFalse, endAnd, compiler);
+
+        // Add the label for the end of the AND operation
+        compiler.addLabel(endAnd);
+    }
+
 
 }

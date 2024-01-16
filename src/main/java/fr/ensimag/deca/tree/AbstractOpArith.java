@@ -107,4 +107,93 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
     public abstract BinaryInstructionDValToReg getOperator(DVal op1, GPRegister op2);
 
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        DVal dVal = getDval(getRightOperand());
+
+        LOG.debug("Hey! Im an " + getClass() + ". How cool is that ?");
+
+        GPRegister registerLeft;
+        DVal registerRight;
+        int offSet = 0;
+        String var = extractVariable(compiler);
+
+
+        switch(var){
+            case "both":
+                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                break;
+
+            case "left":
+                registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                if(dVal != null){
+                    registerRight = dVal;
+                    break;
+                }
+                getRightOperand().codeGenInstOP(compiler);
+                offSet++;
+                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            case "right":
+                registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                getLeftOperand().codeGenInstOP(compiler);
+                offSet++;
+                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            default:
+                if(compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()){
+                    compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+
+                getLeftOperand().codeGenInstOP(compiler);
+                registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                getRightOperand().codeGenInstOP(compiler);
+                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                offSet += 2;
+
+        }
+
+
+        compiler.addInstruction(new LOAD(
+                registerLeft,
+                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
+        ));
+
+        compiler.addInstruction(getOperator(
+                registerRight,
+                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
+        ));
+
+        if(isDiv()){
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
+        }
+        else if(isMod()){
+            compiler.addInstruction(new BOV(compiler.getErrorHandler().addModuloByZero()));
+        }
+        else if (this.getType().isFloat())
+            if (!compiler.getCompilerOptions().getNoCheck())
+                compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
+
+
+        if(offSet == 2)
+            compiler.getStack().decreaseRegister();
+
+        if(offSet == 0)
+            compiler.getStack().increaseRegister();
+
+    }
+
+    protected  boolean isDiv(){
+        return false;
+    }
+    protected  boolean isMod(){
+        return false;
+    }
+
+
 }

@@ -19,6 +19,17 @@ public class LowerOrEqual extends AbstractOpIneq {
         super(leftOperand, rightOperand);
     }
 
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BLE(op);
+    }
+
+    @Override
+    public String getLabel() {
+        String string = "lower_or_equal_" + counter;
+        increaseCounter();
+        return string;
+    }
 
     @Override
     protected String getOperatorName() {

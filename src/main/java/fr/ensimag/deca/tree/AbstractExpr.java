@@ -132,9 +132,6 @@ public abstract class AbstractExpr extends AbstractInst {
 
     private int labelCounter = 0;
 
-    private void increaseLabelCounter(){
-        labelCounter++;
-    }
     /**
      * Generate code to print the expression
      *
@@ -157,24 +154,7 @@ public abstract class AbstractExpr extends AbstractInst {
             else if (this.getType().isInt())
                 compiler.addInstruction(new WINT());
 
-            else{
-                // Create labels for the end of the NOT operation and the false condition
-                Label endNot = new Label("print_end_not_" + labelCounter);
-                Label falseNot = new Label("print_false_not_"+ labelCounter);
-                increaseLabelCounter();
 
-                compiler.addInstruction(new CMP(0, Register.R1));
-
-                compiler.addInstruction(new BEQ(falseNot));
-
-                compiler.addInstruction(new WSTR("\"true\""));
-                compiler.addInstruction(new BRA(endNot));
-
-                compiler.addLabel(falseNot);
-                compiler.addInstruction(new WSTR("\"false\""));
-
-                compiler.addLabel(endNot);
-            }
             compiler.getStack().decreaseRegister();
         }else {
 
@@ -182,6 +162,18 @@ public abstract class AbstractExpr extends AbstractInst {
             codeGenPrint(compiler);
             compiler.getStack().popRegister(compiler);
         }
+    }
+
+    protected void codeGenPrintOP(DecacCompiler compiler){
+        codeGenPrint(compiler);
+    }
+    private void increaseLabelCounter(){
+        labelCounter++;
+    }
+
+
+    protected boolean isVariable(DecacCompiler compiler){
+        return this instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) this);
     }
 
 

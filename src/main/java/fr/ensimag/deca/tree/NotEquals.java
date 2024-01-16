@@ -75,4 +75,15 @@ public class NotEquals extends AbstractOpExactCmp {
         counter++;
     }
 
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BNE(op);
+    }
+    @Override
+    public String getLabel() {
+        String string = "not_equal_" + counter;
+        increaseCounter();
+        return string;
+    }
+
 }

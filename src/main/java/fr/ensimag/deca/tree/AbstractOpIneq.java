@@ -2,6 +2,9 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.BranchInstruction;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.instructions.BLT;
 
 /**
  *
@@ -82,6 +85,9 @@ public abstract class AbstractOpIneq extends AbstractOpCmp {
         }
         return null;
     }
+
+
+
 
 
 }

@@ -199,4 +199,15 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
 
     public abstract void increaseCounter();
 
+    public abstract BranchInstruction getOperator(Label op);
+
+    public abstract String getLabel();
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        String string = getLabel();
+        Label label = new Label(string);
+        BranchInstruction branchInstruction = getOperator(label);
+        codeGenInstGeneralOP(compiler,branchInstruction, label,string);
+    }
 }

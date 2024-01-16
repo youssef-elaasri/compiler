@@ -102,4 +102,8 @@ public class Modulo extends AbstractOpArith {
         // nothing to do
     }
 
+    @Override
+    protected boolean isMod() {
+        return true;
+    }
 }

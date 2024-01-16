@@ -22,6 +22,18 @@ public class GreaterOrEqual extends AbstractOpIneq {
         super(leftOperand, rightOperand);
     }
 
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BGE(op);
+    }
+
+    @Override
+    public String getLabel() {
+        String string = "greater_or_equal_" + counter;
+        increaseCounter();
+        return string;
+    }
+
 
     @Override
     protected String getOperatorName() {

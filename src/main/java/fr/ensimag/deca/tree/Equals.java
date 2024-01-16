@@ -80,5 +80,18 @@ public class Equals extends AbstractOpExactCmp {
         counter++;
     }
 
-    
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BEQ(op);
+    }
+
+    @Override
+    public String getLabel() {
+        String string = "equal_" + counter;
+        increaseCounter();
+        return string;
+    }
+
+
+
 }

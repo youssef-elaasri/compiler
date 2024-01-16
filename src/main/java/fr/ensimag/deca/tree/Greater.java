@@ -21,6 +21,18 @@ public class Greater extends AbstractOpIneq {
         super(leftOperand, rightOperand);
     }
 
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BGT(op);
+    }
+
+    @Override
+    public String getLabel() {
+        String string = "greater_" + counter;
+        increaseCounter();
+        return string;
+    }
+
 
     @Override
     protected String getOperatorName() {

@@ -22,6 +22,18 @@ public class Lower extends AbstractOpIneq {
         super(leftOperand, rightOperand);
     }
 
+    @Override
+    public BranchInstruction getOperator(Label op) {
+        return new BLT(op);
+    }
+
+    @Override
+    public String getLabel() {
+        String label = "lower" + counter;
+        increaseCounter();
+        return label;
+    }
+
 
     @Override
     protected String getOperatorName() {
@@ -44,14 +56,7 @@ public class Lower extends AbstractOpIneq {
         codeGenInstGeneral(compiler,branchInstruction,label,"lower_" + i);
     }
 
-    @Override
-    protected void codeGenInstOP(DecacCompiler compiler) {
-        int i = counter;
-        Label label = new Label("lower_"+i);
-        increaseCounter();
-        BranchInstruction branchInstruction = new BLT(label);
-        codeGenInstGeneralOP(compiler,branchInstruction,label,"lower_" + i);
-    }
+
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {

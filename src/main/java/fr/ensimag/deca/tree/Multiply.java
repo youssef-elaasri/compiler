@@ -66,47 +66,47 @@ public class Multiply extends AbstractOpArith {
         }
 
     }
-
-    @Override
-    protected void codeGenInstOP(DecacCompiler compiler) {
-        // trying to catch the exponent of 2
-        int rightExponent = -1;
-        int leftExponent = -1;
-        if (getRightOperand() instanceof IntLiteral &&
-                ((IntLiteral) getRightOperand()).getValue() > 0 &&
-                (((IntLiteral) getRightOperand()).getValue() &
-                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0) {
-
-            rightExponent = getExponent(((IntLiteral) getRightOperand()).getValue());
-        }
-        if (getLeftOperand() instanceof IntLiteral &&
-                ((IntLiteral) getLeftOperand()).getValue() > 0 &&
-                (((IntLiteral) getLeftOperand()).getValue() &
-                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0) {
-            leftExponent = getExponent(((IntLiteral) getLeftOperand()).getValue());
-        }
-        if (rightExponent == -1 && leftExponent == -1
-                || rightExponent > 9 || leftExponent > 9) {
-            codeGenInst(compiler);
-            return;
-        }
-
-        if (rightExponent != -1 ) {
-            if (leftExponent != -1) {
-                if (rightExponent > leftExponent) {
-                    shift(compiler, leftExponent,getRightOperand());
-                }
-                else {
-                    shift(compiler, rightExponent, getLeftOperand());
-                }
-            } else {
-                shift(compiler,rightExponent, getLeftOperand());
-            }
-        } else {
-            shift(compiler,rightExponent, getLeftOperand());
-        }
-
-    }
+//
+//    @Override
+//    protected void codeGenInstOP(DecacCompiler compiler) {
+//        // trying to catch the exponent of 2
+//        int rightExponent = -1;
+//        int leftExponent = -1;
+//        if (getRightOperand() instanceof IntLiteral &&
+//                ((IntLiteral) getRightOperand()).getValue() > 0 &&
+//                (((IntLiteral) getRightOperand()).getValue() &
+//                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0) {
+//
+//            rightExponent = getExponent(((IntLiteral) getRightOperand()).getValue());
+//        }
+//        if (getLeftOperand() instanceof IntLiteral &&
+//                ((IntLiteral) getLeftOperand()).getValue() > 0 &&
+//                (((IntLiteral) getLeftOperand()).getValue() &
+//                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0) {
+//            leftExponent = getExponent(((IntLiteral) getLeftOperand()).getValue());
+//        }
+//        if (rightExponent == -1 && leftExponent == -1
+//                || rightExponent > 9 || leftExponent > 9) {
+//            codeGenInst(compiler);
+//            return;
+//        }
+//
+//        if (rightExponent != -1 ) {
+//            if (leftExponent != -1) {
+//                if (rightExponent > leftExponent) {
+//                    shift(compiler, leftExponent,getRightOperand());
+//                }
+//                else {
+//                    shift(compiler, rightExponent, getLeftOperand());
+//                }
+//            } else {
+//                shift(compiler,rightExponent, getLeftOperand());
+//            }
+//        } else {
+//            shift(compiler,rightExponent, getLeftOperand());
+//        }
+//
+//    }
 
     private void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr) {
         expr.codeGenInstOP(compiler);
