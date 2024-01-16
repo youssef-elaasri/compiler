@@ -67,21 +67,32 @@ public abstract class Type {
     public boolean isClassOrNull() {
         return false;
     }
-
+    /**
+     * Verifiying if a type is a SubType of another Type
+     * @param env
+     * @param T
+     * @return
+     */
     public boolean isSubType(EnvironmentType env, Type T){
+
+        if(this.getName().getName() == "Object")
+        return false;
+
         ClassDefinition typeB = (ClassDefinition) env.defOfType(this.getName());
         ClassDefinition typeA = (ClassDefinition) env.defOfType(T.getName());
         boolean isSame = this.getName()==T.getName();
         boolean isTObject = T.getName().toString() == "Object";
         boolean doesExtendsT=typeB.getSuperClass()==typeA;
-        boolean isNull = this==null;
+        boolean isNull = this ==null;
         
-        if(isSame || isTObject || doesExtendsT || isNull){
+        if(isSame || isTObject || doesExtendsT || isNull ){
             return true;
         }
-        if(typeB.getSuperClass().getType().isSubType(env, T)){
-            return true;
-        }
+
+        Type superType = typeB.getSuperClass().getType();
+            if(superType.isSubType(env, T)){
+                return true;
+            }
         return false;
     }
 
