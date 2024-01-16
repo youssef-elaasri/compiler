@@ -10,18 +10,19 @@ import org.apache.commons.lang.Validate;
 
 public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
-    final private AbstractIdentifier name;
-    final private Signature sig;
+    final private AbstractIdentifier methodName;
+    final private ListDeclParam list_param;
+    private Signature sig;
 
-    public DeclMethod(AbstractIdentifier type,AbstractIdentifier name, Signature sig){
+    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param) {
         Validate.notNull(type);
-        Validate.notNull(sig);
-        Validate.notNull(name);
+        Validate.notNull(list_param);
+        Validate.notNull(methodName);
         this.type=type;
-        this.name=name;
-        this.sig=sig;
+        this.methodName = methodName;
+        this.list_param=list_param;
+        this.sig = list_param.getSignature();
 
-        
     }
     @Override
     public void decompile(IndentPrintStream s) {
@@ -56,7 +57,7 @@ public class DeclMethod extends AbstractDeclMethod{
         if(!sig2.equals(sig)){
             throw new ContextualError(name.getName()+" not same signature", getLocation());
         }
-        
+
         // A completer plus tard dans Type pr verifier le sous typage
         // if(! type2.isSubType(env,type)){
         //     throw new ContextualError(name.getName()+" not subtype ", getLocation());
@@ -71,5 +72,20 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected void verifyMethodBody(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
 
+    }
+
+    @Override
+    protected AbstractIdentifier getMethodName() {
+        return this.methodName;
+    }
+
+    @Override
+    protected AbstractIdentifier getMethodType() {
+        return this.type;
+    }
+
+    @Override
+    protected Signature getMethodSignature() {
+        return this.sig;
     }
 }

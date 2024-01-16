@@ -14,7 +14,7 @@ public class DeclField extends AbstractDeclField{
     final private AbstractIdentifier type;
     final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
-
+    private int offset;
     public DeclField(AbstractIdentifier visibility, AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
         Validate.notNull(visibility);
         Validate.notNull(type);
@@ -25,6 +25,19 @@ public class DeclField extends AbstractDeclField{
         this.fieldName = fieldName;
         this.initialization = initialization;
     }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public AbstractInitialization getInitialization() {
+        return initialization;
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
         // this.visib.decompile...
@@ -87,5 +100,10 @@ public class DeclField extends AbstractDeclField{
     @Override
     protected void verifyFieldInit(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId) {
 
+    }
+
+    @Override
+    public void codeGenInitListDeclClass(DecacCompiler compiler) {
+        //TODO I can't find the field's type
     }
 }
