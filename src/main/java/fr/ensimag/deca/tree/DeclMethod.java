@@ -58,9 +58,9 @@ public class DeclMethod extends AbstractDeclMethod{
         }
         
         // A completer plus tard dans Type pr verifier le sous typage
-        // if(! type2.isSubType(env,type)){
-        //     throw new ContextualError(name.getName()+" not subtype ", getLocation());
-        // }
+        if(! type2.isSubType( compiler.environmentType,typeM)){
+            throw new ContextualError(name.getName()+" not subtype ", getLocation());
+        }
         EnvironmentExp envExp=new EnvironmentExp(null);
         envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), sig,envSup.getNumberOfMethods());

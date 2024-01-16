@@ -68,6 +68,23 @@ public abstract class Type {
         return false;
     }
 
+    public boolean isSubType(EnvironmentType env, Type T){
+        ClassDefinition typeB = (ClassDefinition) env.defOfType(this.getName());
+        ClassDefinition typeA = (ClassDefinition) env.defOfType(T.getName());
+        boolean isSame = this.getName()==T.getName();
+        boolean isTObject = T.getName().toString() == "Object";
+        boolean doesExtendsT=typeB.getSuperClass()==typeA;
+        boolean isNull = this==null;
+        
+        if(isSame || isTObject || doesExtendsT || isNull){
+            return true;
+        }
+        if(typeB.getSuperClass().getType().isSubType(env, T)){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns the same object, as type ClassType, if possible. Throws
      * ContextualError(errorMessage, l) otherwise.
