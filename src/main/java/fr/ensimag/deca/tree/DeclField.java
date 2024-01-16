@@ -16,7 +16,7 @@ public class DeclField extends AbstractDeclField{
 
     private int offset;
 
-    public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization, AbstractIdentifier visibility) {
+    public DeclField(AbstractIdentifier visibility, AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization) {
         Validate.notNull(type);
         Validate.notNull(visibility);
         Validate.notNull(FieldName);
