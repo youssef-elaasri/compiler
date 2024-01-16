@@ -122,7 +122,6 @@ public class Program extends AbstractProgram {
      * @param methodLabel
      */
     public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
-        Label codeMethodLabel = new Label("code." + methodLabel);
         compiler.addInstruction(new LOAD(methodLabel, Register.R0));
         compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
         compiler.getStack().increaseAddrCounter();

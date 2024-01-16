@@ -4,6 +4,7 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
@@ -90,7 +91,8 @@ public class DeclClass extends AbstractDeclClass {
 
         Program.setOperandEquals(compiler);
         for(AbstractDeclMethod method : this.listMethod.getList()){
-            Program.setOperandMethod(compiler, method.getMethodName().getMethodDefinition().getLabel());
+            Label codeMethodLabel = new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString());
+            Program.setOperandMethod(compiler,codeMethodLabel);
         }
 
 

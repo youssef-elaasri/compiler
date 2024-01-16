@@ -10,16 +10,17 @@ import org.apache.commons.lang.Validate;
 
 public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
-    final private AbstractIdentifier name;
+    final private AbstractIdentifier methodName;
     final private Signature sig;
 
-    public DeclMethod(AbstractIdentifier type,AbstractIdentifier name, Signature sig){
+    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, Signature sig){
         Validate.notNull(type);
         Validate.notNull(sig);
-        Validate.notNull(name);
+        Validate.notNull(methodName);
         this.type=type;
-        this.name=name;
+        this.methodName = methodName;
         this.sig=sig;
+
 
 
     }
@@ -51,7 +52,7 @@ public class DeclMethod extends AbstractDeclMethod{
 
     @Override
     protected AbstractIdentifier getMethodName() {
-        return this.name;
+        return this.methodName;
     }
 
     @Override
