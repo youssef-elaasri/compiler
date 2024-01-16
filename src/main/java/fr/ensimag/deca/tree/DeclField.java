@@ -9,17 +9,19 @@ import org.apache.commons.lang.Validate;
 import java.io.PrintStream;
 
 public class DeclField extends AbstractDeclField{
-
+    final private AbstractIdentifier visibility;
     final private AbstractIdentifier type;
     final private AbstractIdentifier FieldName;
     final private AbstractInitialization initialization;
 
     private int offset;
 
-    public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization) {
+    public DeclField(AbstractIdentifier type, AbstractIdentifier FieldName, AbstractInitialization initialization, AbstractIdentifier visibility) {
         Validate.notNull(type);
+        Validate.notNull(visibility);
         Validate.notNull(FieldName);
         Validate.notNull(initialization);
+        this.visibility = visibility;
         this.type = type;
         this.FieldName = FieldName;
         this.initialization = initialization;
