@@ -69,12 +69,12 @@ public class New extends AbstractExpr{
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new NEW(
-                compiler.getClassManager().get(className).getListField().getList().size(),
+                compiler.getClassManager().get(className).getListField().getList().size() + 1,
                 Register.getR(compiler.getStack().getCurrentRegister())
         ));
         compiler.addInstruction(new BOV(compiler.getErrorHandler().addFullStack()));
         compiler.addInstruction(
-                new LEA(compiler.getClassManager().get(className).getClassName().getExpDefinition().getOperand(),
+                new LEA(compiler.getClassManager().get(className).getClassName().getClassDefinition().getOperand(),
                 Register.R0
                 ));
         compiler.addInstruction(

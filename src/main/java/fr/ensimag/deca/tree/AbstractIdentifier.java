@@ -102,4 +102,17 @@ public abstract class AbstractIdentifier extends AbstractLValue {
         }
         return Visibility.PROTECTED;
     }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractIdentifier)
+            return ((AbstractIdentifier) obj).getName() == getName();
+        return super.equals(obj);
+    }
+
 }
