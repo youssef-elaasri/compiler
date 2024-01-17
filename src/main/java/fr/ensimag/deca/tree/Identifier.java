@@ -166,17 +166,14 @@ public class Identifier extends AbstractIdentifier {
         //current implementation for currentClass == null
         //which correspond to the main case
         Definition expDefinition = localEnv.get(this.name);
-        Definition expClassDefinition = compiler.environmentType.defOfType(this.name);
-        if (expDefinition == null && expClassDefinition == null){
+        if (expDefinition == null){
             throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
         }
-        else{
-            Definition exToSet = expDefinition != null ? expDefinition : expClassDefinition;
-            this.setDefinition(exToSet);
-            Type typeId = exToSet.getType();
-            this.setType(typeId);
-            return typeId;
-        }
+        this.setDefinition(expDefinition);
+        Type typeId = expDefinition.getType();
+        this.setType(typeId);
+
+        return typeId;
     }
 
     /**

@@ -27,8 +27,8 @@ public class ListDeclParam extends TreeList<AbstractDeclParam> {
 
     public Signature verifyListDeclParam(DecacCompiler compiler) throws ContextualError {
         Signature sig = new Signature();
-        for (AbstractDeclParam Param : this.getList()){
-            sig.add(Param.verifyParam(compiler));
+        for (AbstractDeclParam param : this.getList()){
+            sig.add(param.verifyParam(compiler));
         }
         return sig;
     }

@@ -7,8 +7,10 @@ import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ListDeclField extends TreeList<AbstractDeclField>{
     @Override
@@ -24,11 +26,11 @@ public class ListDeclField extends TreeList<AbstractDeclField>{
         EnvironmentExp envExpr = new EnvironmentExp(null);
         for (AbstractDeclField declF : this.getList()) {
             EnvironmentExp envExp = declF.verifyField(compiler, superId, classId);
-            Map<SymbolTable.Symbol, ExpDefinition> interMap = new HashMap<>(envExp.getExpDefinitionMap());
+            Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
+            Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
             /*Vérifier si les deux environnements sont disjoints*/
-            interMap.keySet().retainAll(envExpr.getExpDefinitionMap().keySet());
-            if (!interMap.isEmpty()) {
-                throw new ContextualError("Vous avez déclaré un champ plusieurs fois dans la classe !", this.getLocation());
+            if (!Collections.disjoint(keyS, keySr)) {
+                throw new ContextualError("Vous avez déclaré " + keySr + " plusieurs fois dans la classe !", declF.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
         }

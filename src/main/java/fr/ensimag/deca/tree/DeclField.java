@@ -79,18 +79,10 @@ public class DeclField extends AbstractDeclField{
             throw new ContextualError("Super class " + superId.getName() + " is not defined !", superId.getLocation());
         }
         ExpDefinition expDef = envSup.getMembers().getExpDefinitionMap().get(fieldName.getName());
-        FieldDefinition fieldDef;
-        if (expDef == null) {
-            fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility.getVisibility(compiler), classId.getClassDefinition(), 0);
+        if (expDef != null && !(expDef.isField())) {
+            throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
         }
-        else {
-            if (!expDef.isField()) {
-                throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
-            }
-            else {
-                fieldDef = (FieldDefinition) expDef;
-            }
-        }
+        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility.getVisibility(compiler), classId.getClassDefinition(), 0);
         EnvironmentExp envExp = new EnvironmentExp(null);
         envExp.declare(fieldName.getName(), fieldDef);
         fieldName.setDefinition(fieldDef);

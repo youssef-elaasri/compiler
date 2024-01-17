@@ -1,7 +1,9 @@
 package fr.ensimag.deca.tree;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
@@ -22,13 +24,13 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
     }
     public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError{
         EnvironmentExp envExpr =  new EnvironmentExp(null);
-        for(AbstractDeclMethod meth:this.getList()){
+        for(AbstractDeclMethod meth : this.getList()){
             EnvironmentExp envExp = meth.verifyMethod(compiler, superId);
-            Map<SymbolTable.Symbol, ExpDefinition> interMap = new HashMap<>(envExp.getExpDefinitionMap());
+            Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
+            Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
             /*Vérifier si les deux environnements sont disjoints*/
-            interMap.keySet().retainAll(envExpr.getExpDefinitionMap().keySet());
-            if (!interMap.isEmpty()) {
-                throw new ContextualError("Vous avez déclaré un champ plusieurs fois dans la classe !", this.getLocation());
+            if (!Collections.disjoint(keyS, keySr)) {
+                throw new ContextualError("Vous avez déclaré la méthode " + keySr + " plusieurs fois dans la classe !", meth.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
         }

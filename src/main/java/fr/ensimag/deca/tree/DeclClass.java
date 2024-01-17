@@ -15,8 +15,10 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Declaration of a class (<code>class name extends superClass {members}<code>).
@@ -77,6 +79,7 @@ public class DeclClass extends AbstractDeclClass {
         compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
         className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
+        LOG.debug("verify verifyClass: end");
     }
 
     @Override
@@ -86,8 +89,16 @@ public class DeclClass extends AbstractDeclClass {
         LOG.debug("verify verifyClassMembers: start");
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
         EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
-        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(envExpf.getExpDefinitionMap());
+        Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
+        Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
+        /*Vérifier si les deux environnements sont disjoints*/
+        if (!Collections.disjoint(keyF, keyM)) {
+            throw new ContextualError("Un champ et une méthode ont le même nom dans la classe et la super classe !", this.getLocation());
+        }
+        /*Method putAll overwrites Symbols already present in the superclass map*/
+        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
         mergedMap.putAll(envExpm.getExpDefinitionMap());
+        mergedMap.putAll(envExpf.getExpDefinitionMap());
         ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
         ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
         classDef.getMembers().setExpDefinitionMap(mergedMap);

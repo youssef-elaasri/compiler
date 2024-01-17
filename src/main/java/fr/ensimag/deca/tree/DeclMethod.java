@@ -42,24 +42,22 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError {
         ClassDefinition envSup = superId.getClassDefinition();
-        Type typeM=type.verifyType(compiler);
-        if(envSup==null){
+        Type typeM = type.verifyType(compiler);
+        if(envSup == null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
         }
         ExpDefinition envExpSuper= envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
-        if(envExpSuper == null){
-            throw new ContextualError(methodName.getName() + " is not defined !", methodName.getLocation());
-        }
-
-        MethodDefinition methDef =superId.getMethodDefinition();
-        Signature sig2=methDef.getSignature();
-        Type type2=methDef.getType();
-        if(!sig2.equals(sig)){
-            throw new ContextualError(methodName.getName()+" not same signature", getLocation());
-        }
-        
-        if(! type2.isSubType( compiler.environmentType,typeM)){
-            throw new ContextualError(methodName.getName()+" not subtype ", getLocation());
+        if(envExpSuper != null){
+            MethodDefinition methDef =superId.getMethodDefinition();
+            Signature sig2=methDef.getSignature();
+            Type type2=methDef.getType();
+            Signature signature = list_param.verifyListDeclParam(compiler);
+            if(!sig2.equals(signature)){
+                throw new ContextualError(methodName.getName()+" not same signature", getLocation());
+            }
+            if(! type2.isSubType( compiler.environmentType,typeM)){
+                throw new ContextualError(methodName.getName()+" not subtype ", getLocation());
+            }
         }
         EnvironmentExp envExp=new EnvironmentExp(null);
         envSup.incNumberOfMethods();

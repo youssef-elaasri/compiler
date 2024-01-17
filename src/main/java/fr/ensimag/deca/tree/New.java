@@ -24,10 +24,11 @@ public class New extends AbstractExpr{
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        Type classType = this.className.verifyExpr(compiler, localEnv, currentClass);
+        Type classType = className.verifyType(compiler);
         if (!classType.isClass()){
             throw new ContextualError("The type " + classType + " is not a class type", this.getLocation());
         }
+        this.setType(classType);
         return classType;
     }
     @Override
@@ -46,17 +47,17 @@ public class New extends AbstractExpr{
     }
 
 
-    @Override
-    protected void prettyPrintType(PrintStream s, String prefix) {
-        Type t = className.getType();
-        if (t != null) {
-            s.print(prefix);
-            s.print("type: ");
-            s.print(t);
-            s.println();
-        }
-
-    }
+//    @Override
+//    protected void prettyPrintType(PrintStream s, String prefix) {
+//        Type t = this.getType();
+//        if (t != null) {
+//            s.print(prefix);
+//            s.print("type: ");
+//            s.print(t);
+//            s.println();
+//        }
+//
+//    }
 
 
 

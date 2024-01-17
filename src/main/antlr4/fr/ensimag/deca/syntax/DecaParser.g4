@@ -590,6 +590,10 @@ decl_field[AbstractIdentifier t, AbstractIdentifier v] returns[AbstractDeclField
         setLocation($tree, $i.start);
         }
       (EQUALS e=expr {
+        Initialization initialization = new Initialization($e.tree);
+        $tree = new DeclField($v, $t,$i.tree,initialization);
+        setLocation($tree, $e.start);
+        setLocation(initialization, $e.start);
         }
       )? {
         }

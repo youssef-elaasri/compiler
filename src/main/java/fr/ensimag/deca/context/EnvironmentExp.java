@@ -86,7 +86,7 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
     }
 
     public void setExpDefinitionMap(Map<Symbol, ExpDefinition> expDefinitionMap) {
-        this.expDefinitionMap = expDefinitionMap;
+        this.expDefinitionMap = new HashMap<>(expDefinitionMap);
     }
 
 
