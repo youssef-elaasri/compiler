@@ -36,7 +36,8 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
         }
         return envExpr;
     }
-    public void verifyListDeclMethodBody(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId){
+
+    public void verifyListDeclMethodBody(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass){
         throw new UnsupportedOperationException("not yet implemented");
     }
 

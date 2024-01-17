@@ -93,7 +93,7 @@ public class DeclClass extends AbstractDeclClass {
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
         /*Vérifier si les deux environnements sont disjoints*/
         if (!Collections.disjoint(keyF, keyM)) {
-            throw new ContextualError("Un champ et une méthode ont le même nom dans la classe et la super classe !", this.getLocation());
+            throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", this.getLocation());
         }
         /*Method putAll overwrites Symbols already present in the superclass map*/
         Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
@@ -108,11 +108,10 @@ public class DeclClass extends AbstractDeclClass {
     
     @Override
     protected void verifyClassBody(DecacCompiler compiler) throws ContextualError {
-//        ClassDefinition superClassDefinition = superName.getClassDefinition();
-//        this.listField.verifyListDeclField(compiler, superName, className);
-//        this.listMethod.verifyListDeclMethod(compiler, superName);
-//        ClassType classType = new ClassType(className.getName(), className.getLocation(), superClassDefinition);
-        throw new UnsupportedOperationException("not yet implemented");
+        /*The two first passes ensure that className is defined in environmentType as a class)*/
+        EnvironmentExp envExp = ((ClassDefinition) compiler.environmentType.defOfType(className.getName())).getMembers();
+        listField.verifyListDeclFieldI(compiler, envExp, className.getClassDefinition());
+//        listMethod.verifyListDeclMethodBody(compiler, envExp, className.getClassDefinition());
     }
 
     @Override

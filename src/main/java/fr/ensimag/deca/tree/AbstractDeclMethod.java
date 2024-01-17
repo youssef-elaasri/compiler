@@ -12,5 +12,4 @@ public abstract class AbstractDeclMethod extends Tree {
 
     protected abstract AbstractIdentifier getMethodType();
 
-    protected abstract Signature getMethodSignature();
 }

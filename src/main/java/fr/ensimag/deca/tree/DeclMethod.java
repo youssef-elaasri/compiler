@@ -12,7 +12,6 @@ public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
     final private AbstractIdentifier methodName;
     final private ListDeclParam list_param;
-    private Signature sig;
 
     public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param) {
         Validate.notNull(type);
@@ -21,7 +20,6 @@ public class DeclMethod extends AbstractDeclMethod{
         this.type=type;
         this.methodName = methodName;
         this.list_param=list_param;
-        this.sig = list_param.getSignature();
 
     }
     @Override
@@ -61,7 +59,7 @@ public class DeclMethod extends AbstractDeclMethod{
         }
         EnvironmentExp envExp=new EnvironmentExp(null);
         envSup.incNumberOfMethods();
-        MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), sig,envSup.getNumberOfMethods());
+        MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),envSup.getNumberOfMethods());
         envExp.declare(methodName.getName(), methDefReturned);
         return envExp;
     }
@@ -81,8 +79,4 @@ public class DeclMethod extends AbstractDeclMethod{
         return this.type;
     }
 
-    @Override
-    protected Signature getMethodSignature() {
-        return this.sig;
-    }
 }
