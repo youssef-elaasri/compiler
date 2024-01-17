@@ -144,22 +144,29 @@ public class DeclClass extends AbstractDeclClass {
     @Override
     public void codeGenInitListDeclClass(DecacCompiler compiler) {
         compiler.addComment("Initialize " + this.className.getName() + "'s fields");
-
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
-        compiler.addInstruction(new LOAD(0, Register.R0));
-        compiler.addInstruction(new LOAD(new RegisterOffset(-2,Register.LB),Register.R1));
-        int offset = 1;
-        for(AbstractDeclField abstractDeclField : listField.getList()){
-            ((DeclField) abstractDeclField).setOffset(offset);
-            if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
-                compiler.addInstruction(new STORE(Register.R0,new RegisterOffset(offset,Register.R1)));
-            } else {
-                ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
-                compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1)
-                        ,new RegisterOffset(offset,Register.R1)));
+        if (superName.getName().toString().equals("Object")) {
+            int offset = 1;
+            for (AbstractDeclField abstractDeclField : listField.getList()) {
+                ((DeclField) abstractDeclField).setOffset(offset);
+                if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
+                    compiler.addInstruction(new LOAD(0, Register.R0));
+                    compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
+                    compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(offset, Register.R1)));
+                } else {
+                    compiler.getStack().setCurrentRegister(0);
+                    ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
+                    compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
+                    compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                            , new RegisterOffset(offset, Register.R1)));
+                }
+                compiler.getStack().resetCurrentRegister();
+                offset++;
             }
-            offset++;
+        }
+        else {
+            codeGenInitRec(compiler, className);
         }
         compiler.addInstruction(new RTS());
 
@@ -190,5 +197,9 @@ public class DeclClass extends AbstractDeclClass {
 
     public ListDeclField getListField() {
         return listField;
+    }
+
+    public void codeGenInitRec(DecacCompiler compiler, AbstractIdentifier className) {
+        //TODO
     }
 }

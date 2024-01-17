@@ -95,6 +95,9 @@ public class Stack {
         return currentRegister;
     }
 
+    public void setCurrentRegister(int currentRegister) {this.currentRegister = currentRegister;}
+    public void resetCurrentRegister() {this.currentRegister = 2;}
+
     public void increaseRegister(){
         currentRegister++;
     }
