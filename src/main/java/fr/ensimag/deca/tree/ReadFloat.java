@@ -58,9 +58,12 @@ public class ReadFloat extends AbstractReadExpr {
     }
 
     @Override
-    protected void codeGenPrint(DecacCompiler compiler) {
+    protected void codeGenPrint(DecacCompiler compiler, boolean ex) {
         compiler.addInstruction(new RFLOAT());
-        compiler.addInstruction(new WFLOAT());
+        if (ex)
+            compiler.addInstruction(new WFLOATX());
+        else
+            compiler.addInstruction(new WFLOATX());
 
     }
 }
