@@ -175,6 +175,7 @@ public class DecacCompiler {
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
+        
     }
 
     /**
@@ -198,19 +199,21 @@ public class DecacCompiler {
             return true;
         }
 
-        try {
-            prog.verifyProgram(this);
-        } catch (ContextualError e){
-            System.err.println("Error during program verification:\n"
-                    + e.getMessage());
-        }
-        if(getCompilerOptions().getVerification()){ System.exit(1);}
-        assert(prog.checkAllDecorations());
-
         if(getCompilerOptions().getParse()){
             prog.decompile(out);
-            System.exit(1);
+            System.exit(0);
         }
+
+        try {
+            prog.verifyProgram(this);
+        } catch (ContextualError e) {
+            e.display(System.err);
+            return true;
+        }
+        if(getCompilerOptions().getVerification()){ System.exit(0);}
+        assert(prog.checkAllDecorations());
+
+
 
         if(getCompilerOptions().doChangeRegisterNumber()){
             stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());

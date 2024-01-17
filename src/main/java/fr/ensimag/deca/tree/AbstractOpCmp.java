@@ -41,12 +41,12 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         AbstractExpr right = this.getRightOperand();
         Type type1 = left.verifyExpr(compiler, localEnv, currentClass);
         Type type2 = right.verifyExpr(compiler, localEnv, currentClass);
-        Type syntType = verifyCmpOp(compiler, opName, type1, type2);
+        Type syntType = verifyCmpOp(compiler, opName, type1, type2, localEnv, currentClass);
         this.setType(syntType);
         return syntType;
     }
 
-    public Type verifyCmpOp(DecacCompiler compiler, String op, Type type1, Type type2) throws ContextualError {
+    public Type verifyCmpOp(DecacCompiler compiler, String op, Type type1, Type type2, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
         List<String> opList = new ArrayList<String>();
         opList.add("==");
         opList.add("!=");
@@ -60,6 +60,16 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         if( (opList.contains(op) && verifyDomTypeArithOp(type1) && verifyDomTypeArithOp(type2))
         //here we verify if type1 and type2 are both boolean and if the op is eq or neq
         || ( (type1.isBoolean() && type2.isBoolean()) && (op.equals("==") || op.equals("!=")) ) ) {
+            if ((type1.isInt() && type2.isFloat())) {
+                AbstractExpr leftOp = new ConvFloat(this.getLeftOperand());
+                this.setLeftOperand(leftOp);
+                leftOp.verifyExpr(compiler, localEnv, currentClass);
+            }
+            else if ((type1.isFloat() && type2.isInt())) {
+                AbstractExpr rightOp = new ConvFloat(this.getRightOperand());
+                this.setRightOperand(rightOp);
+                rightOp.verifyExpr(compiler, localEnv, currentClass);
+            }
             return compiler.environmentType.BOOLEAN;
         }
         //TO DO Add the case where op ∈ {eq, neq} and T1 = type_class(A)

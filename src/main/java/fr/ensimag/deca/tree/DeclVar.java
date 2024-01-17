@@ -49,7 +49,7 @@ public class DeclVar extends AbstractDeclVar {
         SymbolTable.Symbol name = varName.getName();
         Map<SymbolTable.Symbol, ExpDefinition> expDef = localEnv.getExpDefinitionMap();
         if (expDef.containsKey(name)) {
-            throw new ContextualError("Name " + name + " is already defined in localEnv !", Location.BUILTIN);
+            throw new ContextualError("Name " + name + " is already defined in localEnv !", this.getLocation());
         }
         VariableDefinition varDef = new VariableDefinition(ty, varName.getLocation());
         varName.setDefinition(varDef);
