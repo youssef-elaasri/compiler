@@ -38,8 +38,8 @@ public class ListDeclField extends TreeList<AbstractDeclField>{
     }
 
 
-    public void verifyListDeclFieldI(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId){
-        throw new UnsupportedOperationException("not yet implemented");
+    public void verifyListDeclFieldI(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) throws ContextualError {
+
     }
 
 

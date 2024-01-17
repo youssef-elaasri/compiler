@@ -10,12 +10,12 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 public class DeclField extends AbstractDeclField{
-    final private AbstractIdentifier visibility;
+    final private Visibility visibility;
     final private AbstractIdentifier type;
     final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
     private int offset;
-    public DeclField(AbstractIdentifier visibility, AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
+    public DeclField(Visibility visibility, AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
         Validate.notNull(visibility);
         Validate.notNull(type);
         Validate.notNull(fieldName);
@@ -41,7 +41,7 @@ public class DeclField extends AbstractDeclField{
     @Override
     public void decompile(IndentPrintStream s) {
         // this.visib.decompile...
-        visibility.decompile(s);
+        s.print(visibility.toString());
         s.print(" ");
         type.decompile(s);
         s.print(" ");
@@ -53,7 +53,6 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
-        visibility.prettyPrint(s, prefix, false);
         type.prettyPrint(s, prefix, false);
         fieldName.prettyPrint(s, prefix, false);
         initialization.prettyPrint(s, prefix, true);
@@ -61,12 +60,14 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     protected void iterChildren(TreeFunction f) {
-        visibility.iter(f);
         type.iter(f);
         fieldName.iter(f);
         initialization.iter(f);
     }
-
+    @Override
+    String prettyPrintNode() {
+        return "[visibility = " + this.visibility + "] " + this.getClass().getSimpleName();
+    }
 
     @Override
     protected EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier classId) throws ContextualError{
@@ -82,7 +83,7 @@ public class DeclField extends AbstractDeclField{
         if (expDef != null && !(expDef.isField())) {
             throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
         }
-        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility.getVisibility(compiler), classId.getClassDefinition(), 0);
+        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility, classId.getClassDefinition(), 0);
         EnvironmentExp envExp = new EnvironmentExp(null);
         envExp.declare(fieldName.getName(), fieldDef);
         fieldName.setDefinition(fieldDef);

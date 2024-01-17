@@ -555,21 +555,21 @@ class_body returns[ListDeclField list_field, ListDeclMethod list_method]
     ;
 
 decl_field_set[ListDeclField list_field]
-    : v=visibility t=type list_decl_field[$list_field, $t.tree, $v.tree]
+    : v=visibility t=type list_decl_field[$list_field, $t.tree, $v.enum]
     SEMI {
     }
     ;
 
-visibility returns[AbstractIdentifier tree]
+visibility returns[Visibility enum]
     : /* epsilon */ {
-        $tree = new Identifier(symbolTable.create("PUBLIC"));
+        $enum = Visibility.PUBLIC;
         }
     | pr=PROTECTED {
-        $tree = new Identifier(symbolTable.create("PROTECTED"));
+        $enum = Visibility.PROTECTED;
         }
     ;
 
-list_decl_field[ListDeclField list_field, AbstractIdentifier t, AbstractIdentifier v]
+list_decl_field[ListDeclField list_field, AbstractIdentifier t, Visibility v]
     : dv1=decl_field[$t, $v] {
         assert($dv1.tree != null);
         $list_field.add($dv1.tree);
@@ -581,7 +581,7 @@ list_decl_field[ListDeclField list_field, AbstractIdentifier t, AbstractIdentifi
       )*
     ;
 
-decl_field[AbstractIdentifier t, AbstractIdentifier v] returns[AbstractDeclField tree]
+decl_field[AbstractIdentifier t, Visibility v] returns[AbstractDeclField tree]
 @init {
     NoInitialization noInitialization = new NoInitialization();
 }
