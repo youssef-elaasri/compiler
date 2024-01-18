@@ -70,7 +70,7 @@ public class New extends AbstractExpr{
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new NEW(
-                compiler.getClassManager().get(className).getListField().getList().size() + 1,
+                compiler.getClassManager().get(className).getClassName().getClassDefinition().getNumberOfFields() + 1,
                 Register.getR(compiler.getStack().getCurrentRegister())
         ));
         compiler.addInstruction(new BOV(compiler.getErrorHandler().addFullStack()));

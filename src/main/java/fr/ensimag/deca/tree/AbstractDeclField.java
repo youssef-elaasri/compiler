@@ -9,7 +9,7 @@ import fr.ensimag.deca.tools.SymbolTable;
 
 public abstract class AbstractDeclField extends Tree{
 
-    protected abstract EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition currentClass) throws ContextualError;
+    protected abstract EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier currentClass) throws ContextualError;
 
     protected abstract void verifyFieldInit(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError ;
 

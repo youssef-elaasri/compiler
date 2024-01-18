@@ -73,7 +73,7 @@ public class DeclField extends AbstractDeclField{
     }
 
     @Override
-    protected EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition currentClass) throws ContextualError{
+    protected EnvironmentExp verifyField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier currentClass) throws ContextualError{
         Type typeF = type.verifyType(compiler);
         if (typeF.isVoid()) {
             throw new ContextualError("Type of field must not be of Void type !", this.getLocation());
@@ -86,7 +86,7 @@ public class DeclField extends AbstractDeclField{
         if (expDef != null && !(expDef.isField())) {
             throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
         }
-        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility, currentClass, currentClass.getNumberOfFields());
+        FieldDefinition fieldDef = new FieldDefinition(typeF, this.getLocation(), visibility, currentClass.getClassDefinition(), currentClass.getClassDefinition().getNumberOfFields());
         EnvironmentExp envExp = new EnvironmentExp(null);
         envExp.declare(fieldName.getName(), fieldDef);
         fieldName.setDefinition(fieldDef);

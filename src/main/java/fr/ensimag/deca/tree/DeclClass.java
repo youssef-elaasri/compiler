@@ -75,8 +75,8 @@ public class DeclClass extends AbstractDeclClass {
             throw new ContextualError("Class " + classSymb + " is already defined !", this.getLocation());
         }
         compiler.environmentType.declareClass(className, (ClassDefinition) superDef);
-        className.setDefinition(compiler.environmentType.defOfType(classSymb));
         superName.setDefinition(compiler.environmentType.defOfType(superSymb));
+        className.setDefinition(compiler.environmentType.defOfType(className.getName()));
         LOG.debug("verify verifyClass: end");
     }
 
@@ -85,14 +85,8 @@ public class DeclClass extends AbstractDeclClass {
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         LOG.debug("verify verifyClassMembers: start");
-        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
-        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
-        classDef.setNumberOfFields(listField.size());
-        classDef.setNumberOfMethods(listMethod.size());
-
-        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, classDef);
+        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
         EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
-
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
 
@@ -104,10 +98,17 @@ public class DeclClass extends AbstractDeclClass {
         Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
         mergedMap.putAll(envExpm.getExpDefinitionMap());
         mergedMap.putAll(envExpf.getExpDefinitionMap());
-
+        /*Here we build the classDefinition of our currentClass based on the updated ClassDefinition of our superClass*/
+        superName.setDefinition(compiler.environmentType.defOfType(superName.getName()));
+        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
+        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+        /*Here we set the members of our currentClass to complete the definition*/
         classDef.getMembers().setExpDefinitionMap(mergedMap);
-
+        /*Here we set the number of fields and methods based on the previous definition of our class */
+        classDef.setNumberOfFields(className.getClassDefinition().getNumberOfFields());
+        classDef.setNumberOfMethods(className.getClassDefinition().getNumberOfMethods());
         compiler.environmentType.put(className.getName(), classDef);
+        className.setDefinition(classDef);
         LOG.debug("verify verifyClassMembers: end");
     }
     
@@ -127,12 +128,13 @@ public class DeclClass extends AbstractDeclClass {
         compiler.getStack().increaseCounterTSTO();
 
         // define the supper class
-        if (superName.getName().equals(compiler.createSymbol("Object")))
-            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
+        if (superName.getName().equals(compiler.createSymbol("Object"))) {
+            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB), Register.R0));
+        }
 
-        else
-            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(),Register.R0));
-
+        else {
+            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(), Register.R0));
+        }
         compiler.addInstruction(new STORE(Register.R0,className.getDefinition().getOperand()));
 
         // define methods
@@ -153,7 +155,6 @@ public class DeclClass extends AbstractDeclClass {
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
         if (superName.getName().toString().equals("Object")) {
-//            int offset = 1;
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
                 if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
@@ -164,7 +165,6 @@ public class DeclClass extends AbstractDeclClass {
                     codeGenInit(compiler, abstractDeclField, index);
                 }
                 compiler.getStack().resetCurrentRegister();
-//                offset++;
             }
         }
         else {
