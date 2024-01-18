@@ -90,7 +90,7 @@ public class DeclClass extends AbstractDeclClass {
         classDef.setNumberOfFields(listField.size());
         classDef.setNumberOfMethods(listMethod.size());
 
-        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
+        EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, classDef);
         EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
 
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
