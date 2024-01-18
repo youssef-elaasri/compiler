@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 /**
  * Arithmetic binary operations (+, -, /, ...)
- *
+ * 
  * @author gl22
  * @date 01/01/2024
  */
@@ -20,18 +20,17 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
     public AbstractOpArith(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
-
     private static final Logger LOG = Logger.getLogger(AbstractOpArith.class);
 
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
-                           ClassDefinition currentClass) throws ContextualError {
+            ClassDefinition currentClass) throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         String opName = this.getOperatorName();
         switch (opName) {
             case "%":
-                Type typeMod = this.verifyExpr(compiler, localEnv, currentClass);
+                Type typeMod =  this.verifyExpr(compiler, localEnv, currentClass);
                 this.setType(typeMod);
                 return typeMod;
             default:
@@ -74,10 +73,10 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
      * Generates instructions to perform arithmetic operations based on the types of operands.
      * Handles cases where additional stack manipulation is required due to the limited number of registers.
      *
-     * @param compiler                   The DecacCompiler instance managing the compilation process.
+     * @param compiler                The DecacCompiler instance managing the compilation process.
      * @param binaryInstructionDValToReg The binary instruction for the arithmetic operation.
-     * @param isDiv                      A boolean indicating whether the operation is a division.
-     * @param isLoad                     A boolean indicating whether to load the result into the current register.
+     * @param isDiv                   A boolean indicating whether the operation is a division.
+     * @param isLoad                  A boolean indicating whether to load the result into the current register.
      */
     public void codeGenInstOpArith(DecacCompiler compiler, BinaryInstructionDValToReg binaryInstructionDValToReg,
                                    boolean isDiv, boolean isLoad) {
@@ -234,5 +233,73 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
         return false;
     }
 
+
+    protected int getExponent (int num) {
+        if (num < 0)
+            num = -num;
+        int exponent = 0;
+        while ((num & 1) == 0) {
+            num >>= 1;
+            exponent++;
+        }
+        return exponent;
+    }
+
+    protected void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr,
+                         boolean isNegative, boolean isDiv) {
+        expr.codeGenInstOP(compiler);
+        if (isDiv) {
+            for (int i = 0; i<leftExponent; i++) {
+                compiler.addInstruction(
+                        new SHR(
+                                Register.getR(
+                                        compiler.getStack().getCurrentRegister()-1
+                                )
+                        )
+                );
+            }
+        } else {
+            for (int i = 0; i<leftExponent; i++) {
+                compiler.addInstruction(
+                        new SHL(
+                                Register.getR(
+                                        compiler.getStack().getCurrentRegister()-1
+                                )
+                        )
+                );
+            }
+        }
+        if (isNegative)
+            compiler.addInstruction(new OPP(
+                    Register.getR(compiler.getStack().getCurrentRegister()-1),
+                    Register.getR(compiler.getStack().getCurrentRegister()-1)
+            ));
+    }
+
+    protected int getRightExponent() {
+        if (getRightOperand() instanceof IntLiteral &&
+                ((((IntLiteral) getRightOperand()).getValue() &
+                        (((IntLiteral) getRightOperand()).getValue() -1) )== 0||
+                        (-((IntLiteral) getRightOperand()).getValue() &
+                                (-((IntLiteral) getRightOperand()).getValue() -1) )== 0)) {
+
+            return getExponent(((IntLiteral) getRightOperand()).getValue());
+        }
+        else {
+            return -1;
+        }
+    }
+
+    protected int getLeftExponent() {
+        if (getLeftOperand() instanceof IntLiteral &&
+                ((((IntLiteral) getLeftOperand()).getValue() &
+                        (((IntLiteral) getLeftOperand()).getValue() -1) )== 0  ||
+                        (-((IntLiteral) getLeftOperand()).getValue() &
+                                (-((IntLiteral) getLeftOperand()).getValue() -1) )== 0 )) {
+            return getExponent(((IntLiteral) getLeftOperand()).getValue());
+        } else {
+            return -1;
+        }
+    }
 
 }
