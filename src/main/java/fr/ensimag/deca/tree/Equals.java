@@ -5,10 +5,8 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.BEQ;
-import fr.ensimag.ima.pseudocode.instructions.BRA;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
-import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
+import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.util.Random;
 
@@ -18,8 +16,6 @@ import java.util.Random;
  * @date 01/01/2024
  */
 public class Equals extends AbstractOpExactCmp {
-
-    private static int counter = 0;
 
     public Equals(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
@@ -40,16 +36,10 @@ public class Equals extends AbstractOpExactCmp {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        int i = counter;
-        increaseCounter();
-        Label label = new Label("equal_"+ i);
-        BranchInstruction branchInstruction = new BEQ(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"equal_" + i);
-    }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
+        UnaryInstructionToReg branchInstruction = new SEQ(
+                Register.getR(compiler.getStack().getCurrentRegister())
+        );
+        codeGenInstGeneral(compiler,branchInstruction);
     }
 
     
