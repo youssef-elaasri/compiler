@@ -6,7 +6,7 @@ import fr.ensimag.deca.context.*;
 public abstract class AbstractDeclMethod extends Tree {
     protected abstract EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError;
 
-    protected abstract void verifyMethodBody(DecacCompiler compiler, ExpDefinition localEnv, ClassDefinition classId);
+    protected abstract void verifyMethodBody(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition classId) throws ContextualError;
 
     protected abstract AbstractIdentifier getMethodName();
 

@@ -155,14 +155,16 @@ inst returns[AbstractInst tree]
             assert($condition.tree != null);
             assert($body.tree != null);
             $tree = new While($condition.tree,$body.tree);
-            setLocation($tree, $condition.start);
+            setLocation($tree, $WHILE);
         }
-    | RETURN expr SEMI {
-            assert($expr.tree != null);
-            $tree = $expr.tree;
-            setLocation($tree, $expr.start);
+    | RETURN e=expr SEMI {
+            assert($e.tree != null);
+            $tree= new Return($e.tree);
+            setLocation($tree, $RETURN);
         }
     ;
+
+ 
 
 if_then_else returns[IfThenElse tree]
 @init {
@@ -602,9 +604,13 @@ decl_field[AbstractIdentifier t, Visibility v] returns[AbstractDeclField tree]
 decl_method returns[AbstractDeclMethod tree]
 @init {
     ListDeclParam list_param = new ListDeclParam();
+    MethodBody methodBody;
 }
-    : type ident OPARENT params=list_params[list_param] CPARENT (block {
-    $tree = new DeclMethod($type.tree, $ident.tree, list_param);
+    : type i=ident OPARENT params=list_params[list_param] CPARENT (b=block {
+        methodBody=new MethodBody($block.decls,$block.insts);
+        $tree = new DeclMethod($type.tree, $ident.tree, list_param,methodBody);
+        setLocation($tree,$i.start);
+        setLocation(methodBody,$i.start);
         }
       | ASM OPARENT code=multi_line_string CPARENT SEMI {
         }

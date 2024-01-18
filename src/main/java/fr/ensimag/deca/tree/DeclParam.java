@@ -4,6 +4,7 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.ExpDefinition;
+import fr.ensimag.deca.context.ParamDefinition;
 import fr.ensimag.deca.context.Signature;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
@@ -50,7 +51,9 @@ public class DeclParam extends AbstractDeclParam{
     protected EnvironmentExp verifyParamName(DecacCompiler compiler) throws ContextualError {
         Type typeP =  this.type.verifyType(compiler);
         EnvironmentExp exp = new EnvironmentExp(null);
-        exp.declare(paramName.getName(),type.getMethodDefinition());
+        ParamDefinition paramDef = new ParamDefinition(typeP, getLocation());
+        exp.declare(paramName.getName(),paramDef);
+        paramName.setDefinition(paramDef);
         return exp;
     }
 

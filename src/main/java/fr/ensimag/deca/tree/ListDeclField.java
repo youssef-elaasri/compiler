@@ -22,13 +22,13 @@ public class ListDeclField extends TreeList<AbstractDeclField>{
         }
     }
 
-    public EnvironmentExp verifyListDeclField(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition currentClass) throws ContextualError{
+    public EnvironmentExp verifyListDeclField(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier currentClass) throws ContextualError{
         EnvironmentExp envExpr = new EnvironmentExp(null);
         /*The definition of the class and the super class are ensured by pass 1*/
-        currentClass.setNumberOfFields(superId.getClassDefinition().getNumberOfFields());
+        currentClass.getClassDefinition().setNumberOfFields(superId.getClassDefinition().getNumberOfFields());
 
         for (AbstractDeclField declF : this.getList()) {
-            currentClass.incNumberOfFields();
+            currentClass.getClassDefinition().incNumberOfFields();
             EnvironmentExp envExp = declF.verifyField(compiler, superId, currentClass);
             Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
             Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
