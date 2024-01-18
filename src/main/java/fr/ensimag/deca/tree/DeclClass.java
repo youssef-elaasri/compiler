@@ -87,10 +87,17 @@ public class DeclClass extends AbstractDeclClass {
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         LOG.debug("verify verifyClassMembers: start");
+        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
+        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+        classDef.setNumberOfFields(listField.size());
+        classDef.setNumberOfMethods(listMethod.size());
+
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
         EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
+
         /*Vérifier si les deux environnements sont disjoints*/
         if (!Collections.disjoint(keyF, keyM)) {
             throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", this.getLocation());
@@ -99,9 +106,9 @@ public class DeclClass extends AbstractDeclClass {
         Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
         mergedMap.putAll(envExpm.getExpDefinitionMap());
         mergedMap.putAll(envExpf.getExpDefinitionMap());
-        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
-        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+
         classDef.getMembers().setExpDefinitionMap(mergedMap);
+
         compiler.environmentType.put(className.getName(), classDef);
         LOG.debug("verify verifyClassMembers: end");
     }
@@ -134,6 +141,7 @@ public class DeclClass extends AbstractDeclClass {
 
         Program.setOperandEquals(compiler);
         for(AbstractDeclMethod method : this.listMethod.getList()){
+
             Label codeMethodLabel = new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString());
             Program.setOperandMethod(compiler,codeMethodLabel);
         }

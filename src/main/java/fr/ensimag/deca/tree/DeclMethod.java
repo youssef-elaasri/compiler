@@ -12,6 +12,9 @@ public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
     final private AbstractIdentifier methodName;
     final private ListDeclParam list_param;
+    private boolean isOverride = false;
+
+    private int methodIndex;
 
     public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param) {
         Validate.notNull(type);
@@ -37,18 +40,25 @@ public class DeclMethod extends AbstractDeclMethod{
 
     }
 
+    public boolean isOverride() {
+        return isOverride;
+    }
+
     @Override
     protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError {
-        ClassDefinition envSup = superId.getClassDefinition();
+        ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+
         Type typeM = type.verifyType(compiler);
         if(envSup == null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
         }
-        ExpDefinition envExpSuper= envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
+        MethodDefinition envExpSuper = (MethodDefinition) envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
+
         if(envExpSuper != null){
-            MethodDefinition methDef =superId.getMethodDefinition();
-            Signature sig2=methDef.getSignature();
-            Type type2=methDef.getType();
+            this.isOverride = true;
+           // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
+            Signature sig2=envExpSuper.getSignature();
+            Type type2=envExpSuper.getType();
             Signature signature = list_param.verifyListDeclParam(compiler);
             if(!sig2.equals(signature)){
                 throw new ContextualError(methodName.getName()+" not same signature", getLocation());
@@ -56,10 +66,11 @@ public class DeclMethod extends AbstractDeclMethod{
             if(! type2.isSubType( compiler.environmentType,typeM)){
                 throw new ContextualError(methodName.getName()+" not subtype ", getLocation());
             }
+            this.setIndex(envExpSuper.getIndex());
         }
         EnvironmentExp envExp=new EnvironmentExp(null);
-        envSup.incNumberOfMethods();
-        MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),envSup.getNumberOfMethods());
+        //envSup.incNumberOfMethods();
+        MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
         envExp.declare(methodName.getName(), methDefReturned);
         return envExp;
     }
@@ -79,4 +90,9 @@ public class DeclMethod extends AbstractDeclMethod{
         return this.type;
     }
 
+
+    @Override
+    protected void setIndex(int index) {
+        this.methodIndex = index;
+    }
 }

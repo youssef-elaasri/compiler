@@ -12,4 +12,7 @@ public abstract class AbstractDeclMethod extends Tree {
 
     protected abstract AbstractIdentifier getMethodType();
 
+    protected abstract void setIndex(int index);
+
+    protected abstract boolean isOverride();
 }

@@ -23,9 +23,16 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
 
     }
     public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError{
+        int indexCounter = 0;
         EnvironmentExp envExpr =  new EnvironmentExp(null);
         for(AbstractDeclMethod meth : this.getList()){
+            indexCounter++;
+            meth.setIndex(indexCounter);
             EnvironmentExp envExp = meth.verifyMethod(compiler, superId);
+
+            //here we decrease the index counter if the class was override
+            if( meth.isOverride()) indexCounter--;
+
             Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
             Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
             /*Vérifier si les deux environnements sont disjoints*/
@@ -33,6 +40,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
                 throw new ContextualError("Vous avez déclaré la méthode " + keySr + " plusieurs fois dans la classe !", meth.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
+
         }
         return envExpr;
     }
