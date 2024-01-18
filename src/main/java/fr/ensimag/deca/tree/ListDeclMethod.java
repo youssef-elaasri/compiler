@@ -1,9 +1,6 @@
 package fr.ensimag.deca.tree;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
@@ -14,6 +11,10 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
 
 public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
+
+    private final int NbrOfAllMethods = this.getList().size();
+    private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
+
     @Override
     public void decompile(IndentPrintStream s) {
        for(AbstractDeclMethod m:getList()){
@@ -22,16 +23,27 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
        }
 
     }
-    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError{
-        int indexCounter = 0;
+    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError{
+        ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+        int iterationCounter = 0;
+        int indexCounter = supClass.getNumberOfMethods() + supClass.getNbrOfOverrides();
         EnvironmentExp envExpr =  new EnvironmentExp(null);
+        int initialIndex = supClass.getNumberOfMethods() + supClass.getNbrOfOverrides();
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;
             meth.setIndex(indexCounter);
-            EnvironmentExp envExp = meth.verifyMethod(compiler, superId);
+            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, classDef);
 
-            //here we decrease the index counter if the class was override
-            if( meth.isOverride()) indexCounter--;
+            if( meth.isOverride()){
+                //case one if the meth override is first in methods we restart the indexCounter
+                if (meth.getIndex() == indexCounter - 1){
+                    indexCounter--;
+                }
+                //case two if the meth override is in the middle of methods
+                else if (meth.getIndex() >= initialIndex) {
+                    this.getList().get(meth.getIndex() - initialIndex).setIndex(indexCounter);
+                }
+            }
 
             Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
             Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
@@ -40,7 +52,8 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
                 throw new ContextualError("Vous avez déclaré la méthode " + keySr + " plusieurs fois dans la classe !", meth.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
-
+            indexMethodMap.put(meth.getIndex(), meth);
+            iterationCounter++;
         }
         return envExpr;
     }

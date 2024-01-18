@@ -13,10 +13,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Declaration of a class (<code>class name extends superClass {members}<code>).
@@ -91,7 +88,7 @@ public class DeclClass extends AbstractDeclClass {
         classDef.setNumberOfMethods(listMethod.size());
 
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, classDef);
-        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName, classDef);
 
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
@@ -126,8 +123,9 @@ public class DeclClass extends AbstractDeclClass {
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
 
+        boolean isSuperClassObject = superName.getName().equals(compiler.createSymbol("Object"));
         // define the supper class
-        if (superName.getName().equals(compiler.createSymbol("Object")))
+        if (isSuperClassObject)
             compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
 
         else
@@ -137,11 +135,25 @@ public class DeclClass extends AbstractDeclClass {
 
         // define methods
 
-        Program.setOperandEquals(compiler);
-        for(AbstractDeclMethod method : this.listMethod.getList()){
+//        int  nbrOfMethods = listMethod.getNbrOfAllMethods(compiler.getClassManager().get(superName));
 
-            Label codeMethodLabel = new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString());
-            Program.setOperandMethod(compiler,codeMethodLabel);
+        Map<Integer, Label> methodTable = new HashMap<>();
+
+        if (!isSuperClassObject){
+            for (AbstractDeclMethod method : compiler.getClassManager().get(superName).listMethod.getList()) {
+                int index = method.getIndex();
+                methodTable.put(index, new Label("code." + superName.getName().toString() + "." + method.getMethodName().getName().toString()));
+            }
+        }
+
+        for (AbstractDeclMethod method : compiler.getClassManager().get(className).listMethod.getList()){
+            int index = method.getIndex();
+            methodTable.put(index, new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString()));
+        }
+
+        Program.setOperandEquals(compiler);
+        for(Label methodLabel : methodTable.values()){
+            Program.setOperandMethod(compiler,methodLabel);
         }
 
 
@@ -222,6 +234,10 @@ public class DeclClass extends AbstractDeclClass {
 
     public ListDeclField getListField() {
         return listField;
+    }
+
+    public ListDeclMethod getListMethodSize(){
+        return listMethod;
     }
 
     public void codeGenInit(DecacCompiler compiler, AbstractDeclField abstractDeclField, int index) {

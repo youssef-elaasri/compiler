@@ -111,8 +111,8 @@ public abstract class AbstractIdentifier extends AbstractLValue {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AbstractIdentifier)
-            return ((AbstractIdentifier) obj).getName() == getName();
-        return super.equals(obj);
+            return ((AbstractIdentifier) obj).getName().equals(getName());
+        return false;
     }
 
 }

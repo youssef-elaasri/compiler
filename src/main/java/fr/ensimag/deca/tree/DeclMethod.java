@@ -5,7 +5,11 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.tools.IndentPrintStream;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.Label;
 import org.apache.commons.lang.Validate;
 
 public class DeclMethod extends AbstractDeclMethod{
@@ -15,6 +19,8 @@ public class DeclMethod extends AbstractDeclMethod{
     private boolean isOverride = false;
 
     private int methodIndex;
+
+
 
     public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param) {
         Validate.notNull(type);
@@ -45,7 +51,7 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError {
+    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
 
         Type typeM = type.verifyType(compiler);
@@ -57,6 +63,7 @@ public class DeclMethod extends AbstractDeclMethod{
         if(envExpSuper != null){
             this.isOverride = true;
            // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
+            classDef.incrNbrOfOverrides();
             Signature sig2=envExpSuper.getSignature();
             Type type2=envExpSuper.getType();
             Signature signature = list_param.verifyListDeclParam(compiler);
@@ -68,9 +75,11 @@ public class DeclMethod extends AbstractDeclMethod{
             }
             this.setIndex(envExpSuper.getIndex());
         }
+
         EnvironmentExp envExp=new EnvironmentExp(null);
-        //envSup.incNumberOfMethods();
+
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
+        methDefReturned.setLabel(new Label(methodName.getName().toString()));
         envExp.declare(methodName.getName(), methDefReturned);
         return envExp;
     }
@@ -94,5 +103,10 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected void setIndex(int index) {
         this.methodIndex = index;
+    }
+
+    @Override
+    protected int getIndex() {
+        return this.methodIndex;
     }
 }
