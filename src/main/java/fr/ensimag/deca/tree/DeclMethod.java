@@ -12,6 +12,7 @@ public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
     final private AbstractIdentifier methodName;
     final private ListDeclParam list_param;
+    final private MethodBody methodBody;
     private boolean isOverride = false;
 
     private int methodIndex;
@@ -52,9 +53,10 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError {
+    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
-
+        ClassDefinition classDef = (ClassDefinition)compiler.environmentType.defOfType(className.getName());
+        
         Type typeM = type.verifyType(compiler);
         if(envSup == null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
@@ -80,7 +82,6 @@ public class DeclMethod extends AbstractDeclMethod{
         EnvironmentExp envExp=new EnvironmentExp(null);
         //envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
-        methDefReturned.setLabel(new Label(methodName.getName().toString()));
         envExp.declare(methodName.getName(), methDefReturned);
         methodName.setDefinition(methDefReturned);
         return envExp;

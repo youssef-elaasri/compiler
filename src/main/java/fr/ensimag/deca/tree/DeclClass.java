@@ -83,7 +83,7 @@ public class DeclClass extends AbstractDeclClass {
 //        throw new UnsupportedOperationException("not yet implemented");
         LOG.debug("verify verifyClassMembers: start");
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
-        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName, className);
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
 

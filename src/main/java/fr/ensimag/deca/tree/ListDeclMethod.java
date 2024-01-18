@@ -6,13 +6,11 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
 
 public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
 
-    private final int NbrOfAllMethods = this.getList().size();
     private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
 
     static int indexCounter = 0;
@@ -25,14 +23,14 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
        }
 
     }
-    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError{
+    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError{
         ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
         indexCounter += supClass.getNumberOfMethods() - supClass.getNbrOfOverrides() + 1;
         EnvironmentExp envExpr =  new EnvironmentExp(null);
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;
             meth.setIndex(indexCounter);
-            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, classDef);
+            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, className);
 
             if( meth.isOverride()){
                 indexCounter--;
