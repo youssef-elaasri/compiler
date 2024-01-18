@@ -97,6 +97,18 @@ public class DeclField extends AbstractDeclField{
     }
 
     @Override
+    protected void prettyPrintType(PrintStream s, String prefix) {
+        Definition d = this.fieldName.getDefinition();
+        if (d != null) {
+            s.print(prefix);
+            s.print("definition: ");
+            s.print(d);
+            s.println();
+        }
+    }
+
+
+    @Override
     public void codeGenInitListDeclClass(DecacCompiler compiler) {
         //TODO I can't find the field's type
     }
