@@ -131,6 +131,10 @@ public class Stack {
         increaseCounterTSTO();
     }
 
+    public void pushRegister(DecacCompiler compiler, Register R) {
+        compiler.getStack().setCurrentRegister(1);
+        compiler.addInstruction(new PUSH(R));
+    }
 
     /**
      * Pops the current register from the stack and decreases the counter TSTO.
