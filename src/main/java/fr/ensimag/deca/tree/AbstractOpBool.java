@@ -12,6 +12,7 @@ import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.List;
  * @date 01/01/2024
  */
 public abstract class AbstractOpBool extends AbstractBinaryExpr {
+    private static final Logger LOG = Logger.getLogger(AbstractOpBool.class);
+
 
     public AbstractOpBool(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
@@ -166,6 +169,7 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
 
         switch (vars){
             case "both":
+                LOG.debug("This is an And");
                 compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getLeftOperand()), endAnd, compiler);
                 compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getRightOperand()), endAnd, compiler);
                 compiler.getStack().increaseRegister();

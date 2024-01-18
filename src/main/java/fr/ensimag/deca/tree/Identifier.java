@@ -257,4 +257,6 @@ public class Identifier extends AbstractIdentifier {
         compiler.getStack().increaseRegister();
     }
 
+
+
 }

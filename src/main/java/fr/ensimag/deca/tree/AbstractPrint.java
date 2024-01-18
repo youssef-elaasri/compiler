@@ -59,7 +59,10 @@ public abstract class AbstractPrint extends AbstractInst {
         for (AbstractExpr a : getArguments().getList()) {
             a.codeGenPrint(compiler);
         }
+
     }
+
+
 
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {

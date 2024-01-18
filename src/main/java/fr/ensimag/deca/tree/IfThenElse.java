@@ -62,8 +62,11 @@ public class IfThenElse extends AbstractInst {
             Label elseBranch_ = new Label("else_branch_" + number);
             Label endOfIf = new Label("end_of_if_" + number);
 
+            if(compiler.getCompilerOptions().getOPTIM())
+                condition.codeGenInstOP(compiler);
+            else
+                condition.codeGenInst(compiler);
 
-            condition.codeGenInst(compiler);
             compiler.addInstruction(new CMP(
                     0,
                     Register.getR(compiler.getStack().getCurrentRegister() - 1)
@@ -72,17 +75,33 @@ public class IfThenElse extends AbstractInst {
             compiler.addInstruction(new BEQ(elseBranch_));
 
             compiler.addLabel(ifBranch);
-            for (AbstractInst abstractInst : thenBranch.getList()) {
-                abstractInst.codeGenInst(compiler);
+
+            if(compiler.getCompilerOptions().getOPTIM()) {
+                for (AbstractInst abstractInst : thenBranch.getList()) {
+                    abstractInst.codeGenInstOP(compiler);
+                }
+            }
+            else{
+                for (AbstractInst abstractInst : thenBranch.getList()) {
+                    abstractInst.codeGenInst(compiler);
+                }
             }
             compiler.addInstruction(new BRA(endOfIf));
 
             compiler.addLabel(elseBranch_);
 
 
-            for (AbstractInst abstractInst : elseBranch.getList()) {
-                abstractInst.codeGenInst(compiler);
+            if(compiler.getCompilerOptions().getOPTIM()) {
+                for (AbstractInst abstractInst : elseBranch.getList()) {
+                    abstractInst.codeGenInstOP(compiler);
+                }
             }
+            else{
+                for (AbstractInst abstractInst : elseBranch.getList()) {
+                    abstractInst.codeGenInst(compiler);
+                }
+            }
+
             compiler.addLabel(endOfIf);
         }else{
             compiler.getStack().pushRegister(compiler);
@@ -145,6 +164,7 @@ public class IfThenElse extends AbstractInst {
 
     @Override
     public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        condition.addLiveVariable(liveVariable);
         thenBranch.addLiveVariable(liveVariable);
         elseBranch.addLiveVariable(liveVariable);
     }
@@ -191,4 +211,6 @@ public class IfThenElse extends AbstractInst {
         thenBranch.prettyPrint(s, prefix, false);
         elseBranch.prettyPrint(s, prefix, true);
     }
+
+
 }

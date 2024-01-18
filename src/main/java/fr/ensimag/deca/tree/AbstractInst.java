@@ -56,5 +56,7 @@ public abstract class AbstractInst extends Tree {
 
     public abstract void checkAliveVariables();
 
-    public abstract void addLiveVariable(HashSet<AbstractIdentifier> liveVariable);
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable){
+        // do nothing
+    }
 }

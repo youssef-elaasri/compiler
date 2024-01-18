@@ -58,27 +58,8 @@ public class Not extends AbstractUnaryExpr {
         else
             getOperand().codeGenInst(compiler);
 
-        int i = counter++;
-        // Create labels for the end of the NOT operation and the false condition
-        Label endNot = new Label("end_not" + i);
-        Label falseNot = new Label("false_not" + i);
-
-        // Compare the result of the operand with 0 and jump to falseNot if equal (operand is false)
         compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-        compiler.addInstruction(new BEQ(falseNot));
-
-        // If the operand is true, load 0 into the register (result is false) and jump to endNot
-        compiler.addInstruction(new LOAD(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-        compiler.addInstruction(new BRA(endNot));
-
-        // Add label for the false condition
-        compiler.addLabel(falseNot);
-
-        // If the operand is false, load 1 into the register (result is true)
-        compiler.addInstruction(new LOAD(1, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
-
-        // Add label for the end of the NOT operation
-        compiler.addLabel(endNot);
+        compiler.addInstruction(new SEQ(Register.getR(compiler.getStack().getCurrentRegister() - 1)));
 
     }
 
@@ -88,29 +69,12 @@ public class Not extends AbstractUnaryExpr {
             codeGenInst(compiler);
             return;
         }
-        // Create labels for the end of the NOT operation and the false condition
-        int i = counter++;
-
+        compiler.addComment("hey");
         compiler.getStack().increaseRegister();
-
-        Label endNot = new Label("end_not" + i);
-        Label falseNot = new Label("false_not" + i);
-        // Compare the result of the operand with 0 and jump to falseNot if equal (operand is false)
         compiler.addInstruction(new CMP(0, compiler.getRegister((AbstractIdentifier) getOperand())));
-        compiler.addInstruction(new BEQ(falseNot));
+        compiler.addInstruction(new SEQ(Register.getR(compiler.getStack().getCurrentRegister() - 1)));
 
-        // If the operand is true, load 0 into the register (result is false) and jump to endNot
-        compiler.addInstruction(new LOAD(0, compiler.getRegister((AbstractIdentifier) getOperand())));
-        compiler.addInstruction(new BRA(endNot));
 
-        // Add label for the false condition
-        compiler.addLabel(falseNot);
-
-        // If the operand is false, load 1 into the register (result is true)
-        compiler.addInstruction(new LOAD(1, compiler.getRegister((AbstractIdentifier) getOperand())));
-
-        // Add label for the end of the NOT operation
-        compiler.addLabel(endNot);
     }
 
     @Override

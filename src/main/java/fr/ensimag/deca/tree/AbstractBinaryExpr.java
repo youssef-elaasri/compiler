@@ -69,12 +69,9 @@ public abstract class AbstractBinaryExpr extends AbstractExpr {
 
     @Override
     public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
-        if (getLeftOperand() instanceof Identifier) {
-            liveVariable.add((Identifier) getLeftOperand());
-        }
-        else if (getRightOperand() instanceof Identifier) {
-            liveVariable.add((Identifier) getRightOperand());
-        }
+        getLeftOperand().addLiveVariable(liveVariable);
+        getRightOperand().addLiveVariable(liveVariable);
+
     }
 
     public String extractVariable(DecacCompiler compiler){

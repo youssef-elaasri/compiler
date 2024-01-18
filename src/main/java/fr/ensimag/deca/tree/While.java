@@ -78,6 +78,13 @@ public class While extends AbstractInst {
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+
+            for(AbstractIdentifier abstractIdentifier : liveVariables){
+                LOG.debug("this variable " + abstractIdentifier + " is in liveVariables");
+            }
+
+
+
             //Loop inversion
             int num = counter;
             increaseCounter();
@@ -140,6 +147,7 @@ public class While extends AbstractInst {
         compiler.getInWhile();
 
         LOG.debug("We got to \"loadLiveVariable\"... That's something... ");
+
 
         compiler.initVariablesDict();
 

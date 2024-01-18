@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 /**
  * Arithmetic binary operations (+, -, /, ...)
- * 
+ *
  * @author gl22
  * @date 01/01/2024
  */
@@ -20,17 +20,18 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
     public AbstractOpArith(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
+
     private static final Logger LOG = Logger.getLogger(AbstractOpArith.class);
 
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
-            ClassDefinition currentClass) throws ContextualError {
+                           ClassDefinition currentClass) throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
         String opName = this.getOperatorName();
         switch (opName) {
             case "%":
-                Type typeMod =  this.verifyExpr(compiler, localEnv, currentClass);
+                Type typeMod = this.verifyExpr(compiler, localEnv, currentClass);
                 this.setType(typeMod);
                 return typeMod;
             default:
@@ -73,10 +74,10 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
      * Generates instructions to perform arithmetic operations based on the types of operands.
      * Handles cases where additional stack manipulation is required due to the limited number of registers.
      *
-     * @param compiler                The DecacCompiler instance managing the compilation process.
+     * @param compiler                   The DecacCompiler instance managing the compilation process.
      * @param binaryInstructionDValToReg The binary instruction for the arithmetic operation.
-     * @param isDiv                   A boolean indicating whether the operation is a division.
-     * @param isLoad                  A boolean indicating whether to load the result into the current register.
+     * @param isDiv                      A boolean indicating whether the operation is a division.
+     * @param isLoad                     A boolean indicating whether to load the result into the current register.
      */
     public void codeGenInstOpArith(DecacCompiler compiler, BinaryInstructionDValToReg binaryInstructionDValToReg,
                                    boolean isDiv, boolean isLoad) {
@@ -86,11 +87,11 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
             compiler.addInstruction(binaryInstructionDValToReg);
             LOG.debug("I'm this and my type is " + this.getType().isFloat());
 
-             if(this.getType().isFloat() && !isDiv) {
-                 LOG.debug("I BOV therefore I exist");
-                 if (!compiler.getCompilerOptions().getNoCheck())
+            if (this.getType().isFloat() && !isDiv) {
+                LOG.debug("I BOV therefore I exist");
+                if (!compiler.getCompilerOptions().getNoCheck())
                     compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
-             }
+            }
 
             compiler.getStack().decreaseRegister();
             if (isLoad)
@@ -115,83 +116,121 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
         GPRegister registerLeft;
         DVal registerRight;
-        int offSet = 0;
+
         String var = extractVariable(compiler);
 
+        LOG.debug(("The value of var is " + var));
 
-        switch(var){
+        switch (var) {
             case "both":
                 registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
                 registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                compiler.getStack().increaseRegister();
+
+                compiler.addInstruction(new LOAD(
+                        registerLeft,
+                        Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                ));
+
+                compiler.addInstruction(getOperator(
+                        registerRight,
+                        Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                ));
                 break;
 
             case "left":
                 registerLeft = compiler.getRegister((AbstractIdentifier) getLeftOperand());
-                if(dVal != null){
+                if (dVal != null) {
                     registerRight = dVal;
-                    break;
+                    compiler.getStack().increaseRegister();
+                    compiler.addInstruction(getOperator(
+                            registerRight,
+                            registerLeft
+                    ));
+                    compiler.addInstruction(new LOAD(
+                            registerLeft,
+                            Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                    ));
+
+                }else {
+                    if (compiler.getStack().getCurrentRegister() >= compiler.getStack().getNumberOfRegisters()) {
+                        compiler.getStack().pushRegister(compiler);
+                        codeGenInstOP(compiler);
+                        compiler.getStack().popRegister(compiler);
+                        return;
+                    }
+
+                    compiler.getStack().increaseRegister();
+                    compiler.addInstruction(new LOAD(
+                            registerLeft,
+                            Register.getR(compiler.getStack().getCurrentRegister() - 1)
+
+                    ));
+                    getRightOperand().codeGenInstOP(compiler);
+                    registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+
+                    compiler.getStack().decreaseRegister();
+
+                    compiler.addInstruction(getOperator(
+                            registerRight,
+                            Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                    ));
                 }
-                getRightOperand().codeGenInstOP(compiler);
-                offSet++;
-                registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
                 break;
 
             case "right":
                 registerRight = compiler.getRegister((AbstractIdentifier) getRightOperand());
                 getLeftOperand().codeGenInstOP(compiler);
-                offSet++;
                 registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+
+                compiler.addInstruction(getOperator(
+                        registerRight,
+                        registerLeft
+                ));
                 break;
 
             default:
-                if(compiler.getStack().getCurrentRegister() + 1 < compiler.getStack().getNumberOfRegisters()){
+                if (compiler.getStack().getCurrentRegister() >= compiler.getStack().getNumberOfRegisters()) {
                     compiler.getStack().pushRegister(compiler);
                     codeGenInstOP(compiler);
                     compiler.getStack().popRegister(compiler);
+                    return;
                 }
-
                 getLeftOperand().codeGenInstOP(compiler);
                 registerLeft = Register.getR(compiler.getStack().getCurrentRegister() - 1);
                 getRightOperand().codeGenInstOP(compiler);
                 registerRight = Register.getR(compiler.getStack().getCurrentRegister() - 1);
-                offSet += 2;
+
+                compiler.addInstruction(getOperator(
+                        registerRight,
+                        registerLeft
+                ));
+
+
+                compiler.getStack().decreaseRegister();
+
+                break;
+
 
         }
 
 
-        compiler.addInstruction(new LOAD(
-                registerLeft,
-                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
-        ));
-
-        compiler.addInstruction(getOperator(
-                registerRight,
-                Register.getR(compiler.getStack().getCurrentRegister() - offSet)
-        ));
-
-        if(isDiv()){
+        if (isDiv()) {
             compiler.addInstruction(new BOV(compiler.getErrorHandler().addDivisionByZero()));
-        }
-        else if(isMod()){
+        } else if (isMod()) {
             compiler.addInstruction(new BOV(compiler.getErrorHandler().addModuloByZero()));
-        }
-        else if (this.getType().isFloat())
+        } else if (this.getType().isFloat())
             if (!compiler.getCompilerOptions().getNoCheck())
                 compiler.addInstruction(new BOV(compiler.getErrorHandler().addOverflow()));
 
 
-        if(offSet == 2)
-            compiler.getStack().decreaseRegister();
-
-        if(offSet == 0)
-            compiler.getStack().increaseRegister();
-
     }
 
-    protected  boolean isDiv(){
+    protected boolean isDiv() {
         return false;
     }
-    protected  boolean isMod(){
+
+    protected boolean isMod() {
         return false;
     }
 
