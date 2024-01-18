@@ -42,6 +42,10 @@ public class CompilerOptions {
     public boolean getOPTIM() {
         return OPTIM;
     }
+    public boolean getOtherThanBOption() {
+        return otherThanBOption;
+    }
+
     public boolean getPrintBanner() {
         return printBanner;
     }
@@ -83,6 +87,7 @@ public class CompilerOptions {
     private boolean changeRegisterNumber=false;
 
     private boolean OPTIM = false;
+    private boolean otherThanBOption = false;
     private int numberOfRegistersEntered;
 
     private List<File> sourceFiles = new ArrayList<File>();
@@ -104,6 +109,7 @@ public class CompilerOptions {
                         }
                         else{
                             this.parse = true;
+                            otherThanBOption = true;
                         }
                         break;
                     case "-v":
@@ -112,22 +118,27 @@ public class CompilerOptions {
                         }
                         else{
                             this.verification = true;
+                            otherThanBOption = true;
                         }
                         break;
                     case "-P":
                         this.parallel = true;
+                        otherThanBOption = true;
                         break;
                     case "-b":
                         this.printBanner = true;
                         break;
                     case "-d":
                         this.debug++;
+                        otherThanBOption = true;
                         break;
                     case "-n":
                         noCheck=true;
+                        otherThanBOption = true;
                         break;
                     case "-r":
                         changeRegisterNumber=true;
+                        otherThanBOption = true;
                         break;
                     case "-op":
                         OPTIM = true;
@@ -140,7 +151,11 @@ public class CompilerOptions {
                         if(pattern.matcher(arg).matches() && doChangeRegisterNumber()){
                             numberOfRegistersEntered=Integer.parseInt(arg);
                         }else{
-                            this.sourceFiles.add(new File(arg));
+                            if (arg.endsWith(".deca")) {
+                                this.sourceFiles.add(new File(arg));
+                                otherThanBOption = true;
+                            }
+                            else throw new CLIException("the file " + arg + " does not have the extension .deca");
                         }
                 }
             }
@@ -149,57 +164,6 @@ public class CompilerOptions {
             numberOfRegistersEntered=Integer.parseInt(args[1]);
         }
 
-//        String[] file_name = new String[1];
-//        int argsLength  = args.length;
-//
-//        if (argsLength > 0) {
-//            file_name[0] = args[argsLength-1];
-//        }
-//        else {
-//            throw new CLIException("No options or file name are given.");
-//        }
-//
-//        DecaLexer lex = AbstractDecaLexer.createLexerFromArgs(file_name);
-//        CommonTokenStream tokens = new CommonTokenStream(lex);
-//        DecaParser parser = new DecaParser(tokens);
-//        File file = null;
-//
-//        if (lex.getSourceName() != null) {
-//            file = new File(lex.getSourceName());
-//        }
-//        else{
-//            throw new CLIException("Cannot find file: " + file_name[0]);
-//        }
-//        sourceFiles.add(file);
-//        final DecacCompiler decacCompiler = new DecacCompiler(new CompilerOptions(), file);
-//        parser.setDecacCompiler(decacCompiler);
-//        AbstractProgram prog = parser.parseProgramAndManageErrors(System.err);
-//
-//        switch (args[0]) {
-//            case "-p":
-//                if (prog == null) {
-//                    System.exit(1);
-//                } else {
-//                    prog.decompile(System.out);
-//                    System.exit(1);
-//                }
-//                break;
-//            case "-v":
-//                if (prog == null) {
-//                    System.exit(1);
-//                } else {
-//                    try {
-//                        prog.verifyProgram(decacCompiler);
-//                        System.exit(1);
-//                    } catch (LocationException e) {
-//                        e.display(System.err);
-//                        System.exit(1);
-//                    }
-//                }
-//                break;
-//            default:
-//                File srcFile = new File(args[0]);
-//        }
 
         Logger logger = Logger.getRootLogger();
         //map command-line debug option to log4j's level.
@@ -229,7 +193,16 @@ public class CompilerOptions {
     }
 
     protected void displayUsage() {
-        //TODO
-        //throw new UnsupportedOperationException("not yet implemented");
+        String optionsDescription = "Usage: decac <options> <source files>\n "+
+        "where possible options include:\n"+
+        "-b (banner): displays a banner indicating the team name.\n" +
+        "-p (parse): stops decac after the tree construction step and displays the decompilation of the tree " +
+        "-v (verification): stops decac after the verification step (produces no output in the absence of errors).\n" +
+        "-n (no check): removes runtime tests specified in points 11.1 and 11.3 of the Deca semantics.\n" +
+        "-r X (registers): limits the available general-purpose registers to R0 ... R{X-1}, with 4 <= X <= 16.\n" +
+        "-d (debug): activates debug traces. Repeat the option several times for more traces.\n" +
+        "-P (parallel): if there are multiple source files, launches the compilation of files in parallel (to speed up compilation)";
+
+        System.out.println(optionsDescription);
     }
 }

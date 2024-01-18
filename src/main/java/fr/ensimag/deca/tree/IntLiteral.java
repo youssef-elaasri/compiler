@@ -85,7 +85,7 @@ public class IntLiteral extends AbstractExpr {
     }
 
     @Override
-    protected void codeGenPrint(DecacCompiler compiler) {
+    protected void codeGenPrint(DecacCompiler compiler, boolean ex) {
         compiler.addInstruction(new LOAD(value , Register.R1));
         compiler.addInstruction(new WINT());
     }

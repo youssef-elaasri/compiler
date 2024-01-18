@@ -1,16 +1,4 @@
 {
-	int a = 7;
-	int b = a / 7;
-	if (a < 10)  {
-	println("Failed");
-	}
-	else {
-	if (a > 10)  {
-	println("PAssed");
-	}
-	else {
-	}
-
-	}
-
+	int a = 45;
+	(a = (a + 1));
 }

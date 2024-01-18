@@ -12,6 +12,7 @@ import java.util.HashSet;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOATX;
 import fr.ensimag.ima.pseudocode.instructions.WINT;
 import org.apache.commons.lang.Validate;
 
@@ -100,9 +101,12 @@ public class FloatLiteral extends AbstractExpr {
     }
 
     @Override
-    protected void codeGenPrint(DecacCompiler compiler) {
+    protected void codeGenPrint(DecacCompiler compiler, boolean ex) {
         compiler.addInstruction(new LOAD(value , Register.R1));
-        compiler.addInstruction(new WFLOAT());
+        if(ex)
+            compiler.addInstruction(new WFLOATX());
+        else
+            compiler.addInstruction(new WFLOAT());
     }
 
 }

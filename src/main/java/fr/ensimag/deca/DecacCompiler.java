@@ -174,6 +174,7 @@ public class DecacCompiler {
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
+
     }
 
     /**
@@ -197,13 +198,18 @@ public class DecacCompiler {
             return true;
         }
 
+        if(getCompilerOptions().getParse()){
+            prog.decompile(out);
+            System.exit(0);
+        }
+
         try {
             prog.verifyProgram(this);
         } catch (ContextualError e) {
             e.display(System.err);
             return true;
         }
-        if(getCompilerOptions().getVerification()){ System.exit(1);}
+        if(getCompilerOptions().getVerification()){ System.exit(0);}
         assert(prog.checkAllDecorations());
 
         if(getCompilerOptions().getParse()){
@@ -221,6 +227,7 @@ public class DecacCompiler {
             isPass3 = true;
             prog.ConstantFoldingAndPropagation(this);
         }
+
 
         if(getCompilerOptions().doChangeRegisterNumber()){
             stack.setNumberOfRegisters(getCompilerOptions().getReigsterNumberEntered());
@@ -312,7 +319,7 @@ public class DecacCompiler {
     public void setIfManager(HashMap<AbstractIdentifier, AbstractExpr> ifManager) {
         this.ifManager = ifManager;
     }
-    
+
     private final HashMap<AbstractIdentifier, DeclClass> classManager = new HashMap<>();
 
     public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
