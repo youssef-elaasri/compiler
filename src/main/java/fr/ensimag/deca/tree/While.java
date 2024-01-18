@@ -13,9 +13,10 @@ import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
 import java.util.HashSet;
+
 import org.apache.log4j.Logger;
+
 /**
- *
  * @author gl22
  * @date 01/01/2024
  */
@@ -52,21 +53,20 @@ public class While extends AbstractInst {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
             int i = counter;
             increaseCounter();
             Label whileLabel = new Label("while_" + i);
             Label endOfWhile = new Label("end_of_while_" + i);
             compiler.addLabel(whileLabel);
             condition.codeGenInst(compiler);
-            compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister()-1)));
+            compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
             compiler.addInstruction(new BEQ(endOfWhile));
             compiler.getStack().decreaseRegister();
             body.codeGenListInst(compiler);
             compiler.addInstruction(new BRA(whileLabel));
             compiler.addLabel(endOfWhile);
-        }
-        else {
+        } else {
             compiler.getStack().pushRegister(compiler);
             codeGenInst(compiler);
             compiler.getStack().popRegister(compiler);
@@ -75,12 +75,11 @@ public class While extends AbstractInst {
 
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
-        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
 
-            for(AbstractIdentifier abstractIdentifier : liveVariables){
+            for (AbstractIdentifier abstractIdentifier : liveVariables) {
                 LOG.debug("this variable " + abstractIdentifier + " is in liveVariables");
             }
-
 
 
             //Loop inversion
@@ -103,16 +102,13 @@ public class While extends AbstractInst {
 
             Boolean isInWhile = compiler.isInWhile();
             // Load live variables
-            if(!isInWhile)
+            if (!isInWhile)
                 loadLiveVariable(compiler);
 
             // Start + Body
             compiler.addLabel(startOfWile);
 
-            for (AbstractInst abstractInst : body.getList()) {
-                LOG.debug("The instruction is " + abstractInst);
-                abstractInst.codeGenInstOP(compiler);
-            }
+            body.codeGenListInst(compiler);
 
             // while (cond)
             this.condition.codeGenInstOP(compiler);
@@ -127,10 +123,9 @@ public class While extends AbstractInst {
             compiler.addLabel(endOfWile);
 
             //Store variables
-            if(!isInWhile)
+            if (!isInWhile)
                 storeLiveVariable(compiler);
-        }
-        else {
+        } else {
             compiler.getStack().pushRegister(compiler);
             codeGenInstOP(compiler);
             compiler.getStack().popRegister(compiler);
@@ -139,7 +134,7 @@ public class While extends AbstractInst {
     }
 
 
-    private void loadLiveVariable(DecacCompiler compiler){
+    private void loadLiveVariable(DecacCompiler compiler) {
 
         // Getting into a while is marked by loading all the variables in registers
         compiler.getInWhile();
@@ -149,7 +144,7 @@ public class While extends AbstractInst {
 
         compiler.initVariablesDict();
 
-        for (AbstractIdentifier abstractIdentifier : liveVariables){
+        for (AbstractIdentifier abstractIdentifier : liveVariables) {
             LOG.debug("Let's see those variables ...");
             compiler.addInstruction(new LOAD(
                     abstractIdentifier.getExpDefinition().getOperand(),
@@ -164,12 +159,12 @@ public class While extends AbstractInst {
         }
     }
 
-    private void storeLiveVariable(DecacCompiler compiler){
+    private void storeLiveVariable(DecacCompiler compiler) {
 
         // Getting out of a while is marked by storing all the variables in registers
         compiler.getOutWhile();
 
-        for (AbstractIdentifier abstractIdentifier : liveVariables){
+        for (AbstractIdentifier abstractIdentifier : liveVariables) {
 
             compiler.addInstruction(new STORE(
                     compiler.getRegister(abstractIdentifier),
@@ -180,7 +175,6 @@ public class While extends AbstractInst {
 
         compiler.initVariablesDict();
     }
-
 
 
     @Override
@@ -218,7 +212,7 @@ public class While extends AbstractInst {
 
     @Override
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
-            ClassDefinition currentClass, Type returnType)
+                              ClassDefinition currentClass, Type returnType)
             throws ContextualError {
         condition.verifyCondition(compiler, localEnv, currentClass);
         body.verifyListInst(compiler, localEnv, currentClass, returnType);
@@ -250,7 +244,6 @@ public class While extends AbstractInst {
     private void increaseCounter() {
         counter++;
     }
-
 
 
 }

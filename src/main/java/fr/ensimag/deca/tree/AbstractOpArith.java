@@ -142,12 +142,14 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                 if (dVal != null) {
                     registerRight = dVal;
                     compiler.getStack().increaseRegister();
-                    compiler.addInstruction(getOperator(
-                            registerRight,
-                            registerLeft
-                    ));
+
                     compiler.addInstruction(new LOAD(
                             registerLeft,
+                            Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                    ));
+
+                    compiler.addInstruction(getOperator(
+                            registerRight,
                             Register.getR(compiler.getStack().getCurrentRegister() - 1)
                     ));
 

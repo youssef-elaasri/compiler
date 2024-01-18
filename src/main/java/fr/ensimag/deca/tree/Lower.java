@@ -2,10 +2,7 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.ima.pseudocode.BranchInstruction;
-import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
+import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BLT;
 import fr.ensimag.ima.pseudocode.instructions.SLT;
@@ -24,8 +21,8 @@ public class Lower extends AbstractOpIneq {
     }
 
     @Override
-    public BranchInstruction getOperator(Label op) {
-        return new BLT(op);
+    public UnaryInstructionToReg getOperator(GPRegister op) {
+        return new SLT(op);
     }
 
     @Override

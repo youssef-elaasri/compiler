@@ -6,6 +6,7 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
+
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ import org.apache.commons.lang.Validate;
  * @date 01/01/2024
  */
 public class IfThenElse extends AbstractInst {
-    
+
     private AbstractExpr condition;
     private ListInst thenBranch;
     private ListInst elseBranch;
@@ -38,10 +39,10 @@ public class IfThenElse extends AbstractInst {
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
     }
-    
+
     @Override
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
-            ClassDefinition currentClass, Type returnType)
+                              ClassDefinition currentClass, Type returnType)
             throws ContextualError {
         condition.verifyCondition(compiler, localEnv, currentClass);
         thenBranch.verifyListInst(compiler, localEnv, currentClass, returnType);
@@ -50,19 +51,20 @@ public class IfThenElse extends AbstractInst {
 
     private static int counterIf = -1;
 
-    private void increaseCounterIf(){
+    private void increaseCounterIf() {
         counterIf++;
     }
+
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
             increaseCounterIf();
             int number = counterIf;
             Label ifBranch = new Label("if_branch_" + number);
             Label elseBranch_ = new Label("else_branch_" + number);
             Label endOfIf = new Label("end_of_if_" + number);
 
-            if(compiler.getCompilerOptions().getOPTIM())
+            if (compiler.getCompilerOptions().getOPTIM())
                 condition.codeGenInstOP(compiler);
             else
                 condition.codeGenInst(compiler);
@@ -76,41 +78,24 @@ public class IfThenElse extends AbstractInst {
 
             compiler.addLabel(ifBranch);
 
-            if(compiler.getCompilerOptions().getOPTIM()) {
-                for (AbstractInst abstractInst : thenBranch.getList()) {
-                    abstractInst.codeGenInstOP(compiler);
-                }
-            }
-            else{
-                for (AbstractInst abstractInst : thenBranch.getList()) {
-                    abstractInst.codeGenInst(compiler);
-                }
-            }
+
+            thenBranch.codeGenListInst(compiler);
+
             compiler.addInstruction(new BRA(endOfIf));
 
             compiler.addLabel(elseBranch_);
 
 
-            if(compiler.getCompilerOptions().getOPTIM()) {
-                for (AbstractInst abstractInst : elseBranch.getList()) {
-                    abstractInst.codeGenInstOP(compiler);
-                }
-            }
-            else{
-                for (AbstractInst abstractInst : elseBranch.getList()) {
-                    abstractInst.codeGenInst(compiler);
-                }
-            }
+            elseBranch.codeGenListInst(compiler);
+
 
             compiler.addLabel(endOfIf);
-        }else{
+        } else {
             compiler.getStack().pushRegister(compiler);
             codeGenInst(compiler);
             compiler.getStack().popRegister(compiler);
 
         }
-
-
 
 
     }
@@ -170,7 +155,7 @@ public class IfThenElse extends AbstractInst {
     }
 
     public ListInst DeadCodeElimination() {
-        if (condition instanceof BooleanLiteral ) {
+        if (condition instanceof BooleanLiteral) {
             if (((BooleanLiteral) condition).getValue())
                 return thenBranch.DeadCodeElimination();
             else
@@ -184,22 +169,21 @@ public class IfThenElse extends AbstractInst {
 
     @Override
     public void decompile(IndentPrintStream s) {
-       String st = "if";
-       s.print(st);
-       s.print(" (");
-       condition.decompile(s);
-       s.print(") ");
-       s.println(" {");
-       thenBranch.decompile(s);
-       s.println("}");
-       s.println("else {");
-       elseBranch.decompile(s);
-       s.println("}");
+        String st = "if";
+        s.print(st);
+        s.print(" (");
+        condition.decompile(s);
+        s.print(") ");
+        s.println(" {");
+        thenBranch.decompile(s);
+        s.println("}");
+        s.println("else {");
+        elseBranch.decompile(s);
+        s.println("}");
     }
 
     @Override
-    protected
-    void iterChildren(TreeFunction f) {
+    protected void iterChildren(TreeFunction f) {
         condition.iter(f);
         thenBranch.iter(f);
         elseBranch.iter(f);

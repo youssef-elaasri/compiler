@@ -14,6 +14,7 @@ import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,9 @@ import java.util.Set;
  * @date 01/01/2024
  */
 public abstract class AbstractOpCmp extends AbstractBinaryExpr {
+
+    private static final Logger LOG = Logger.getLogger(AbstractOpCmp.class);
+
 
 
 
@@ -108,9 +112,8 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         }
     }
 
-    protected void codeGenInstGeneralOP(DecacCompiler compiler, BranchInstruction branchInstruction, Label trueLabel, String opCmp){
+    protected void codeGenInstGeneralOP(DecacCompiler compiler, UnaryInstructionToReg branchInstruction){
         String vars = extractVariable(compiler);
-        Label endEqualLabel = new Label("end_" + opCmp);
 
         GPRegister rightRegister = null;
         GPRegister leftRegister = null;
@@ -136,7 +139,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
                 break;
 
             default:
-                codeGenInstGeneral(compiler, branchInstruction, trueLabel, opCmp);
+                codeGenInstGeneral(compiler, branchInstruction);
                 return;
 
         }
@@ -147,11 +150,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         ));
 
         compiler.addInstruction(branchInstruction);
-        compiler.addInstruction(new LOAD(0,Register.getR(compiler.getStack().getCurrentRegister()-1)));
-        compiler.addInstruction(new BRA(endEqualLabel));
-        compiler.addLabel(trueLabel);
-        compiler.addInstruction(new LOAD(1,Register.getR(compiler.getStack().getCurrentRegister()-1)));
-        compiler.addLabel(endEqualLabel);
+
 
 
 
@@ -182,17 +181,14 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         compiler.getStack().decreaseRegister();
     }
 
-    public abstract void increaseCounter();
 
-    public abstract BranchInstruction getOperator(Label op);
+    public abstract UnaryInstructionToReg getOperator(GPRegister register);
 
-    public abstract String getLabel();
 
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
-        String string = getLabel();
-        Label label = new Label(string);
-        BranchInstruction branchInstruction = getOperator(label);
-        codeGenInstGeneralOP(compiler,branchInstruction, label,string);
+        LOG.debug("the current register is " + compiler.getStack().getCurrentRegister() + " AND I WANNA DIE");
+        UnaryInstructionToReg branchInstruction = getOperator(Register.getR(compiler.getStack().getCurrentRegister()));
+        codeGenInstGeneralOP(compiler,branchInstruction);
     }
 }

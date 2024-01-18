@@ -107,7 +107,6 @@ public class Assign extends AbstractBinaryExpr {
                     compiler.getRegister((AbstractIdentifier) getLeftOperand())
             ));
 
-            compiler.getStack().decreaseRegister();
         }
         else {
             compiler.getStack().pushRegister(compiler);
