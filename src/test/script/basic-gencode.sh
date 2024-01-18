@@ -209,7 +209,7 @@ decac src/test/deca/codegen/invalid/floatOverflow.deca
 # On code en dur la valeur attendue.
 attendu="the float may be too long or invalid"
 
-if ! decac src/test/deca/codegen/invalid/floatOverflow.deca  2>&1 | grep -q  "the float may be too long or invalid" ; then
+if ! decac src/test/deca/codegen/invalid/floatOverflow.deca  2>&1 | grep -q  "Invalid float" ; then
     echo "FAILED"
     exit 1
 fi
