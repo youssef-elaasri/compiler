@@ -39,11 +39,17 @@ public class ListInst extends TreeList<AbstractInst> {
         if (compiler.getCompilerOptions().getOPTIM()) {
             for (AbstractInst i : getList()) {
                 i.codeGenInstOP(compiler);
+                if (i instanceof AbstractExpr)
+                    compiler.getStack().decreaseRegister();
+
             }
         }
         else {
             for (AbstractInst i : getList()) {
                 i.codeGenInst(compiler);
+                if (i instanceof AbstractExpr)
+                    compiler.getStack().decreaseRegister();
+
             }
         }
     }

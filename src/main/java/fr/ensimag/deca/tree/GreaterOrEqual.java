@@ -4,9 +4,12 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BGE;
 import fr.ensimag.ima.pseudocode.instructions.BGT;
+import fr.ensimag.ima.pseudocode.instructions.SGE;
 
 /**
  * Operator "x >= y"
@@ -16,8 +19,6 @@ import fr.ensimag.ima.pseudocode.instructions.BGT;
  */
 public class GreaterOrEqual extends AbstractOpIneq {
 
-    private static int counter = 0;
-
     public GreaterOrEqual(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -26,14 +27,6 @@ public class GreaterOrEqual extends AbstractOpIneq {
     public BranchInstruction getOperator(Label op) {
         return new BGE(op);
     }
-
-    @Override
-    public String getLabel() {
-        String string = "greater_or_equal_" + counter;
-        increaseCounter();
-        return string;
-    }
-
 
     @Override
     protected String getOperatorName() {
@@ -49,12 +42,12 @@ public class GreaterOrEqual extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        int i = counter;
-        increaseCounter();
-        Label label = new Label("greater_or_equal_"+ i);
-        BranchInstruction branchInstruction = new BGE(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"greater_or_equal_"+i);
+        UnaryInstructionToReg branchInstruction = new SGE(
+                Register.getR(compiler.getStack().getCurrentRegister())
+        );
+        codeGenInstGeneral(compiler,branchInstruction);
     }
+
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
@@ -66,9 +59,5 @@ public class GreaterOrEqual extends AbstractOpIneq {
         // nothing to do
     }
 
-    @Override
-    public void increaseCounter() {
-        counter++;
-    }
 
 }

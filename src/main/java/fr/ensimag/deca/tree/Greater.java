@@ -4,9 +4,12 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BGT;
 import fr.ensimag.ima.pseudocode.instructions.BLT;
+import fr.ensimag.ima.pseudocode.instructions.SGT;
 
 /**
  *
@@ -14,8 +17,6 @@ import fr.ensimag.ima.pseudocode.instructions.BLT;
  * @date 01/01/2024
  */
 public class Greater extends AbstractOpIneq {
-
-    private static int counter = 0;
 
     public Greater(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
@@ -25,14 +26,6 @@ public class Greater extends AbstractOpIneq {
     public BranchInstruction getOperator(Label op) {
         return new BGT(op);
     }
-
-    @Override
-    public String getLabel() {
-        String string = "greater_" + counter;
-        increaseCounter();
-        return string;
-    }
-
 
     @Override
     protected String getOperatorName() {
@@ -48,25 +41,19 @@ public class Greater extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        int i = counter;
-        increaseCounter();
-        Label label = new Label("greater_"+i);
-        BranchInstruction branchInstruction = new BGT(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"greater_"+i);
+        UnaryInstructionToReg branchInstruction = new SGT(
+                Register.getR(compiler.getStack().getCurrentRegister())
+        );
+        codeGenInstGeneral(compiler,branchInstruction);
     }
+}
 
-    @Override
-    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        return ConstantFoldingAndPropagationOpIn(compiler,true);
-    }
+@Override
+protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+    return ConstantFoldingAndPropagationOpIn(compiler,true);
+}
 
-    @Override
-    public void checkAliveVariables() {
-        // nothing to do
-    }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
-    }
+@Override
+public void checkAliveVariables() {
+    // nothing to do
 }

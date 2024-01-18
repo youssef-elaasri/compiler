@@ -4,8 +4,11 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BLT;
+import fr.ensimag.ima.pseudocode.instructions.SLT;
 
 import java.util.HashSet;
 
@@ -16,8 +19,6 @@ import java.util.HashSet;
  */
 public class Lower extends AbstractOpIneq {
 
-    private static int counter = 0;
-
     public Lower(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -26,14 +27,6 @@ public class Lower extends AbstractOpIneq {
     public BranchInstruction getOperator(Label op) {
         return new BLT(op);
     }
-
-    @Override
-    public String getLabel() {
-        String label = "lower" + counter;
-        increaseCounter();
-        return label;
-    }
-
 
     @Override
     protected String getOperatorName() {
@@ -49,14 +42,11 @@ public class Lower extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        int i = counter;
-        Label label = new Label("lower_"+i);
-        increaseCounter();
-        BranchInstruction branchInstruction = new BLT(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"lower_" + i);
+        UnaryInstructionToReg branchInstruction = new SLT(
+                Register.getR(compiler.getStack().getCurrentRegister())
+        );
+        codeGenInstGeneral(compiler,branchInstruction);
     }
-
-
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
@@ -72,10 +62,4 @@ public class Lower extends AbstractOpIneq {
     public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
 
     }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
-    }
-
 }

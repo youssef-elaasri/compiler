@@ -4,8 +4,11 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BLE;
+import fr.ensimag.ima.pseudocode.instructions.SLE;
 
 /**
  *
@@ -18,18 +21,11 @@ public class LowerOrEqual extends AbstractOpIneq {
     public LowerOrEqual(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
-
     @Override
     public BranchInstruction getOperator(Label op) {
         return new BLE(op);
     }
 
-    @Override
-    public String getLabel() {
-        String string = "lower_or_equal_" + counter;
-        increaseCounter();
-        return string;
-    }
 
     @Override
     protected String getOperatorName() {
@@ -45,13 +41,11 @@ public class LowerOrEqual extends AbstractOpIneq {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        int i = counter;
-        increaseCounter();
-        Label label = new Label("lower_or_equal_"+i);
-        BranchInstruction branchInstruction = new BLE(label);
-        codeGenInstGeneral(compiler,branchInstruction,label,"lower_or_equal_"+i);
+        UnaryInstructionToReg branchInstruction = new SLE(
+                Register.getR(compiler.getStack().getCurrentRegister())
+        );
+        codeGenInstGeneral(compiler,branchInstruction);
     }
-
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         return ConstantFoldingAndPropagationOpEq(compiler,false);
@@ -61,12 +55,6 @@ public class LowerOrEqual extends AbstractOpIneq {
     public void checkAliveVariables() {
         // nothing to do
     }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
-    }
-
 
 
 }

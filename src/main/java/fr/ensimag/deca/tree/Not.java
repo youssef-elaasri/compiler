@@ -18,8 +18,6 @@ import java.util.HashSet;
  */
 public class Not extends AbstractUnaryExpr {
 
-    protected static int counter = 0;
-
     public Not(AbstractExpr operand) {
         super(operand);
     }
@@ -69,7 +67,6 @@ public class Not extends AbstractUnaryExpr {
             codeGenInst(compiler);
             return;
         }
-        compiler.addComment("hey");
         compiler.getStack().increaseRegister();
         compiler.addInstruction(new CMP(0, compiler.getRegister((AbstractIdentifier) getOperand())));
         compiler.addInstruction(new SEQ(Register.getR(compiler.getStack().getCurrentRegister() - 1)));
