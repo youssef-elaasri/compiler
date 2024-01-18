@@ -247,7 +247,13 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
 
     protected void shift(DecacCompiler compiler, int leftExponent, AbstractExpr expr,
                          boolean isNegative, boolean isDiv) {
-        expr.codeGenInstOP(compiler);
+
+        if(expr instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) expr)){
+            compiler.getStack().increaseRegister();
+            compiler.addInstruction(new LOAD(compiler.getRegister((AbstractIdentifier) expr), Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+        }else
+            expr.codeGenInstOP(compiler);
+
         if (isDiv) {
             for (int i = 0; i<leftExponent; i++) {
                 compiler.addInstruction(
