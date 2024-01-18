@@ -111,7 +111,7 @@ public class DeclClass extends AbstractDeclClass {
         /*The two first passes ensure that className is defined in environmentType as a class)*/
         EnvironmentExp envExp = ((ClassDefinition) compiler.environmentType.defOfType(className.getName())).getMembers();
         listField.verifyListDeclFieldI(compiler, envExp, className.getClassDefinition());
-//        listMethod.verifyListDeclMethodBody(compiler, envExp, className.getClassDefinition());
+       listMethod.verifyListDeclMethodBody(compiler, envExp, className.getClassDefinition());
     }
 
     @Override
