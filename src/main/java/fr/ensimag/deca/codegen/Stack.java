@@ -95,6 +95,9 @@ public class Stack {
         return currentRegister;
     }
 
+    public void setCurrentRegister(int currentRegister) {this.currentRegister = currentRegister;}
+    public void resetCurrentRegister() {this.currentRegister = 2;}
+
     public void increaseRegister(){
         currentRegister++;
     }
@@ -128,6 +131,10 @@ public class Stack {
         increaseCounterTSTO();
     }
 
+    public void pushRegister(DecacCompiler compiler, Register R) {
+        compiler.getStack().setCurrentRegister(1);
+        compiler.addInstruction(new PUSH(R));
+    }
 
     /**
      * Pops the current register from the stack and decreases the counter TSTO.

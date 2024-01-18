@@ -2,6 +2,7 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.context.Signature;
 import fr.ensimag.deca.context.Type;
@@ -46,8 +47,11 @@ public class DeclParam extends AbstractDeclParam{
     }
 
     @Override
-    protected ExpDefinition verifyParamName(DecacCompiler compiler) {
-        return null;
+    protected EnvironmentExp verifyParamName(DecacCompiler compiler) throws ContextualError {
+        Type typeP =  this.type.verifyType(compiler);
+        EnvironmentExp exp = new EnvironmentExp(null);
+        exp.declare(paramName.getName(),type.getMethodDefinition());
+        return exp;
     }
 
     @Override
