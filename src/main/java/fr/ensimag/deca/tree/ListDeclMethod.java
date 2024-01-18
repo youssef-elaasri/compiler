@@ -15,6 +15,8 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
     private final int NbrOfAllMethods = this.getList().size();
     private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
 
+    static int indexCounter = 0;
+
     @Override
     public void decompile(IndentPrintStream s) {
        for(AbstractDeclMethod m:getList()){
@@ -25,24 +27,15 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
     }
     public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError{
         ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
-        int iterationCounter = 0;
-        int indexCounter = supClass.getNumberOfMethods() + supClass.getNbrOfOverrides();
+        indexCounter += supClass.getNumberOfMethods() - supClass.getNbrOfOverrides() + 1;
         EnvironmentExp envExpr =  new EnvironmentExp(null);
-        int initialIndex = supClass.getNumberOfMethods() + supClass.getNbrOfOverrides();
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;
             meth.setIndex(indexCounter);
             EnvironmentExp envExp = meth.verifyMethod(compiler, superId, classDef);
 
             if( meth.isOverride()){
-                //case one if the meth override is first in methods we restart the indexCounter
-                if (meth.getIndex() == indexCounter - 1){
-                    indexCounter--;
-                }
-                //case two if the meth override is in the middle of methods
-                else if (meth.getIndex() >= initialIndex) {
-                    this.getList().get(meth.getIndex() - initialIndex).setIndex(indexCounter);
-                }
+                indexCounter--;
             }
 
             Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
@@ -53,7 +46,6 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
             indexMethodMap.put(meth.getIndex(), meth);
-            iterationCounter++;
         }
         return envExpr;
     }
