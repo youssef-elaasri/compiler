@@ -1,18 +1,12 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.NullOperand;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
-import fr.ensimag.ima.pseudocode.instructions.ADDSP;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
-import fr.ensimag.ima.pseudocode.instructions.LOAD;
-import fr.ensimag.ima.pseudocode.instructions.STORE;
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -61,9 +55,11 @@ public class MethodCall extends AbstractExpr{
 
         compiler.addComment("Call Method " + methodIdent.getName());
         compiler.addInstruction(new ADDSP(size + 1));
-        //TODO
+        compiler.getStack().increaseCounterTSTO(size + 1);
+
         compiler.addInstruction(new LOAD(
-                expression.
+                ((ClassType) expression.getType()).getDefinition().getOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister())
         ));
 
         compiler.addInstruction(new STORE(
@@ -94,8 +90,23 @@ public class MethodCall extends AbstractExpr{
                 Register.getR(compiler.getStack().getCurrentRegister())
         ));
 
-        compiler.addInstruction();
+        compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDereferencingNull()));
 
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(0, Register.getR(compiler.getStack().getCurrentRegister())),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new BSR(new RegisterOffset(
+                methodIdent.getMethodDefinition().getIndex(),
+                Register.getR(compiler.getStack().getCurrentRegister()))
+        ));
+
+        compiler.addInstruction(new SUBSP(size + 1));
+        compiler.getStack().decreaseCounterTSTO(size + 1);
+
+
+        compiler.getStack().increaseRegister();
 
     }
 }
