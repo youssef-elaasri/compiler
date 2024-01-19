@@ -416,6 +416,7 @@ select_expr returns[AbstractExpr tree]
         }
         | /* epsilon */ {
             // we matched "e.i"
+            assert($args.tree != null);
             $tree = new Selection($e1.tree, $i.tree);
             setLocation($tree, $list_expr.start);
 
@@ -456,7 +457,7 @@ primary_expr returns[AbstractExpr tree]
     | e=literal {
             assert($literal.tree != null);
             $tree = $literal.tree;
-            setLocation($tree, $e.start);
+            setLocation($tree, $literal.start);
         }
     ;
 
