@@ -58,6 +58,14 @@ public class ErrorHandler {
         return label;
     }
 
+    public Label addDereferencingNull() {
+        Label label = new Label("dereferencing.null");
+        errors.putIfAbsent("\"Error: dereferencing null\"",
+                label
+                );
+        return label;
+    }
+
     public Label addInvalidIntegerInput(){
         Label label = new Label("invalid_integer_input");
         errors.putIfAbsent(

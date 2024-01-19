@@ -59,9 +59,8 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError {
+    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
-        ClassDefinition classDef = (ClassDefinition)compiler.environmentType.defOfType(className.getName());
 
         Type typeM = type.verifyType(compiler);
         if(envSup == null){

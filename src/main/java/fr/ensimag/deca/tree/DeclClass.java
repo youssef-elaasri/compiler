@@ -105,6 +105,8 @@ public class DeclClass extends AbstractDeclClass {
         /*Here we set the number of fields and methods based on the previous definition of our class */
         classDef.setNumberOfFields(className.getClassDefinition().getNumberOfFields());
         classDef.setNumberOfMethods(className.getClassDefinition().getNumberOfMethods());
+        classDef.setNbrOfOverrides(className.getClassDefinition().getNbrOfOverrides());
+
         compiler.environmentType.put(className.getName(), classDef);
         className.setDefinition(classDef);
         LOG.debug("verify verifyClassMembers: end");
