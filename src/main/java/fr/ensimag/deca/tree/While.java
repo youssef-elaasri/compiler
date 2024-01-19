@@ -59,9 +59,7 @@ public class While extends AbstractInst {
             compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister()-1)));
             compiler.addInstruction(new BEQ(endOfWhile));
             compiler.getStack().decreaseRegister();
-            for (AbstractInst inst : body.getList()) {
-                inst.codeGenInst(compiler);
-            }
+            body.codeGenListInst(compiler);
             compiler.addInstruction(new BRA(whileLabel));
             compiler.addLabel(endOfWhile);
         }

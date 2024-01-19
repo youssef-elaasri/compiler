@@ -70,17 +70,13 @@ public class IfThenElse extends AbstractInst {
             compiler.addInstruction(new BEQ(elseBranch_));
 
             compiler.addLabel(ifBranch);
-            for (AbstractInst abstractInst : thenBranch.getList()) {
-                abstractInst.codeGenInst(compiler);
-            }
+            thenBranch.codeGenListInst(compiler);
             compiler.addInstruction(new BRA(endOfIf));
 
             compiler.addLabel(elseBranch_);
 
 
-            for (AbstractInst abstractInst : elseBranch.getList()) {
-                abstractInst.codeGenInst(compiler);
-            }
+            elseBranch.codeGenListInst(compiler);
             compiler.addLabel(endOfIf);
         }else{
             compiler.getStack().pushRegister(compiler);
