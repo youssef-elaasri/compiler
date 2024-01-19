@@ -25,12 +25,14 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
     }
     public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError{
         ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+        ClassDefinition classDef = (ClassDefinition)compiler.environmentType.defOfType(className.getName());
+
         int indexCounter = supClass.getNumberOfAllMethods() - supClass.getNbrOfOverrides();
         EnvironmentExp envExpr =  new EnvironmentExp(null);
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;
             meth.setIndex(indexCounter);
-            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, className);
+            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, classDef);
 
             if( meth.isOverride()){
                 indexCounter--;
