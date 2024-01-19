@@ -215,7 +215,7 @@ public class DeclClass extends AbstractDeclClass {
         className.prettyPrint(s, prefix, false);
         superName.prettyPrint(s, prefix, false);
         listField.prettyPrint(s, prefix, false);
-        listMethod.prettyPrint(s, prefix, false);
+        listMethod.prettyPrint(s, prefix, true);
     }
 
     @Override

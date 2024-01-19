@@ -6,6 +6,13 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.NullOperand;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.ADDSP;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -46,5 +53,49 @@ public class MethodCall extends AbstractExpr{
         expression.iter(f);
         methodIdent.iter(f);
         listExpression.iter(f);
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        int size = listExpression.size();
+
+        compiler.addComment("Call Method " + methodIdent.getName());
+        compiler.addInstruction(new ADDSP(size + 1));
+        //TODO
+        compiler.addInstruction(new LOAD(
+                expression.
+        ));
+
+        compiler.addInstruction(new STORE(
+                Register.getR(compiler.getStack().getCurrentRegister()),
+                new RegisterOffset(0, Register.SP)
+        ));
+
+        AbstractExpr abstractExpr;
+        for(int i = size - 1; i >= 0; --i){
+            abstractExpr = listExpression.getList().get(i);
+
+            abstractExpr.codeGenInst(compiler);
+            compiler.getStack().decreaseRegister();
+
+            compiler.addInstruction(new STORE(
+                    Register.getR(compiler.getStack().getCurrentRegister()),
+                    new RegisterOffset(i - size, Register.SP)
+            ));
+        }
+
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(0, Register.SP),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new CMP(
+                new NullOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction();
+
+
     }
 }
