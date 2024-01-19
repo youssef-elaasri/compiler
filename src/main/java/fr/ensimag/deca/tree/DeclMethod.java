@@ -12,6 +12,7 @@ public class DeclMethod extends AbstractDeclMethod{
     final private AbstractIdentifier type;
     final private AbstractIdentifier methodName;
     final private ListDeclParam list_param;
+    final private MethodBody methodBody;
     private boolean isOverride = false;
 
     private int methodIndex;
@@ -28,7 +29,13 @@ public class DeclMethod extends AbstractDeclMethod{
     }
     @Override
     public void decompile(IndentPrintStream s) {
-
+        type.decompile(s);
+        s.print(" ");
+        methodName.decompile(s);
+        s.print("(");
+        list_param.decompile(s);
+        s.print(")");
+        methodBody.decompile(s);
     }
 
     @Override
