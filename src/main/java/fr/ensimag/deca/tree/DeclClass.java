@@ -26,7 +26,7 @@ public class DeclClass extends AbstractDeclClass {
     final private AbstractIdentifier superName;
     final private ListDeclField listField;
     final private ListDeclMethod listMethod;
-    private Map<Integer, Label> methodTable = new HashMap<>();
+    private final TreeMap<Integer, Label> methodTable = new TreeMap<>();
 
     private static final Logger LOG = Logger.getLogger(ListDeclClass.class);
 
