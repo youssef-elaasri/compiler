@@ -29,7 +29,13 @@ public class ListDeclParam extends TreeList<AbstractDeclParam> {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        throw new UnsupportedOperationException("not yet implemented");
+        for (AbstractDeclParam exp : this.getList()){
+           if(exp != null){
+            this.decompile(s);
+            s.print(",");
+            exp.decompile(s);
+           }
+        }
     }
 
     public Signature verifyListDeclParam(DecacCompiler compiler) throws ContextualError {
