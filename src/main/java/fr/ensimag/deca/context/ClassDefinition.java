@@ -29,6 +29,16 @@ public class ClassDefinition extends TypeDefinition {
         return numberOfMethods;
     }
 
+    public int getNumberOfAllMethods(){
+        if (this.superClass == null){
+            return 0;
+        }
+        if (this.superClass.getType().getName().toString().equals("Object")){
+            return this.getNumberOfMethods();
+        }
+        return this.getNumberOfMethods() + superClass.getNumberOfAllMethods();
+    }
+
     public void setNumberOfMethods(int n) {
         Validate.isTrue(n >= 0);
         numberOfMethods = n;
