@@ -18,6 +18,9 @@ public class Return extends AbstractInst {
     
        protected  void verifyInst(DecacCompiler compiler,
         EnvironmentExp localEnv, ClassDefinition currentClass, Type returnType) throws ContextualError{
+            if(returnType.isVoid()){
+                throw new ContextualError("Return Type should not be void !", this.getLocation());
+            }
             returnedExpr.verifyRValue(compiler, localEnv, currentClass, returnType);
         }
 
