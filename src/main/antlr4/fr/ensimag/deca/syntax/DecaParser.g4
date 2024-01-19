@@ -415,7 +415,7 @@ select_expr returns[AbstractExpr tree]
         | /* epsilon */ {
             // we matched "e.i"
             $tree = new Selection($e1.tree, $i.tree);
-            setLocation($tree, $i.start);
+            setLocation($tree, $list_expr.start);
 
         }
         )

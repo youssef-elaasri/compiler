@@ -23,11 +23,11 @@ public class ListExpr extends TreeList<AbstractExpr> {
         int paramCounter = 0;
         for( AbstractExpr rvalue : this.getList()){
 
-            Type rvalueType = rvalue.verifyExpr(compiler, localEnv, currentClass);
             Type requiredType = sig.paramNumber(paramCounter);
+            Type rvalueType = rvalue.verifyRValue(compiler, localEnv, currentClass, requiredType).getType();
             if (!rvalueType.sameType(requiredType)){
-                throw new ContextualError("The type of " + rvalue.getType() +
-                        " is not compatible with the method signature type: " + requiredType, this.getLocation());
+                throw new ContextualError("The type of " + rvalue.getType().getName().toString() +
+                        " is not compatible with the method signature type: " + requiredType, rvalue.getLocation());
             }
             paramCounter++;
         }
