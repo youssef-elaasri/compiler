@@ -49,8 +49,6 @@ public class ClassDefinition extends TypeDefinition {
         return numberOfMethods;
     }
 
-    private int nbrOfOverrides = 0;
-
     public int getNbrOfOverrides() {
         return nbrOfOverrides;
     }
@@ -58,9 +56,11 @@ public class ClassDefinition extends TypeDefinition {
     public void setNbrOfOverrides(int nbrOfOverrides){
         this.nbrOfOverrides = nbrOfOverrides;
     }
+
     public void incrNbrOfOverrides(){
-        this.nbrOfOverrides ++;
+        nbrOfOverrides ++;
     }
+    private int nbrOfOverrides = 0;
     private int numberOfFields = 0;
     private int numberOfMethods = 0;
 
