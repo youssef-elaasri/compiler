@@ -55,12 +55,20 @@ public class Assign extends AbstractBinaryExpr {
     protected void codeGenInst(DecacCompiler compiler) {
         if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
             getRightOperand().codeGenInst(compiler);
-            AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
-            compiler.addInstruction(
-                    new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
-                            lvalue.getExpDefinition().getOperand()
-                    )
-            );
+            if (getLeftOperand() instanceof Identifier) {
+                AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
+                compiler.addInstruction(
+                        new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
+                                lvalue.getExpDefinition().getOperand()
+                        )
+                );
+            } else {
+                compiler.addInstruction(new STORE(
+                        Register.getR(compiler.getStack().getCurrentRegister()-2),
+                        ((Selection) getLeftOperand()).codeGenInstAssign(compiler)
+                ));
+                compiler.getStack().decreaseRegister();
+            }
             compiler.getStack().decreaseRegister();
         }
         else {
