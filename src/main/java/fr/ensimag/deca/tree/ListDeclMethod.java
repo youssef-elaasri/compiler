@@ -13,7 +13,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
 
     private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
 
-    static int indexCounter = 0;
+    //static int indexCounter = 0;
 
     @Override
     public void decompile(IndentPrintStream s) {
@@ -25,7 +25,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
     }
     public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError{
         ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
-        indexCounter += supClass.getNumberOfAllMethods() + 1;
+        int indexCounter = supClass.getNumberOfAllMethods() - supClass.getNbrOfOverrides();
         EnvironmentExp envExpr =  new EnvironmentExp(null);
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;

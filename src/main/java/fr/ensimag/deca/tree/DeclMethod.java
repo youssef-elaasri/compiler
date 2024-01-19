@@ -86,8 +86,8 @@ public class DeclMethod extends AbstractDeclMethod{
         }
 
         EnvironmentExp envExp=new EnvironmentExp(null);
-        envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
+        classDef.incNumberOfMethods();
         envExp.declare(methodName.getName(), methDefReturned);
         methodName.setDefinition(methDefReturned);
         return envExp;
