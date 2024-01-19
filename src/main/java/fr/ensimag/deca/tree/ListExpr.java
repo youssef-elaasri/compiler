@@ -1,10 +1,7 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 
 /**
@@ -20,4 +17,20 @@ public class ListExpr extends TreeList<AbstractExpr> {
             exp.decompile(s);
         }
     }
+
+    public void verifyListRValues(DecacCompiler compiler, EnvironmentExp localEnv,
+                              ClassDefinition currentClass, Signature sig) throws ContextualError{
+        int paramCounter = 0;
+        for( AbstractExpr rvalue : this.getList()){
+
+            Type rvalueType = rvalue.verifyExpr(compiler, localEnv, currentClass);
+            Type requiredType = sig.paramNumber(paramCounter);
+            if (!rvalueType.sameType(requiredType)){
+                throw new ContextualError("The type of " + rvalue.getType() +
+                        " is not compatible with the method signature type: " + requiredType, this.getLocation());
+            }
+            paramCounter++;
+        }
+    }
+
 }
