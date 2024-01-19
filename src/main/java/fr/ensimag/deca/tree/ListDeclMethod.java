@@ -1,19 +1,20 @@
 package fr.ensimag.deca.tree;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
 
 public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
+
+    private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
+
+    static int indexCounter = 0;
+
     @Override
     public void decompile(IndentPrintStream s) {
        for(AbstractDeclMethod m:getList()){
@@ -22,16 +23,18 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
        }
 
     }
-    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError{
-        int indexCounter = 0;
+    public EnvironmentExp verifyListDeclMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError{
+        ClassDefinition supClass = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+        indexCounter += supClass.getNumberOfAllMethods() + 1;
         EnvironmentExp envExpr =  new EnvironmentExp(null);
         for(AbstractDeclMethod meth : this.getList()){
             indexCounter++;
             meth.setIndex(indexCounter);
-            EnvironmentExp envExp = meth.verifyMethod(compiler, superId);
+            EnvironmentExp envExp = meth.verifyMethod(compiler, superId, className);
 
-            //here we decrease the index counter if the class was override
-            if( meth.isOverride()) indexCounter--;
+            if( meth.isOverride()){
+                indexCounter--;
+            }
 
             Set<SymbolTable.Symbol> keyS = envExp.getExpDefinitionMap().keySet();
             Set<SymbolTable.Symbol> keySr = envExpr.getExpDefinitionMap().keySet();
@@ -40,7 +43,7 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
                 throw new ContextualError("Vous avez déclaré la méthode " + keySr + " plusieurs fois dans la classe !", meth.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
-
+            indexMethodMap.put(meth.getIndex(), meth);
         }
         return envExpr;
     }

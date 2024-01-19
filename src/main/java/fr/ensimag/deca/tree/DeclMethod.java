@@ -59,8 +59,9 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId) throws ContextualError {
+    protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+        ClassDefinition classDef = (ClassDefinition)compiler.environmentType.defOfType(className.getName());
 
         Type typeM = type.verifyType(compiler);
         if(envSup == null){
@@ -71,6 +72,7 @@ public class DeclMethod extends AbstractDeclMethod{
         if(envExpSuper != null){
             this.isOverride = true;
            // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
+            classDef.incrNbrOfOverrides();
             Signature sig2=envExpSuper.getSignature();
             Type type2=envExpSuper.getType();
             Signature signature = list_param.verifyListDeclParam(compiler);
@@ -82,8 +84,9 @@ public class DeclMethod extends AbstractDeclMethod{
             }
             this.setIndex(envExpSuper.getIndex());
         }
+
         EnvironmentExp envExp=new EnvironmentExp(null);
-        //envSup.incNumberOfMethods();
+        envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
         envExp.declare(methodName.getName(), methDefReturned);
         methodName.setDefinition(methDefReturned);
@@ -112,5 +115,10 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected void setIndex(int index) {
         this.methodIndex = index;
+    }
+
+    @Override
+    protected int getIndex() {
+        return this.methodIndex;
     }
 }

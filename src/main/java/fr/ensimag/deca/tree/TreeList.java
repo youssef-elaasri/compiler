@@ -39,6 +39,7 @@ public abstract class TreeList<TreeType extends Tree> extends Tree {
         return list.set(index, element);
     }
 
+
     public boolean isEmpty() {
         return list.isEmpty();
     }

@@ -13,10 +13,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Declaration of a class (<code>class name extends superClass {members}<code>).
@@ -29,6 +26,7 @@ public class DeclClass extends AbstractDeclClass {
     final private AbstractIdentifier superName;
     final private ListDeclField listField;
     final private ListDeclMethod listMethod;
+    private final TreeMap<Integer, Label> methodTable = new TreeMap<>();
 
     private static final Logger LOG = Logger.getLogger(ListDeclClass.class);
 
@@ -86,7 +84,7 @@ public class DeclClass extends AbstractDeclClass {
 //        throw new UnsupportedOperationException("not yet implemented");
         LOG.debug("verify verifyClassMembers: start");
         EnvironmentExp envExpf = listField.verifyListDeclField(compiler, superName, className);
-        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName);
+        EnvironmentExp envExpm = listMethod.verifyListDeclMethod(compiler, superName, className);
         Set<SymbolTable.Symbol> keyF = envExpf.getExpDefinitionMap().keySet();
         Set<SymbolTable.Symbol> keyM = envExpm.getExpDefinitionMap().keySet();
 
@@ -127,23 +125,34 @@ public class DeclClass extends AbstractDeclClass {
         compiler.getStack().increaseAddrCounter();
         compiler.getStack().increaseCounterTSTO();
 
+        boolean isSuperClassObject = superName.getName().equals(compiler.createSymbol("Object"));
         // define the supper class
-        if (superName.getName().equals(compiler.createSymbol("Object"))) {
-            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB), Register.R0));
-        }
+        if (isSuperClassObject)
+            compiler.addInstruction(new LEA(new RegisterOffset(1, Register.GB),Register.R0));
 
-        else {
-            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(), Register.R0));
-        }
+        else
+            compiler.addInstruction(new LEA(superName.getDefinition().getOperand(),Register.R0));
+
         compiler.addInstruction(new STORE(Register.R0,className.getDefinition().getOperand()));
 
         // define methods
 
-        Program.setOperandEquals(compiler);
-        for(AbstractDeclMethod method : this.listMethod.getList()){
+//        int  nbrOfMethods = listMethod.getNbrOfAllMethods(compiler.getClassManager().get(superName));
 
-            Label codeMethodLabel = new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString());
-            Program.setOperandMethod(compiler,codeMethodLabel);
+        // Map<Integer, Label> methodTable = new HashMap<>();
+
+        if (!isSuperClassObject){
+            methodTable.putAll(compiler.getClassManager().get(superName).getMethodTable());
+        }
+
+        for (AbstractDeclMethod method : compiler.getClassManager().get(className).listMethod.getList()){
+            int index = method.getIndex();
+            methodTable.put(index, new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString()));
+        }
+
+        Program.setOperandEquals(compiler);
+        for(Label methodLabel : methodTable.values()){
+            Program.setOperandMethod(compiler,methodLabel);
         }
 
 
@@ -155,6 +164,7 @@ public class DeclClass extends AbstractDeclClass {
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
         if (superName.getName().toString().equals("Object")) {
+//            int offset = 1;
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
                 if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
@@ -165,6 +175,7 @@ public class DeclClass extends AbstractDeclClass {
                     codeGenInit(compiler, abstractDeclField, index);
                 }
                 compiler.getStack().resetCurrentRegister();
+//                offset++;
             }
         }
         else {
@@ -222,6 +233,14 @@ public class DeclClass extends AbstractDeclClass {
 
     public ListDeclField getListField() {
         return listField;
+    }
+
+    public ListDeclMethod getListMethodSize(){
+        return listMethod;
+    }
+
+    public Map<Integer, Label> getMethodTable(){
+        return this.methodTable;
     }
 
     public void codeGenInit(DecacCompiler compiler, AbstractDeclField abstractDeclField, int index) {
