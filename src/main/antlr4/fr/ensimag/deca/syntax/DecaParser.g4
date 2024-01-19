@@ -235,7 +235,7 @@ assign_expr returns[AbstractExpr tree]
         EQUALS e2=assign_expr {
             assert($e.tree != null);
             assert($e2.tree != null);
-            $tree = new Assign((Identifier) $e.tree,$e2.tree);
+            $tree = new Assign((AbstractLValue) $e.tree,$e2.tree);
             setLocation($tree, $e2.start);
         }
       | /* epsilon */ {
@@ -409,10 +409,11 @@ select_expr returns[AbstractExpr tree]
         (o=OPARENT args=list_expr CPARENT {
             // we matched "e1.i(args)"
             assert($args.tree != null);
+            $tree = new MethodCall($e1.tree, $i.tree, $args.tree);
         }
         | /* epsilon */ {
             // we matched "e.i"
-            
+            $tree = new Selection($e1.tree, $i.tree);
         }
         )
     ;
