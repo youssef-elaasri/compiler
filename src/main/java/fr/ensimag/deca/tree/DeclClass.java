@@ -26,6 +26,7 @@ public class DeclClass extends AbstractDeclClass {
     final private AbstractIdentifier superName;
     final private ListDeclField listField;
     final private ListDeclMethod listMethod;
+    private Map<Integer, Label> methodTable = new HashMap<>();
 
     private static final Logger LOG = Logger.getLogger(ListDeclClass.class);
 
@@ -138,13 +139,10 @@ public class DeclClass extends AbstractDeclClass {
 
 //        int  nbrOfMethods = listMethod.getNbrOfAllMethods(compiler.getClassManager().get(superName));
 
-        Map<Integer, Label> methodTable = new HashMap<>();
+        // Map<Integer, Label> methodTable = new HashMap<>();
 
         if (!isSuperClassObject){
-            for (AbstractDeclMethod method : compiler.getClassManager().get(superName).listMethod.getList()) {
-                int index = method.getIndex();
-                methodTable.put(index, new Label("code." + superName.getName().toString() + "." + method.getMethodName().getName().toString()));
-            }
+            methodTable.putAll(compiler.getClassManager().get(superName).getMethodTable());
         }
 
         for (AbstractDeclMethod method : compiler.getClassManager().get(className).listMethod.getList()){
@@ -239,6 +237,10 @@ public class DeclClass extends AbstractDeclClass {
 
     public ListDeclMethod getListMethodSize(){
         return listMethod;
+    }
+
+    public Map<Integer, Label> getMethodTable(){
+        return this.methodTable;
     }
 
     public void codeGenInit(DecacCompiler compiler, AbstractDeclField abstractDeclField, int index) {

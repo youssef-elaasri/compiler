@@ -56,7 +56,7 @@ public class DeclMethod extends AbstractDeclMethod{
     protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, AbstractIdentifier className) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
         ClassDefinition classDef = (ClassDefinition)compiler.environmentType.defOfType(className.getName());
-        
+
         Type typeM = type.verifyType(compiler);
         if(envSup == null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
@@ -80,7 +80,7 @@ public class DeclMethod extends AbstractDeclMethod{
         }
 
         EnvironmentExp envExp=new EnvironmentExp(null);
-        //envSup.incNumberOfMethods();
+        envSup.incNumberOfMethods();
         MethodDefinition methDefReturned= new MethodDefinition(typeM, getLocation(), list_param.getSignature(),this.methodIndex);
         envExp.declare(methodName.getName(), methDefReturned);
         methodName.setDefinition(methDefReturned);
