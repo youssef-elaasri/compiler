@@ -60,6 +60,9 @@ public class DeclParam extends AbstractDeclParam{
     }
 
     @Override
+    protected AbstractIdentifier getParamName() {return paramName;}
+
+    @Override
     protected Type getType() {
         return this.type.getType();
     }
