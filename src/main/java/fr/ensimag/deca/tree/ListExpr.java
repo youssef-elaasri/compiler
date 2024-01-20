@@ -21,17 +21,14 @@ public class ListExpr extends TreeList<AbstractExpr> {
     public void verifyListRValues(DecacCompiler compiler, EnvironmentExp localEnv,
                               ClassDefinition currentClass, Signature sig) throws ContextualError{
         int paramCounter = 0;
-        if(sig.getArgs().size() != this.getList().size()){
-            throw new ContextualError("number of method arguments is not respected, this method accepts " + sig.getArgs().size() +" argument(s)", this.getLocation());
-        };
 
-        for( AbstractExpr rvalue : this.getList()){
+        for(AbstractExpr rvalue : this.getList()){
             Type requiredType = sig.paramNumber(paramCounter);
 
             Type rvalueType = rvalue.verifyRValue(compiler, localEnv, currentClass, requiredType).getType();
             if (!rvalueType.sameType(requiredType)){
-                throw new ContextualError("The type of " + rvalue.getType().getName().toString() +
-                        " is not compatible with the method signature type: " + requiredType, rvalue.getLocation());
+                throw new ContextualError("The type of " + rvalue.getType().getName() +
+                        " is not compatible with the parameter type: " + requiredType + " !", rvalue.getLocation());
             }
             paramCounter++;
         }
