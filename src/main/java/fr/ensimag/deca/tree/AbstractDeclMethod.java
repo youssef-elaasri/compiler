@@ -17,4 +17,8 @@ public abstract class AbstractDeclMethod extends Tree {
     protected abstract int getIndex();
 
     protected abstract boolean isOverride();
+
+    protected abstract void codeGenMethods(DecacCompiler compiler);
+
+    protected abstract void setClassName(String className);
 }

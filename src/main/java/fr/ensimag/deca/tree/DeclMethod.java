@@ -7,6 +7,8 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 
@@ -65,9 +67,14 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected void codeGenMethods(DecacCompiler compiler) {
         compiler.addLabel(new Label("code." + className + "." + methodName.getName()));
+        int index = -3;
         for (AbstractDeclParam param : list_param.getList()) {
-
+            param.getParamName().getExpDefinition().setOperand(new RegisterOffset(index,
+                    Register.LB));
+            index--;
         }
+        methodBody.codeGenMethods(compiler, className,
+                methodName.getName().toString(), getMethodType().getType().isVoid());
     }
 
     @Override
