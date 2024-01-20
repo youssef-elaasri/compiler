@@ -42,6 +42,9 @@ public class MethodCall extends AbstractExpr{
             throw new ContextualError(methodIdent.getName() + " is not a method, you can't call it on an object !", this.getLocation());
         }
         Signature sig = methodIdent.getMethodDefinition().getSignature();
+        if(sig.size() != listExpression.getList().size()){
+            throw new ContextualError("Number of method arguments is not respected, this method accepts " + sig.getArgs().size() +" argument(s), " + listExpression.getList().size() + " arguments were given !", this.getLocation());
+        };
         listExpression.verifyListRValues(compiler, localEnv, currentClass, sig);
 
         return methodIdentType;
