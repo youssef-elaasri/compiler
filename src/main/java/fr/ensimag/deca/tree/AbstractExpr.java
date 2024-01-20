@@ -129,6 +129,7 @@ public abstract class AbstractExpr extends AbstractInst {
 
     private int labelCounter = 0;
 
+
     private void increaseLabelCounter(){
         labelCounter++;
     }
@@ -137,7 +138,7 @@ public abstract class AbstractExpr extends AbstractInst {
      *
      * @param compiler
      */
-    protected void codeGenPrint(DecacCompiler compiler) {
+    protected void codeGenPrint(DecacCompiler compiler, boolean ex) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
             codeGenInst(compiler);
             compiler.addInstruction(new LOAD(
@@ -145,8 +146,13 @@ public abstract class AbstractExpr extends AbstractInst {
                     Register.R1
             ));
 
-            if(this.getType().isFloat())
-                compiler.addInstruction(new WFLOAT());
+            if(this.getType().isFloat()) {
+                if (ex)
+                    compiler.addInstruction(new WFLOATX());
+                else
+                    compiler.addInstruction(new WFLOAT());
+            }
+
 
             else if (this.getType().isInt())
                 compiler.addInstruction(new WINT());
@@ -173,7 +179,7 @@ public abstract class AbstractExpr extends AbstractInst {
         }else {
 
             compiler.getStack().pushRegister(compiler);
-            codeGenPrint(compiler);
+            codeGenPrint(compiler, ex);
             compiler.getStack().popRegister(compiler);
         }
     }
