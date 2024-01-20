@@ -53,7 +53,7 @@ public class EnvironmentType {
 
     public void declareClass(AbstractIdentifier id, ClassDefinition superClass) {
         ClassType classType = new ClassType(id.getName(), id.getLocation(), superClass);
-        TypeDefinition classDef = new ClassDefinition(classType, id.getLocation(), superClass);
+        TypeDefinition classDef = classType.getDefinition();
         envTypes.put(id.getName(), classDef);
     }
 

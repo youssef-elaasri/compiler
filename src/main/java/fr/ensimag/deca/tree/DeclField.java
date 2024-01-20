@@ -90,6 +90,7 @@ public class DeclField extends AbstractDeclField{
         EnvironmentExp envExp = new EnvironmentExp(null);
         envExp.declare(fieldName.getName(), fieldDef);
         fieldName.setDefinition(fieldDef);
+        fieldName.setType(fieldDef.getType());
         return envExp;
     }
 
