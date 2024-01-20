@@ -45,7 +45,7 @@ public class ListDeclParam extends TreeList<AbstractDeclParam> {
         EnvironmentExp envExpr = new EnvironmentExp(null);
         for(AbstractDeclParam param:this.getList()){
             EnvironmentExp exp = param.verifyParamName(compiler);
-            Set<SymbolTable.Symbol> keysExp =exp.getExpDefinitionMap().keySet();
+            Set<SymbolTable.Symbol> keysExp = exp.getExpDefinitionMap().keySet();
             Set<SymbolTable.Symbol> keysExpR = envExpr.getExpDefinitionMap().keySet();
             if (!Collections.disjoint(keysExp, keysExpR)) {
                 throw new ContextualError("Vous avez déclaré " + keysExp + " plusieurs fois dans la classe !", param.getLocation());

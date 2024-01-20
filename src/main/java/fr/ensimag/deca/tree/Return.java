@@ -16,10 +16,13 @@ import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 
 public class Return extends AbstractInst {
-    private final AbstractExpr returnedExpr;
+    private AbstractExpr returnedExpr;
 
     public Return(AbstractExpr exp){
         this.returnedExpr=exp;
+    }
+    public void setExpression(AbstractExpr returnedExpr) {
+        this.returnedExpr = returnedExpr;
     }
     
        protected  void verifyInst(DecacCompiler compiler,
@@ -27,7 +30,8 @@ public class Return extends AbstractInst {
             if(returnType.isVoid()){
                 throw new ContextualError("Return Type should not be void !", this.getLocation());
             }
-            returnedExpr.verifyRValue(compiler, localEnv, currentClass, returnType);
+            AbstractExpr expression = returnedExpr.verifyRValue(compiler, localEnv, currentClass, returnType);
+            this.setExpression(expression);
         }
 
     /**

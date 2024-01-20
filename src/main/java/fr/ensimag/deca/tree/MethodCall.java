@@ -28,13 +28,19 @@ public class MethodCall extends AbstractExpr{
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        ClassType classType2 = (ClassType) expression.verifyExpr(compiler, localEnv, currentClass);
-        EnvironmentExp envExp2 = ((ClassDefinition) compiler.environmentType.defOfType(classType2.getName())).getMembers();
-        if(envExp2 == null){
-            throw new ContextualError("Class: "+ classType2.getName() +" is not defined in local environment", this.getLocation());
+        Type typeExp = expression.verifyExpr(compiler, localEnv, currentClass);
+        if (!typeExp.isClass()) {
+            throw new ContextualError("The object to which we apply the method call must be of type Class: " + typeExp.getName() + " was given !", this.getLocation());
         }
+        TypeDefinition classDef2 = compiler.environmentType.defOfType(typeExp.getName());
+        if (classDef2 == null) {
+            throw new ContextualError("Class: " + typeExp.getName() +" is not defined in local environment", this.getLocation());
+        }
+        EnvironmentExp envExp2 = ((ClassDefinition) classDef2).getMembers();
         Type methodIdentType = methodIdent.verifyExpr(compiler, envExp2, currentClass);
-
+        if (!methodIdent.getDefinition().isMethod()) {
+            throw new ContextualError(methodIdent.getName() + " is not a method, you can't call it on an object !", this.getLocation());
+        }
         Signature sig = methodIdent.getMethodDefinition().getSignature();
         listExpression.verifyListRValues(compiler, localEnv, currentClass, sig);
 
