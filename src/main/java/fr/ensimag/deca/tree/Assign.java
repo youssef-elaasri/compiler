@@ -64,7 +64,7 @@ public class Assign extends AbstractBinaryExpr {
                 );
             } else {
                 compiler.addInstruction(new STORE(
-                        Register.getR(compiler.getStack().getCurrentRegister()-2),
+                        Register.getR(compiler.getStack().getCurrentRegister()-1),
                         ((Selection) getLeftOperand()).codeGenInstAssign(compiler)
                 ));
                 compiler.getStack().decreaseRegister();

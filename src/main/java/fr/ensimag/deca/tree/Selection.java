@@ -83,7 +83,6 @@ public class Selection extends AbstractLValue {
         compiler.addInstruction(new BEQ(
                 compiler.getErrorHandler().addDereferencingNull()
         ));
-        compiler.getStack().increaseRegister();
     }
 
     @Override
