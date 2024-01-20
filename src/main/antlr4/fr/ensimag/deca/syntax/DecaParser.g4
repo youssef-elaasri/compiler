@@ -418,7 +418,7 @@ select_expr returns[AbstractExpr tree]
             // we matched "e.i"
             assert($args.tree != null);
             $tree = new Selection($e1.tree, $i.tree);
-            setLocation($tree, $list_expr.start);
+            setLocation($tree, $i.start);
 
         }
         )

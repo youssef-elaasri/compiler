@@ -10,7 +10,7 @@ import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
 
 public class Return extends AbstractInst {
-    private  AbstractExpr returnedExpr; 
+    private final AbstractExpr returnedExpr;
 
     public Return(AbstractExpr exp){
         this.returnedExpr=exp;
