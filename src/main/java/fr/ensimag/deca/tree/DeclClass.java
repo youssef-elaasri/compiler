@@ -93,7 +93,7 @@ public class DeclClass extends AbstractDeclClass {
             throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", this.getLocation());
         }
         /*Method putAll overwrites Symbols already present in the superclass map*/
-        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
+        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(((ClassDefinition) compiler.environmentType.defOfType(superName.getName())).getMembers().getExpDefinitionMap());
         mergedMap.putAll(envExpm.getExpDefinitionMap());
         mergedMap.putAll(envExpf.getExpDefinitionMap());
         /*Here we build the classDefinition of our currentClass based on the updated ClassDefinition of our superClass*/

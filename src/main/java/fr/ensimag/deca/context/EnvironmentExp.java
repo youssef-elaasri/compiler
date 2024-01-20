@@ -67,6 +67,10 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
         return definition;
     }
 
+    public ExpDefinition getInCurrentEnv(Symbol key) {
+        return expDefinitionMap.get(key);
+    }
+
     /**
      * Add the definition def associated to the symbol name in the environment.
      * 

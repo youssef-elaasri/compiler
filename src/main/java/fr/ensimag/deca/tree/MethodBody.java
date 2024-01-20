@@ -39,12 +39,13 @@ public class MethodBody extends Tree{
         localEnvVariable.setExpDefinitionMap(enxExpParam.getExpDefinitionMap());
         listDeclVar.verifyListDeclVariable(compiler, localEnvVariable, currentClass);
 
-        EnvironmentExp localEnvInst = new EnvironmentExp(null);
-        for(Map.Entry<Symbol, ExpDefinition> entry: localEnvVariable.getExpDefinitionMap().entrySet()){
-            if (localEnv.get(entry.getKey()) == null){
-                localEnvInst.declare(entry.getKey(), entry.getValue());
-            }
-        }
+        EnvironmentExp localEnvInst = new EnvironmentExp(localEnv);
+        localEnvInst.setExpDefinitionMap(localEnvVariable.getExpDefinitionMap());
+//        for(Map.Entry<Symbol, ExpDefinition> entry: localEnvVariable.getExpDefinitionMap().entrySet()){
+//            if (localEnv.get(entry.getKey()) == null){
+//                localEnvInst.declare(entry.getKey(), entry.getValue());
+//            }
+//        }
 
         listInst.verifyListInst(compiler, localEnvInst, currentClass, returnType);
         
