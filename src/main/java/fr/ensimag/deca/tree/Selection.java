@@ -45,7 +45,7 @@ public class Selection extends AbstractLValue {
                         " from current class", this.getLocation());
             }
         }
-
+        this.setType(fieldIdentType);
         return fieldIdentType;
     }
 
