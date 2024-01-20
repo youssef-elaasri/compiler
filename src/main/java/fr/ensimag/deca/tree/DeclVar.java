@@ -97,14 +97,26 @@ public class DeclVar extends AbstractDeclVar {
      * @param compiler The DecacCompiler instance managing the compilation process.
      */
     public void codeGenDeclVar(DecacCompiler compiler){
-        this.varName.getExpDefinition().setOperand(
+        varName.getExpDefinition().setOperand(
                 new RegisterOffset(
                         compiler.getStack().getAddrCounter(),
                         Register.GB
                 )
         );
         compiler.getStack().increaseAddrCounter();
-        this.initialization.codeGenInitialization(compiler, varName);
+        initialization.codeGenInitialization(compiler, varName);
 
+    }
+
+    @Override
+    public void codeGenMethods(DecacCompiler compiler) {
+        varName.getExpDefinition().setOperand(
+                new RegisterOffset(
+                        compiler.getStack().getAddrCounter(),
+                        Register.LB
+                )
+        );
+        compiler.getStack().increaseAddrCounter();
+        initialization.codeGenInitialization(compiler,varName);
     }
 }

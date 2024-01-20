@@ -25,6 +25,8 @@ public class Stack {
     private int counterTSTO;
     private int currentRegister;
 
+    private int maxRegister;
+
     /**
      * The Stack constructor initializes stack-related variables.
      * It sets the maximum TSTO to 1, the counter TSTO to 1, and the current register to 2.
@@ -87,10 +89,6 @@ public class Stack {
         addrCounter++;
     }
 
-    public void decreaseAddrCounter(){
-        addrCounter--;
-    }
-
     public int getCurrentRegister(){
         return currentRegister;
     }
@@ -103,7 +101,10 @@ public class Stack {
     }
 
     public void decreaseRegister(){
+        if (currentRegister > maxRegister)
+            setMaxRegister(currentRegister);
         currentRegister--;
+
     }
 
     public int getNumberOfRegisters() {
@@ -155,4 +156,20 @@ public class Stack {
         decreaseCounterTSTO();
     }
 
+    public void resetTSTO() {
+        counterTSTO = 0;
+        maxTSTO = 0;
+    }
+
+    public void resetAddrCounter() {
+        addrCounter = 1;
+    }
+
+    public void setMaxRegister(int maxRegister) {
+        this.maxRegister = maxRegister;
+    }
+
+    public int getMaxRegister() {
+        return maxRegister;
+    }
 }
