@@ -16,6 +16,7 @@ public class MethodCall extends AbstractExpr{
     private final AbstractIdentifier methodIdent;
     private final ListExpr listExpression;
 
+
     public MethodCall(AbstractExpr expression, AbstractIdentifier methodIdent, ListExpr listExpression) {
         Validate.notNull(expression);
         Validate.notNull(methodIdent);
@@ -27,8 +28,20 @@ public class MethodCall extends AbstractExpr{
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        return null;
+        ClassType classType2 = (ClassType) expression.verifyExpr(compiler, localEnv, currentClass);
+        EnvironmentExp envExp2 = ((ClassDefinition) compiler.environmentType.defOfType(classType2.getName())).getMembers();
+        if(envExp2 == null){
+            throw new ContextualError("Class: "+ classType2.getName() +" is not defined in local environment", this.getLocation());
+        }
+        Type methodIdentType = methodIdent.verifyExpr(compiler, envExp2, currentClass);
+
+        Signature sig = methodIdent.getMethodDefinition().getSignature();
+        listExpression.verifyListRValues(compiler, localEnv, currentClass, sig);
+
+        return methodIdentType;
     }
+
+
 
     @Override
     public void decompile(IndentPrintStream s) {

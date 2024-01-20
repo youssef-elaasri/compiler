@@ -17,13 +17,16 @@ import java.util.Set;
 
 public class ListDeclParam extends TreeList<AbstractDeclParam> {
 
+    Signature sig;
+
     public Signature getSignature() {
-        Signature listTypes = new Signature();
-        for(AbstractDeclParam param : this.getList()){
-            listTypes.add(param.getType());
-        }
-        return listTypes;
+        return sig;
     }
+
+    public void setSignature(Signature sig) {
+        this.sig = sig;
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
         throw new UnsupportedOperationException("not yet implemented");
@@ -34,6 +37,7 @@ public class ListDeclParam extends TreeList<AbstractDeclParam> {
         for (AbstractDeclParam param : this.getList()){
             sig.add(param.verifyParam(compiler));
         }
+        this.setSignature(sig);
         return sig;
     }
 

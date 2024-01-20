@@ -61,6 +61,7 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
+        Signature signature = list_param.verifyListDeclParam(compiler);
 
         Type typeM = type.verifyType(compiler);
         if(envSup == null){
@@ -70,11 +71,10 @@ public class DeclMethod extends AbstractDeclMethod{
 
         if(envExpSuper != null){
             this.isOverride = true;
-           // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
+            // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
             classDef.incrNbrOfOverrides();
             Signature sig2=envExpSuper.getSignature();
             Type type2=envExpSuper.getType();
-            Signature signature = list_param.verifyListDeclParam(compiler);
             if(!sig2.equals(signature)){
                 throw new ContextualError(methodName.getName()+" not same signature", getLocation());
             }
