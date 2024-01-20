@@ -4,10 +4,7 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable;
-import fr.ensimag.ima.pseudocode.ImmediateInteger;
-import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
@@ -95,7 +92,7 @@ public class DeclClass extends AbstractDeclClass {
             throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", this.getLocation());
         }
         /*Method putAll overwrites Symbols already present in the superclass map*/
-        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(superName.getClassDefinition().getMembers().getExpDefinitionMap());
+        Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(((ClassDefinition) compiler.environmentType.defOfType(superName.getName())).getMembers().getExpDefinitionMap());
         mergedMap.putAll(envExpm.getExpDefinitionMap());
         mergedMap.putAll(envExpf.getExpDefinitionMap());
         /*Here we build the classDefinition of our currentClass based on the updated ClassDefinition of our superClass*/
@@ -167,13 +164,19 @@ public class DeclClass extends AbstractDeclClass {
         compiler.addComment("Initialize " + this.className.getName() + "'s fields");
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
+
+        compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
         if (superName.getName().toString().equals("Object")) {
 //            int offset = 1;
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
+                ((DeclField) abstractDeclField).getFieldName().getExpDefinition().setOperand(
+                        new RegisterOffset(
+                                index, Register.R1
+                        )
+                );
                 if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
                     compiler.addInstruction(new LOAD(0, Register.R0));
-                    compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
                     compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
                 } else {
                     codeGenInit(compiler, abstractDeclField, index);
@@ -188,8 +191,6 @@ public class DeclClass extends AbstractDeclClass {
 
             if (!compiler.getCompilerOptions().getNoCheck())
                 compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
-
-            compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
 
             compiler.addInstruction(new LOAD(0, Register.R0));
             for (AbstractDeclField abstractDeclField : listField.getList()) {
@@ -248,10 +249,17 @@ public class DeclClass extends AbstractDeclClass {
     }
 
     public void codeGenInit(DecacCompiler compiler, AbstractDeclField abstractDeclField, int index) {
-        compiler.getStack().setCurrentRegister(0);
-        compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
-        ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
-        compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
-                , new RegisterOffset(index, Register.R1)));
+        DVal dVal = className.getDval(((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression());
+        if (dVal != null) {
+            compiler.addInstruction( new LOAD(
+                    dVal, Register.R0
+            ));
+            compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
+        }
+        else {
+            ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
+            compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                    , new RegisterOffset(index, Register.R1)));
+        }
     }
 }

@@ -8,6 +8,7 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
@@ -91,17 +92,15 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
      *
      * @param compiler           The DecacCompiler instance managing the compilation process.
      * @param branchInstruction  The branch instruction to be used for the comparison.
-     * @param trueLabel          The label to branch to when the comparison is true.
-     * @param opCmp              A string representation of the comparison operation.
      */
     protected void codeGenInstGeneral(DecacCompiler compiler,
-                                      BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
+                                      UnaryInstructionToReg branchInstruction) {
         if(compiler.getStack().getCurrentRegister()+1 < compiler.getStack().getNumberOfRegisters()) {
-            codeGenInstOpCmp(compiler,2,branchInstruction, trueLabel, opCmp);
+            codeGenInstOpCmp(compiler,branchInstruction);
         }
         else {
             compiler.getStack().pushRegister(compiler);
-            codeGenInstOpCmp(compiler,1,branchInstruction, trueLabel, opCmp);
+            codeGenInstOpCmp(compiler,branchInstruction);
             compiler.getStack().decreaseRegister();
             compiler.getStack().popRegister(compiler);
             compiler.getStack().increaseRegister();
@@ -114,14 +113,10 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
      * loading true or false values based on the result of the comparison.
      *
      * @param compiler           The DecacCompiler instance managing the compilation process.
-     * @param val                The number of registers to skip for the load instruction.
      * @param branchInstruction  The branch instruction to be used for the comparison.
-     * @param trueLabel          The label to branch to when the comparison is true.
-     * @param opCmp              A string representation of the comparison operation.
      */
-    protected void codeGenInstOpCmp(DecacCompiler compiler, int val,
-                                    BranchInstruction branchInstruction, Label trueLabel, String opCmp) {
-        Label endEqualLabel = new Label("end_" + opCmp);
+    protected void codeGenInstOpCmp(DecacCompiler compiler,
+                                    UnaryInstructionToReg branchInstruction) {
         getLeftOperand().codeGenInst(compiler);
         getRightOperand().codeGenInst(compiler);
 
@@ -133,14 +128,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
 
 
         compiler.addInstruction(branchInstruction);
-        compiler.addInstruction(new LOAD(0,Register.getR(compiler.getStack().getCurrentRegister()-val)));
-        compiler.addInstruction(new BRA(endEqualLabel));
-        compiler.addLabel(trueLabel);
-        compiler.addInstruction(new LOAD(1,Register.getR(compiler.getStack().getCurrentRegister()-val)));
-        compiler.addLabel(endEqualLabel);
         compiler.getStack().decreaseRegister();
     }
-
-    public abstract void increaseCounter();
 
 }

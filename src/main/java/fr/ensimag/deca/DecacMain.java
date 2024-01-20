@@ -2,6 +2,7 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -21,7 +22,7 @@ import org.apache.log4j.Logger;
 public class DecacMain {
     private static Logger LOG = Logger.getLogger(DecacMain.class);
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         // example log4j message.
         LOG.info("Decac compiler started");
         boolean error = false;
@@ -78,8 +79,9 @@ public class DecacMain {
             // Waiting for all tasks to complete
             for(Future<Boolean> future : futures){
                 try{
-                   if(future.get());
-                   error=true;
+                   if(future.get()) {
+                       error = true;
+                   }
                 }
                 catch( InterruptedException | ExecutionException e){
                     e.printStackTrace();

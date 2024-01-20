@@ -113,11 +113,19 @@ public class Stack {
     public void increaseCounterTSTO() {
         counterTSTO++;
     }
-
+    public void increaseCounterTSTO(int i) {
+        counterTSTO += i;
+    }
     public void decreaseCounterTSTO() {
         if (getCounterTSTO() > getMaxTSTO())
             setMaxTSTO(getCounterTSTO());
         counterTSTO--;
+    }
+
+    public void decreaseCounterTSTO(int i) {
+        if (getCounterTSTO() > getMaxTSTO())
+            setMaxTSTO(getCounterTSTO());
+        counterTSTO -= i;
     }
 
     /**

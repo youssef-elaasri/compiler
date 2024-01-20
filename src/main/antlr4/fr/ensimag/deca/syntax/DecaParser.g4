@@ -412,13 +412,12 @@ select_expr returns[AbstractExpr tree]
             // we matched "e1.i(args)"
             assert($args.tree != null);
             $tree = new MethodCall($e1.tree, $i.tree, $args.tree);
-            setLocation($tree, $args.start);
+            setLocation($tree, $i.start);
         }
         | /* epsilon */ {
             // we matched "e.i"
-            assert($args.tree != null);
             $tree = new Selection($e1.tree, $i.tree);
-            setLocation($tree, $list_expr.start);
+            setLocation($tree, $i.start);
 
         }
         )
@@ -481,13 +480,10 @@ literal returns[AbstractExpr tree]
         }
     | fd=FLOAT {
                   try {
-                      float myFloat = Float.parseFloat($fd.text);
-                      if (Float.isInfinite(myFloat)) throw new DecaRecognitionException("Invalid float",this,$ctx);
-                      else if ( Float.isNaN(myFloat)) throw new DecaRecognitionException("Invalid float",this,$ctx);
-                      $tree = new FloatLiteral(myFloat);
+                      $tree = new FloatLiteral(Float.parseFloat($fd.text));
                       setLocation($tree, $fd);
                       }
-                  catch (NumberFormatException e) {
+                  catch (Exception e) {
                       throw new DecaRecognitionException("Invalid float",this,$ctx);
                   }
               }
@@ -504,6 +500,7 @@ literal returns[AbstractExpr tree]
             setLocation($tree, $f);
         }
     | THIS {
+
         }
     | NULL {
         }
@@ -653,5 +650,6 @@ param returns[AbstractDeclParam tree]
         assert($t.tree != null);
         assert($i.tree != null);
         $tree = new DeclParam($t.tree, $i.tree);
+        setLocation($tree, $i.start);
         }
     ;

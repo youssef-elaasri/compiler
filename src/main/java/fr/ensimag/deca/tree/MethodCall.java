@@ -3,6 +3,10 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.NullOperand;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -24,14 +28,23 @@ public class MethodCall extends AbstractExpr{
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        ClassType classType2 = (ClassType) expression.verifyExpr(compiler, localEnv, currentClass);
-        EnvironmentExp envExp2 = ((ClassDefinition) compiler.environmentType.defOfType(classType2.getName())).getMembers();
-        if(envExp2 == null){
-            throw new ContextualError("Class: "+ classType2.getName() +" is not defined in local environment", this.getLocation());
+        Type typeExp = expression.verifyExpr(compiler, localEnv, currentClass);
+        if (!typeExp.isClass()) {
+            throw new ContextualError("The object to which we apply the method call must be of type Class: " + typeExp.getName() + " was given !", this.getLocation());
         }
+        TypeDefinition classDef2 = compiler.environmentType.defOfType(typeExp.getName());
+        if (classDef2 == null) {
+            throw new ContextualError("Class: " + typeExp.getName() +" is not defined in local environment", this.getLocation());
+        }
+        EnvironmentExp envExp2 = ((ClassDefinition) classDef2).getMembers();
         Type methodIdentType = methodIdent.verifyExpr(compiler, envExp2, currentClass);
-
+        if (!methodIdent.getDefinition().isMethod()) {
+            throw new ContextualError(methodIdent.getName() + " is not a method, you can't call it on an object !", this.getLocation());
+        }
         Signature sig = methodIdent.getMethodDefinition().getSignature();
+        if(sig.size() != listExpression.getList().size()){
+            throw new ContextualError("Number of method arguments is not respected, this method accepts " + sig.getArgs().size() +" argument(s), " + listExpression.getList().size() + " arguments were given !", this.getLocation());
+        };
         listExpression.verifyListRValues(compiler, localEnv, currentClass, sig);
 
         return methodIdentType;
@@ -56,5 +69,66 @@ public class MethodCall extends AbstractExpr{
         expression.iter(f);
         methodIdent.iter(f);
         listExpression.iter(f);
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        int size = listExpression.size();
+
+        compiler.addComment("Call Method " + methodIdent.getName());
+        compiler.addInstruction(new ADDSP(size + 1));
+        compiler.getStack().increaseCounterTSTO(size + 1);
+
+        compiler.addInstruction(new LOAD(
+                ((ClassType) expression.getType()).getDefinition().getOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new STORE(
+                Register.getR(compiler.getStack().getCurrentRegister()),
+                new RegisterOffset(0, Register.SP)
+        ));
+
+        AbstractExpr abstractExpr;
+        for(int i = size - 1; i >= 0; --i){
+            abstractExpr = listExpression.getList().get(i);
+
+            abstractExpr.codeGenInst(compiler);
+            compiler.getStack().decreaseRegister();
+
+            compiler.addInstruction(new STORE(
+                    Register.getR(compiler.getStack().getCurrentRegister()),
+                    new RegisterOffset(i - size, Register.SP)
+            ));
+        }
+
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(0, Register.SP),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new CMP(
+                new NullOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDereferencingNull()));
+
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(0, Register.getR(compiler.getStack().getCurrentRegister())),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+
+        compiler.addInstruction(new BSR(new RegisterOffset(
+                methodIdent.getMethodDefinition().getIndex(),
+                Register.getR(compiler.getStack().getCurrentRegister()))
+        ));
+
+        compiler.addInstruction(new SUBSP(size + 1));
+        compiler.getStack().decreaseCounterTSTO(size + 1);
+
+
+        compiler.getStack().increaseRegister();
+
     }
 }

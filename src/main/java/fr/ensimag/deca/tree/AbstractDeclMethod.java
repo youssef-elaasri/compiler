@@ -10,7 +10,7 @@ public abstract class AbstractDeclMethod extends Tree {
 
     protected abstract AbstractIdentifier getMethodName();
 
-    protected abstract AbstractIdentifier getMethodType();
+    protected abstract Type getMethodType();
 
     protected abstract void setIndex(int index);
 

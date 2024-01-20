@@ -80,11 +80,11 @@ public class DeclField extends AbstractDeclField{
         if (typeF.isVoid()) {
             throw new ContextualError("Type of field must not be of Void type !", this.getLocation());
         }
-        ClassDefinition envSup = superId.getClassDefinition();
+        ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
         if (envSup == null) {
             throw new ContextualError("Super class " + superId.getName() + " is not defined !", superId.getLocation());
         }
-        ExpDefinition expDef = envSup.getMembers().getExpDefinitionMap().get(fieldName.getName());
+        ExpDefinition expDef = envSup.getMembers().get(fieldName.getName());
         if (expDef != null && !(expDef.isField())) {
             throw new ContextualError(fieldName.getName() + " must be of type Field : " + expDef.getType() + " was given !", fieldName.getLocation());
         }
@@ -101,11 +101,19 @@ public class DeclField extends AbstractDeclField{
         initialization.verifyInitialization(compiler, typeF, localEnv, currentClass);
     }
 
-
-
-
     @Override
     public void codeGenInitListDeclClass(DecacCompiler compiler) {
-        //TODO I can't find the field's type
+        // nothing to do
+    }
+
+    @Override
+    protected void prettyPrintType(PrintStream s, String prefix) {
+        Definition d = this.fieldName.getDefinition();
+        if (d != null) {
+            s.print(prefix);
+            s.print("definition: ");
+            s.print(d);
+            s.println();
+        }
     }
 }

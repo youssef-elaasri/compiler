@@ -190,6 +190,7 @@ public class Identifier extends AbstractIdentifier {
             throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
         this.setDefinition(tDef);
+        this.setType(tDef.getType());
         return tDef.getType();
     }
 

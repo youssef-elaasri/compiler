@@ -44,7 +44,7 @@ public class DeclParam extends AbstractDeclParam{
     protected Type verifyParam(DecacCompiler compiler) throws ContextualError {
         Type typeP = this.type.verifyType(compiler);
         if (typeP.isVoid()){
-            throw new ContextualError("Type of param must not be of Void type !", this.getLocation());
+            throw new ContextualError("Type of param " + paramName.getName() + " must not be of Void type !", this.getLocation());
         }
         return typeP;
     }
@@ -58,6 +58,9 @@ public class DeclParam extends AbstractDeclParam{
         paramName.setDefinition(paramDef);
         return exp;
     }
+
+    @Override
+    protected AbstractIdentifier getParamName() {return paramName;}
 
     @Override
     protected Type getType() {

@@ -1,15 +1,17 @@
 package fr.ensimag.deca.tree;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import fr.ensimag.deca.context.*;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+
+
+import fr.ensimag.deca.tools.SymbolTable;
 import org.apache.commons.lang.Validate;
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.context.ClassDefinition;
-import fr.ensimag.deca.context.ContextualError;
-import fr.ensimag.deca.context.Definition;
-import fr.ensimag.deca.context.EnvironmentExp;
-import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
@@ -32,9 +34,20 @@ public class MethodBody extends Tree{
         this.listInst=listInst;
     }
 
-    public void verifyMethodBody(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass,  Type returnType) throws ContextualError {
-        listDeclVar.verifyListDeclVariable(compiler, localEnv, currentClass);
-        listInst.verifyListInst(compiler, localEnv, currentClass, returnType);
+    public void verifyMethodBody(DecacCompiler compiler, EnvironmentExp localEnv,EnvironmentExp enxExpParam, ClassDefinition currentClass,  Type returnType) throws ContextualError {
+        EnvironmentExp localEnvVariable = new EnvironmentExp(localEnv);
+        localEnvVariable.setExpDefinitionMap(enxExpParam.getExpDefinitionMap());
+        listDeclVar.verifyListDeclVariable(compiler, localEnvVariable, currentClass);
+
+        EnvironmentExp localEnvInst = new EnvironmentExp(localEnv);
+        localEnvInst.setExpDefinitionMap(localEnvVariable.getExpDefinitionMap());
+//        for(Map.Entry<Symbol, ExpDefinition> entry: localEnvVariable.getExpDefinitionMap().entrySet()){
+//            if (localEnv.get(entry.getKey()) == null){
+//                localEnvInst.declare(entry.getKey(), entry.getValue());
+//            }
+//        }
+
+        listInst.verifyListInst(compiler, localEnvInst, currentClass, returnType);
         
     }
     @Override

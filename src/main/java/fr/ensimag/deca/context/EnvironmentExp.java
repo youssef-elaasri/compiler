@@ -35,6 +35,10 @@ public class EnvironmentExp {
         return expDefinitionMap;
     }
 
+    public void setParentEnvironment(EnvironmentExp parentEnvironment) {
+        this.parentEnvironment = parentEnvironment;
+    }
+
     public EnvironmentExp(EnvironmentExp parentEnvironment) {
         this.parentEnvironment = parentEnvironment;
     }
@@ -61,6 +65,10 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
             return parentEnvironment != null ? parentEnvironment.getExpDefinitionMap().get(key) : null;
         }
         return definition;
+    }
+
+    public ExpDefinition getInCurrentEnv(Symbol key) {
+        return expDefinitionMap.get(key);
     }
 
     /**
