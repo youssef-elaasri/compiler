@@ -504,6 +504,7 @@ literal returns[AbstractExpr tree]
             setLocation($tree, $f);
         }
     | THIS {
+        
         }
     | NULL {
         }
