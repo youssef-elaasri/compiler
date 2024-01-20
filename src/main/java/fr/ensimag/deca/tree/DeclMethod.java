@@ -97,6 +97,7 @@ public class DeclMethod extends AbstractDeclMethod{
     @Override
     protected void verifyMethodBody(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition classId) throws ContextualError {
         Type returnType = type.verifyType(compiler);
+        System.out.println(this.getMethodType());
         EnvironmentExp enxExpParam = list_param.verifyListParamName(compiler);
 
         methodBody.verifyMethodBody(compiler, localEnv,enxExpParam, classId, returnType);
@@ -109,8 +110,8 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
-    protected AbstractIdentifier getMethodType() {
-        return this.type;
+    protected Type getMethodType() {
+        return this.type.getType();
     }
 
 
