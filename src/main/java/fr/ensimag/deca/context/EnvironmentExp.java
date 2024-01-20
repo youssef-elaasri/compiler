@@ -35,6 +35,10 @@ public class EnvironmentExp {
         return expDefinitionMap;
     }
 
+    public void setParentEnvironment(EnvironmentExp parentEnvironment) {
+        this.parentEnvironment = parentEnvironment;
+    }
+
     public EnvironmentExp(EnvironmentExp parentEnvironment) {
         this.parentEnvironment = parentEnvironment;
     }

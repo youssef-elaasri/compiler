@@ -54,8 +54,8 @@ public class DeclVar extends AbstractDeclVar {
         }
         VariableDefinition varDef = new VariableDefinition(ty, varName.getLocation());
         varName.setDefinition(varDef);
-        expDef.put(name, varDef);
-
+        //expDef.put(name, varDef);
+        localEnv.declare(name, varDef);
         initialization.verifyInitialization(compiler, ty, localEnv, currentClass);
 
     }
