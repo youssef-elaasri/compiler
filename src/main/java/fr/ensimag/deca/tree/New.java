@@ -82,10 +82,16 @@ public class New extends AbstractExpr{
                 new STORE(Register.R0,new RegisterOffset(0,
                         Register.getR(compiler.getStack().getCurrentRegister()))
                 ));
+        compiler.addInstruction(new PUSH(
+                Register.getR(compiler.getStack().getCurrentRegister()
+        )));
         compiler.addInstruction(
                 new BSR(new Label("init."
                         + compiler.getClassManager().get(className).getClassName().getName())
                 ));
+        compiler.addInstruction(new POP(
+                Register.getR(compiler.getStack().getCurrentRegister()
+                )));
 
         compiler.getStack().increaseRegister();
     }

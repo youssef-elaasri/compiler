@@ -100,6 +100,11 @@ public class DeclField extends AbstractDeclField{
     }
 
     @Override
+    public void codeGenInitListDeclClass(DecacCompiler compiler) {
+        // nothing to do
+    }
+
+    @Override
     protected void prettyPrintType(PrintStream s, String prefix) {
         Definition d = this.fieldName.getDefinition();
         if (d != null) {
@@ -108,11 +113,5 @@ public class DeclField extends AbstractDeclField{
             s.print(d);
             s.println();
         }
-    }
-
-
-    @Override
-    public void codeGenInitListDeclClass(DecacCompiler compiler) {
-        //TODO I can't find the field's type
     }
 }
