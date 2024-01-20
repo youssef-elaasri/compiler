@@ -128,7 +128,7 @@ public class DecacCompiler {
     /**
      * The main program. Every instruction generated will eventually end up here.
      */
-    private final IMAProgram program = new IMAProgram();
+    private IMAProgram program = new IMAProgram();
  
 
     /** The global environment for types (and the symbolTable) */
@@ -295,5 +295,23 @@ public class DecacCompiler {
 
     public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
         return classManager;
+    }
+
+    String method = null;
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public IMAProgram getProgram() {
+        return program;
+    }
+
+    public void setProgram(IMAProgram program) {
+        this.program = program;
     }
 }

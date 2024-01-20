@@ -88,6 +88,9 @@ public class Program extends AbstractProgram {
         // Halt the program execution
         compiler.addInstruction(new HALT());
 
+        // Update TSTO and SP values based on stack information
+        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
+        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
 
 
         // Classes constructors
@@ -96,6 +99,7 @@ public class Program extends AbstractProgram {
         compiler.addComment("                  Constructors                    ");
         compiler.addComment("--------------------------------------------------");
         classes.codeGenInitListDeclClass(compiler);
+        classes.codeGenMethods(compiler);
 
 
         // Object.equals
@@ -104,10 +108,6 @@ public class Program extends AbstractProgram {
 
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
-
-        // Update TSTO and SP values based on stack information
-        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
-        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
 
     @Override
