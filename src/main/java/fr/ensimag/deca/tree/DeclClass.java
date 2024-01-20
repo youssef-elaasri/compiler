@@ -106,7 +106,7 @@ public class DeclClass extends AbstractDeclClass {
         classDef.setNumberOfFields(className.getClassDefinition().getNumberOfFields());
         classDef.setNumberOfMethods(className.getClassDefinition().getNumberOfMethods());
         classDef.setNbrOfOverrides(className.getClassDefinition().getNbrOfOverrides());
-
+        (classDef).setLocation(this.getLocation());
         compiler.environmentType.put(className.getName(), classDef);
         className.setDefinition(classDef);
         LOG.debug("verify verifyClassMembers: end");

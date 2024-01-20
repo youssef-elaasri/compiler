@@ -95,6 +95,7 @@ public abstract class AbstractExpr extends AbstractInst {
             convF.verifyExpr(compiler, localEnv, currentClass);
             return convF;
         }
+        this.setType(currentType);
         return this;
     }
     
