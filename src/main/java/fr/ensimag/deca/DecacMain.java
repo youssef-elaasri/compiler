@@ -79,8 +79,9 @@ public class DecacMain {
             // Waiting for all tasks to complete
             for(Future<Boolean> future : futures){
                 try{
-                   if(future.get());
-                   error=true;
+                   if(future.get()) {
+                       error = true;
+                   }
                 }
                 catch( InterruptedException | ExecutionException e){
                     e.printStackTrace();
