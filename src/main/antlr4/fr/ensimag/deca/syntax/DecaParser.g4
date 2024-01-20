@@ -482,8 +482,8 @@ literal returns[AbstractExpr tree]
     | fd=FLOAT {
                   try {
                       float myFloat = Float.parseFloat($fd.text);
-                      if (Float.isInfinite(myFloat)) throw new DecaRecognitionException("the float may be too long or invalid",this,$ctx);
-                      else if ( Float.isNaN(myFloat)) throw new DecaRecognitionException("invalid float",this,$ctx);
+                      if (Float.isInfinite(myFloat)) throw new DecaRecognitionException("Invalid float",this,$ctx);
+                      else if ( Float.isNaN(myFloat)) throw new DecaRecognitionException("Invalid float",this,$ctx);
                       $tree = new FloatLiteral(myFloat);
                       setLocation($tree, $fd);
                       }
@@ -608,16 +608,17 @@ decl_field[AbstractIdentifier t, Visibility v] returns[AbstractDeclField tree]
         }
     ;
 
+
 decl_method returns[AbstractDeclMethod tree]
 @init {
     ListDeclParam list_param = new ListDeclParam();
     MethodBody methodBody;
 }
-    : type i=ident OPARENT params=list_params[list_param] CPARENT (b=block {
+    : t=type i=ident OPARENT params=list_params[list_param] CPARENT (b=block {
         methodBody=new MethodBody($block.decls,$block.insts);
         $tree = new DeclMethod($type.tree, $ident.tree, list_param,methodBody);
-        setLocation($tree,$i.start);
-        setLocation(methodBody,$i.start);
+        setLocation($tree,$t.start);
+        setLocation(methodBody,$b.start);
         }
       | ASM OPARENT code=multi_line_string CPARENT SEMI {
         }
