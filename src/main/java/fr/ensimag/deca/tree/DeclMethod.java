@@ -6,6 +6,8 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 
 import java.io.PrintStream;
 
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 
 public class DeclMethod extends AbstractDeclMethod{
@@ -17,7 +19,9 @@ public class DeclMethod extends AbstractDeclMethod{
 
     private int methodIndex;
 
-    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param,MethodBody methodBody) {
+    private String className;
+
+    public DeclMethod(AbstractIdentifier type, AbstractIdentifier methodName, ListDeclParam list_param, MethodBody methodBody) {
         Validate.notNull(type);
         Validate.notNull(list_param);
         Validate.notNull(methodName);
@@ -56,6 +60,19 @@ public class DeclMethod extends AbstractDeclMethod{
 
     public boolean isOverride() {
         return isOverride;
+    }
+
+    @Override
+    protected void codeGenMethods(DecacCompiler compiler) {
+        compiler.addLabel(new Label("code." + className + "." + methodName.getName()));
+        for (AbstractDeclParam param : list_param.getList()) {
+
+        }
+    }
+
+    @Override
+    protected void setClassName(String className) {
+        this.className = className;
     }
 
     @Override

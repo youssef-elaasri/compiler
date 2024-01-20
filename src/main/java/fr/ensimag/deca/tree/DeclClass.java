@@ -145,8 +145,10 @@ public class DeclClass extends AbstractDeclClass {
         }
 
         for (AbstractDeclMethod method : compiler.getClassManager().get(className).listMethod.getList()){
+            method.setClassName(className.getName().toString());
             int index = method.getIndex();
-            methodTable.put(index, new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString()));
+            methodTable.put(index, new Label("code." + className.getName().toString()
+                    + "." + method.getMethodName().getName().toString()));
         }
 
         Program.setOperandEquals(compiler);
@@ -259,5 +261,9 @@ public class DeclClass extends AbstractDeclClass {
             compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
                     , new RegisterOffset(index, Register.R1)));
         }
+    }
+
+    public void codeGenMethods(DecacCompiler compiler) {
+        listMethod.codeGenMethods(compiler);
     }
 }
