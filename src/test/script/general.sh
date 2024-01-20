@@ -15,6 +15,11 @@ match_count=0
 mismatch_count=0
 
 
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color, to reset the color back to the default
+
 # Create a log file
 log_file="$log_directory/compile.log"
 touch "$log_file"
@@ -22,14 +27,16 @@ touch "$log_file"
 # Create the destination directory if it doesn't exist
 mkdir -p "$destination_directory"
 
+# Function to log information about each file
 log_info() {
-    echo "$1" >> "$log_file"
-    echo "Generated Output:" >> "$log_file"
-    echo "$2" >> "$log_file"
-    echo "Expected Output:" >> "$log_file"
-    echo "$3" >> "$log_file"
-    echo "-----------------------------------" >> "$log_file"
+    echo -e "$1" >> "$log_file"
+    echo -e "${GREEN}Generated Output:${NC}" >> "$log_file"
+    echo -e "$2" >> "$log_file"
+    echo -e "${YELLOW}Expected Output:${NC}" >> "$log_file"
+    echo -e "$3" >> "$log_file"
+    echo -e "-----------------------------------" >> "$log_file"
 }
+
 
 # Iterate through all .deca files and compile them
 for decaFile in "$source_directory"/*.deca; do
@@ -47,24 +54,24 @@ for decaFile in "$source_directory"/*.deca; do
 
       if [ -e "$expected_file" ]; then
             if diff -q <(echo "$output") "$expected_file" > /dev/null; then
-              echo "Match: Output for $filename matches the expected content."
+              echo -e "${GREEN} Match: Output for $filename matches the expected content.${NC}"
               ((match_count++))
 
               # Log information about the file
               log_info "$filename" "Compiled correctly" "$(cat "$expected_file")"
 
             else
-              echo "Mismatch: Output for $filename does not match the expected content."
+              echo -e "${RED} Mismatch: Output for $filename does not match the expected content.${NC}"
               ((mismatch_count++))
 
               log_info "$filename" "$output" "$(cat "$expected_file")"
             fi
       else
-            echo "Warning: No expected file found for $filename"
+            echo -e "${RED} Warning: No expected file found for $filename ${NC}"
       fi
 
     else
-        echo "Compilation failed for: $filename. Please check for errors."
+        echo -e "${RED}Compilation failed for $filename. Please check for errors.${NC}"
         ((compile_error_count++))
         log_info "$filename" "Compilation failed" ""
     fi
@@ -72,9 +79,9 @@ for decaFile in "$source_directory"/*.deca; do
 done
 
 # Display summary
-echo "Compilation errors: $compile_error_count"
-echo "Matches: $match_count"
-echo "Mismatches: $mismatch_count"
+echo -e "${YELLOW}Compilation errors: $compile_error_count${NC}"
+echo -e "${GREEN}Matches: $match_count${NC}"
+echo -e "${RED}Mismatches: $mismatch_count${NC}"
 
 # Set exit code based on compilation errors or mismatches
 if [ "$compile_error_count" -gt 0 ] || [ "$mismatch_count" -gt 0 ]; then

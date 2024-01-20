@@ -2,9 +2,7 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.IOException;
-<<<<<<< HEAD
 import java.util.concurrent.*;
-=======
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -12,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
->>>>>>> e26df06e37fe70b4019adf74770abc7a03b9ca96
 
 import org.apache.log4j.Logger;
 
