@@ -84,21 +84,23 @@ public class DeclMethod extends AbstractDeclMethod{
         if(envSup == null){
             throw new ContextualError("Super class"+superId.getName()+"is not defined !", superId.getLocation());
         }
-        MethodDefinition envExpSuper = (MethodDefinition) envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
+        ExpDefinition envExpSuper = envSup.getMembers().getExpDefinitionMap().get(methodName.getName());
 
         if(envExpSuper != null){
+            if (!envExpSuper.isMethod()) {
+                throw new ContextualError(methodName.getName() + " can't be a method because it is already defined in super class and is not a method !", methodName.getLocation());
+            }
             this.isOverride = true;
-            // MethodDefinition methDef = superId.getClassDefinition().getMembers().;
             classDef.incrNbrOfOverrides();
-            Signature sig2=envExpSuper.getSignature();
+            Signature sig2 = ((MethodDefinition) envExpSuper).getSignature();
             Type type2=envExpSuper.getType();
             if(!sig2.equals(signature)){
                 throw new ContextualError(methodName.getName()+" not same signature", getLocation());
             }
             if(! type2.isSubType( compiler.environmentType,typeM)){
-                throw new ContextualError(methodName.getName()+" not subtype ", getLocation());
+                throw new ContextualError(type2 + " not subtype of " + typeM, getLocation());
             }
-            this.setIndex(envExpSuper.getIndex());
+            this.setIndex(((MethodDefinition) envExpSuper).getIndex());
         }
 
         EnvironmentExp envExp=new EnvironmentExp(null);

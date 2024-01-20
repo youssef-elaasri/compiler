@@ -649,5 +649,6 @@ param returns[AbstractDeclParam tree]
         assert($t.tree != null);
         assert($i.tree != null);
         $tree = new DeclParam($t.tree, $i.tree);
+        setLocation($tree, $i.start);
         }
     ;

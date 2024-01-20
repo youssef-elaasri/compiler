@@ -29,12 +29,12 @@ mkdir -p "$destination_directory"
 
 # Function to log information about each file
 log_info() {
-    echo -e "$1" >> "$log_file"
-    echo -e "${GREEN}Generated Output:${NC}" >> "$log_file"
-    echo -e "$2" >> "$log_file"
-    echo -e "${YELLOW}Expected Output:${NC}" >> "$log_file"
-    echo -e "$3" >> "$log_file"
-    echo -e "-----------------------------------" >> "$log_file"
+    echo  "$1" >> "$log_file"
+    echo  "Generated Output:" >> "$log_file"
+    echo  "$2" >> "$log_file"
+    echo  "Expected Output:" >> "$log_file"
+    echo  "$3" >> "$log_file"
+    echo  "-----------------------------------" >> "$log_file"
 }
 
 
