@@ -412,11 +412,10 @@ select_expr returns[AbstractExpr tree]
             // we matched "e1.i(args)"
             assert($args.tree != null);
             $tree = new MethodCall($e1.tree, $i.tree, $args.tree);
-            setLocation($tree, $args.start);
+            setLocation($tree, $i.start);
         }
         | /* epsilon */ {
             // we matched "e.i"
-            assert($args.tree != null);
             $tree = new Selection($e1.tree, $i.tree);
             setLocation($tree, $i.start);
 
@@ -504,7 +503,7 @@ literal returns[AbstractExpr tree]
             setLocation($tree, $f);
         }
     | THIS {
-        
+
         }
     | NULL {
         }
