@@ -46,7 +46,7 @@ public class MethodCall extends AbstractExpr{
             throw new ContextualError("Number of method arguments is not respected, this method accepts " + sig.getArgs().size() +" argument(s), " + listExpression.getList().size() + " arguments were given !", this.getLocation());
         };
         listExpression.verifyListRValues(compiler, localEnv, currentClass, sig);
-
+        this.setType(methodIdentType);
         return methodIdentType;
     }
 

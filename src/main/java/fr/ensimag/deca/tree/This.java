@@ -15,7 +15,12 @@ import java.io.PrintStream;
 public class This extends AbstractExpr{
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        return null;
+        if (currentClass.getType() == null) {
+            throw new ContextualError("This cannot be called outside a class !", this.getLocation());
+        }
+        Type typeThis = compiler.environmentType.defOfType(currentClass.getType().getName()).getType();
+        this.setType(typeThis);
+        return typeThis;
     }
 
     @Override
@@ -25,12 +30,12 @@ public class This extends AbstractExpr{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
-
+        // leaf node => nothing to do
     }
 
     @Override
     protected void iterChildren(TreeFunction f) {
-
+        // leaf node => nothing to do
     }
 
     @Override

@@ -40,7 +40,7 @@ public class New extends AbstractExpr{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
-        className.prettyPrint(s, prefix, false);
+        className.prettyPrint(s, prefix, true);
 
         
     }
