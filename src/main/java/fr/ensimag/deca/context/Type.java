@@ -74,7 +74,6 @@ public abstract class Type {
      * @return
      */
     public boolean isSubType(EnvironmentType env, Type T){
-
         if (this.sameType(T)) {
             if (this.isClass()) {
                 return ((ClassType) this).isSubClassOf((ClassType) T);
@@ -93,6 +92,9 @@ public abstract class Type {
      */
     public ClassType asClassType(String errorMessage, Location l)
             throws ContextualError {
+        if (this.isNull()) {
+            return (ClassType) this;
+        }
         throw new ContextualError(errorMessage, l);
     }
 

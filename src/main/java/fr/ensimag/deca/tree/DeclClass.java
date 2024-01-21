@@ -97,17 +97,19 @@ public class DeclClass extends AbstractDeclClass {
         mergedMap.putAll(envExpf.getExpDefinitionMap());
         /*Here we build the classDefinition of our currentClass based on the updated ClassDefinition of our superClass*/
         superName.setDefinition(compiler.environmentType.defOfType(superName.getName()));
-        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
-        ClassDefinition classDef = new ClassDefinition(classType, className.getLocation(), superName.getClassDefinition());
+//        ClassType classType = new ClassType(className.getName(), className.getLocation(), superName.getClassDefinition());
+//        ClassDefinition classDef = classType.getDefinition();
+        ClassDefinition classDef = className.getClassDefinition();
         /*Here we set the members of our currentClass to complete the definition*/
         classDef.getMembers().setExpDefinitionMap(mergedMap);
         /*Here we set the number of fields and methods based on the previous definition of our class */
-        classDef.setNumberOfFields(className.getClassDefinition().getNumberOfFields());
-        classDef.setNumberOfMethods(className.getClassDefinition().getNumberOfMethods());
-        classDef.setNbrOfOverrides(className.getClassDefinition().getNbrOfOverrides());
-        (classDef).setLocation(this.getLocation());
+//        classDef.setNumberOfFields(className.getClassDefinition().getNumberOfFields());
+//        classDef.setNumberOfMethods(className.getClassDefinition().getNumberOfMethods());
+//        classDef.setNbrOfOverrides(className.getClassDefinition().getNbrOfOverrides());
+//        classDef.setLocation(this.getLocation());
         compiler.environmentType.put(className.getName(), classDef);
         className.setDefinition(classDef);
+        className.setType(classDef.getType());
         LOG.debug("verify verifyClassMembers: end");
     }
     
@@ -147,8 +149,10 @@ public class DeclClass extends AbstractDeclClass {
         }
 
         for (AbstractDeclMethod method : compiler.getClassManager().get(className).listMethod.getList()){
+            method.setClassName(className.getName().toString());
             int index = method.getIndex();
-            methodTable.put(index, new Label("code." + className.getName().toString() + "." + method.getMethodName().getName().toString()));
+            methodTable.put(index, new Label("code." + className.getName().toString()
+                    + "." + method.getMethodName().getName().toString()));
         }
 
         Program.setOperandEquals(compiler);
@@ -261,5 +265,9 @@ public class DeclClass extends AbstractDeclClass {
             compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
                     , new RegisterOffset(index, Register.R1)));
         }
+    }
+
+    public void codeGenMethods(DecacCompiler compiler) {
+        listMethod.codeGenMethods(compiler);
     }
 }

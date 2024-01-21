@@ -32,6 +32,13 @@ public class ListDeclVar extends TreeList<AbstractDeclVar> {
         }
     }
 
+    public void codeGenMethods(DecacCompiler compiler) {
+        for (AbstractDeclVar abstractDeclVar : getList()) {
+            abstractDeclVar.codeGenMethods(compiler);
+            compiler.getStack().increaseCounterTSTO();
+        }
+    }
+
     @Override
     public void decompile(IndentPrintStream s) {
         for(AbstractDeclVar exp : this.getList()){

@@ -9,18 +9,12 @@ import fr.ensimag.deca.tools.SymbolTable.Symbol;
 
 
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.*;
+import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.RegisterOffset;
-import fr.ensimag.ima.pseudocode.instructions.BOV;
-import fr.ensimag.ima.pseudocode.instructions.BSR;
-import fr.ensimag.ima.pseudocode.instructions.LEA;
-import fr.ensimag.ima.pseudocode.instructions.NEW;
-import fr.ensimag.ima.pseudocode.instructions.STORE;
 
 public class MethodBody extends Tree{
     final private ListDeclVar listDeclVar;
@@ -73,7 +67,39 @@ public class MethodBody extends Tree{
         listInst.iter(f);
     }
 
-    protected void codeGenMethodBody(DecacCompiler compiler) {
+    protected void codeGenMethods(DecacCompiler compiler, String className,
+                                  String methodName, boolean isVoid) {
+        compiler.setMethod(className + "." + methodName);
+        compiler.getStack().resetTSTO();
+        compiler.getStack().resetAddrCounter();
+        ImmediateInteger integer = new ImmediateInteger(0);
+        compiler.addInstruction(new TSTO(integer));
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
+        IMAProgram myProgram = compiler.getProgram();
+        IMAProgram copyProgram = new IMAProgram();
+        compiler.setProgram(copyProgram);
+        listDeclVar.codeGenMethods(compiler);
+        listInst.codeGenListInst(compiler);
+        if (!isVoid) {
+            compiler.addInstruction(new WSTR("\"Error: exit from method " +
+                                            className+ "." + methodName + " without return.\""));
+            compiler.addInstruction(new WNL());
+            compiler.addInstruction(new ERROR());
+        }
+        compiler.addLabel(new Label("end." + className + "." + methodName));
+        for (int i = Math.max(compiler.getStack().getCurrentRegister(), compiler.getStack().getMaxRegister()
+                )-1;i>1;i--) {
+            compiler.getProgram().addFirst(new PUSH(
+                    Register.getR(i)
+            ));
+            compiler.addInstruction(new POP(
+                    Register.getR(i)
+            ));
+        }
+        compiler.addInstruction(new RTS());
+        myProgram.append(copyProgram);
+        compiler.setProgram(myProgram);
+        integer.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
     }
     
 

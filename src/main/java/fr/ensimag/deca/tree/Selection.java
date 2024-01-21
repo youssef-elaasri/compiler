@@ -28,31 +28,33 @@ public class Selection extends AbstractLValue {
     }
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        ClassType classType2 = (ClassType)expression.verifyExpr(compiler,localEnv,currentClass);
-        EnvironmentExp envExp2 = ((ClassDefinition) compiler.environmentType.defOfType(classType2.getName())).getMembers();
+        Type typeExp = expression.verifyExpr(compiler, localEnv, currentClass);
+        if (!typeExp.isClass()) {
+            throw new ContextualError("The object to which you apply the selection must be of type Class: " + typeExp.getName() + " was given !", this.getLocation());
+        }
+        TypeDefinition classDef2 = compiler.environmentType.defOfType(typeExp.getName());
+        if (classDef2 == null) {
+            throw new ContextualError("Class: " + typeExp.getName() +" is not defined in local environment", this.getLocation());
+        }
+        EnvironmentExp envExp2 = ((ClassDefinition) classDef2).getMembers();
         if(envExp2 == null){
-            throw new ContextualError("Class: "+ classType2.getName() +" is not defined in local environment", this.getLocation());
+            throw new ContextualError("Class: "+ typeExp.getName() +" is not defined in local environment", this.getLocation());
         }
         Type fieldIdentType = fieldIdent.verifyExpr(compiler, envExp2, currentClass);
         FieldDefinition fieldDefinition = fieldIdent.getFieldDefinition();
 
         if (fieldDefinition.getVisibility().equals(Visibility.PROTECTED)){
-            if (currentClass.getType() == null){
-                throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
-                        " from current class", this.getLocation());
-            }
-
-            ClassType classType = currentClass.getType();
-            if(!classType.isSubType(compiler.environmentType, classType2)){
-                throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
-                        " from current class", this.getLocation());
-            }
             ClassType classField = fieldDefinition.getContainingClass().getType();
-            if(!classField.isSubType(compiler.environmentType, classType)){
+            if(currentClass.getType() == null ||!classField.isSubType(compiler.environmentType, currentClass.getType())){
                 throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
                         " from current class", this.getLocation());
             }
-        }
+            ClassType classType = currentClass.getType();
+            if (!classType.isSubType(compiler.environmentType, typeExp)) {
+                throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
+                        " from current class", this.getLocation());
+            }
+            }
         this.setType(fieldIdentType);
         return fieldIdentType;
     }

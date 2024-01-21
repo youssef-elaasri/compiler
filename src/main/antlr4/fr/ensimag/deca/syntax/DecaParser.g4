@@ -499,8 +499,9 @@ literal returns[AbstractExpr tree]
             $tree = new BooleanLiteral(Boolean.parseBoolean($f.text));
             setLocation($tree, $f);
         }
-    | THIS {
-
+    | th=THIS {
+            $tree = new This();
+            setLocation($tree, $th);
         }
     | NULL {
         }

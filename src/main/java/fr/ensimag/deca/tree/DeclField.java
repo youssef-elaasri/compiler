@@ -15,6 +15,9 @@ public class DeclField extends AbstractDeclField{
     final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
     private int offset;
+
+
+
     public DeclField(Visibility visibility, AbstractIdentifier type, AbstractIdentifier fieldName, AbstractInitialization initialization) {
         Validate.notNull(visibility);
         Validate.notNull(type);
@@ -92,6 +95,7 @@ public class DeclField extends AbstractDeclField{
         EnvironmentExp envExp = new EnvironmentExp(null);
         envExp.declare(fieldName.getName(), fieldDef);
         fieldName.setDefinition(fieldDef);
+        fieldName.setType(fieldDef.getType());
         return envExp;
     }
 
@@ -106,14 +110,4 @@ public class DeclField extends AbstractDeclField{
         // nothing to do
     }
 
-    @Override
-    protected void prettyPrintType(PrintStream s, String prefix) {
-        Definition d = this.fieldName.getDefinition();
-        if (d != null) {
-            s.print(prefix);
-            s.print("definition: ");
-            s.print(d);
-            s.println();
-        }
-    }
 }
