@@ -69,6 +69,7 @@ public class MethodBody extends Tree{
 
     protected void codeGenMethods(DecacCompiler compiler, String className,
                                   String methodName, boolean isVoid) {
+        compiler.getStack().resetCurrentRegister();
         compiler.setMethod(className + "." + methodName);
         compiler.getStack().resetTSTO();
         compiler.getStack().resetAddrCounter();

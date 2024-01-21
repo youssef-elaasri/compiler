@@ -79,10 +79,8 @@ public class MethodCall extends AbstractExpr{
         compiler.addInstruction(new ADDSP(size + 1));
         compiler.getStack().increaseCounterTSTO(size + 1);
 
-        compiler.addInstruction(new LOAD(
-                ((ClassType) expression.getType()).getDefinition().getOperand(),
-                Register.getR(compiler.getStack().getCurrentRegister())
-        ));
+        expression.codeGenInst(compiler);
+        compiler.getStack().decreaseRegister();
 
         compiler.addInstruction(new STORE(
                 Register.getR(compiler.getStack().getCurrentRegister()),
@@ -118,16 +116,20 @@ public class MethodCall extends AbstractExpr{
                 new RegisterOffset(0, Register.getR(compiler.getStack().getCurrentRegister())),
                 Register.getR(compiler.getStack().getCurrentRegister())
         ));
-
+        compiler.getStack().increaseCounterTSTO(2);
         compiler.addInstruction(new BSR(new RegisterOffset(
-                methodIdent.getMethodDefinition().getIndex(),
+                methodIdent.getMethodDefinition().getIndex()+1,
                 Register.getR(compiler.getStack().getCurrentRegister()))
         ));
-
+        compiler.getStack().decreaseCounterTSTO(2);
         compiler.addInstruction(new SUBSP(size + 1));
         compiler.getStack().decreaseCounterTSTO(size + 1);
-
-
+        if (!getType().isVoid()) {
+            compiler.addInstruction(new LOAD(
+                    Register.R0,
+                    Register.getR(compiler.getStack().getCurrentRegister())
+                    ));
+        }
         compiler.getStack().increaseRegister();
 
     }

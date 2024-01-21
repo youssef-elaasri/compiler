@@ -138,7 +138,15 @@ public class Program extends AbstractProgram {
 
     private void putObjectDotEquals(DecacCompiler compiler){
         compiler.addLabel(equalsLabel);
-        //TODO complete this
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(-2, Register.LB),
+                Register.R0
+        ));
+        compiler.addInstruction(new CMP(
+                new RegisterOffset(-3,Register.LB),
+                Register.R0
+        ));
+        compiler.addInstruction(new SEQ(Register.R0));
         compiler.addInstruction(new RTS());
     }
     

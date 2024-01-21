@@ -165,11 +165,13 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void codeGenInitListDeclClass(DecacCompiler compiler) {
+
         compiler.addComment("Initialize " + this.className.getName() + "'s fields");
         Label init = new Label("init." + this.className.getName());
         compiler.addLabel(init);
 
         compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
+        compiler.getStack().increaseCounterTSTO(2);
         if (superName.getName().toString().equals("Object")) {
 //            int offset = 1;
             for (AbstractDeclField abstractDeclField : listField.getList()) {
@@ -212,6 +214,7 @@ public class DeclClass extends AbstractDeclClass {
             }
         }
         compiler.addInstruction(new RTS());
+        compiler.getStack().decreaseCounterTSTO(2);
 
     }
 

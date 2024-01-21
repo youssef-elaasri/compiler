@@ -2,7 +2,12 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.NullOperand;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
 
 /**
@@ -56,12 +61,34 @@ public class Assign extends AbstractBinaryExpr {
         if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
             getRightOperand().codeGenInst(compiler);
             if (getLeftOperand() instanceof Identifier) {
-                AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
-                compiler.addInstruction(
-                        new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
-                                lvalue.getExpDefinition().getOperand()
-                        )
-                );
+                if (((Identifier) getLeftOperand()).getDefinition().isField()) {
+                    compiler.addInstruction(new LOAD(
+                            new RegisterOffset(-2,Register.LB),
+                            Register.getR(compiler.getStack().getCurrentRegister())
+                    ));
+                    compiler.addInstruction(new CMP(
+                            new NullOperand(),
+                            Register.getR(compiler.getStack().getCurrentRegister())
+                    ));
+
+                    compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDereferencingNull()));
+
+                    compiler.addInstruction(
+                            new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
+                                    new RegisterOffset(((Identifier) getLeftOperand()).getFieldDefinition().getIndex(),
+                                            Register.getR(compiler.getStack().getCurrentRegister()))
+                            )
+                    );
+                    compiler.getStack().increaseRegister();
+                    compiler.getStack().decreaseRegister();
+                } else {
+                    AbstractIdentifier lvalue = (AbstractIdentifier) getLeftOperand();
+                    compiler.addInstruction(
+                            new STORE(Register.getR(compiler.getStack().getCurrentRegister()-1),
+                                    lvalue.getExpDefinition().getOperand()
+                            )
+                    );
+                }
             } else {
                 compiler.addInstruction(new STORE(
                         Register.getR(compiler.getStack().getCurrentRegister()-1),

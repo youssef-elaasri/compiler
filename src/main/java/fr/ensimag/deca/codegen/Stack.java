@@ -34,8 +34,8 @@ public class Stack {
      */
     public Stack(){
 
-        maxTSTO = 1;
-        counterTSTO = 1;
+        maxTSTO = 0;
+        counterTSTO = 0;
         currentRegister = 2;
     }
 
@@ -45,6 +45,8 @@ public class Stack {
     public void increaseTSTO(){
         maxTSTO++;
     }
+
+
 
     /**
      * Returns the current maximum TSTO value.
@@ -101,6 +103,10 @@ public class Stack {
     }
 
     public void decreaseRegister(){
+        if (currentRegister == 0) {
+            System.err.println("Error: The expression exceeds the available register capacity.");
+            System.exit(1);
+        }
         if (currentRegister > maxRegister)
             setMaxRegister(currentRegister);
         currentRegister--;
@@ -137,12 +143,12 @@ public class Stack {
     public void pushRegister(DecacCompiler compiler){
         compiler.getStack().decreaseRegister();
         compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
-        increaseCounterTSTO();
     }
 
     public void pushRegister(DecacCompiler compiler, Register R) {
         compiler.getStack().setCurrentRegister(1);
         compiler.addInstruction(new PUSH(R));
+        increaseCounterTSTO();
     }
 
     /**
