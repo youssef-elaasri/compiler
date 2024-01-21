@@ -82,13 +82,7 @@ then
     exit 1
 fi
 
-# AST_file=src/test/deca/syntax/valid/provided/test_AND_AST.txt
-# result=$(test_synt src/test/deca/syntax/valid/provided/test_AND.deca)
 
-# if diff "$AST_file" "$result"  &> /dev/null;
-# then
-#     echo "FAILED"
-#     exit 1
-# fi
+
 
 echo "\033[32mPASSED\033[0m"
