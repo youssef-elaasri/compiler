@@ -74,6 +74,8 @@ public abstract class Type {
      * @return
      */
     public boolean isSubType(EnvironmentType env, Type T){
+        if (T.isClass() && this.isNull()) {return true;}
+
         if (this.sameType(T)) {
             if (this.isClass()) {
                 return ((ClassType) this).isSubClassOf((ClassType) T);
