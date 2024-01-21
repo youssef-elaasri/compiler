@@ -27,8 +27,9 @@ public class Instanceof extends AbstractExpr{
         Type expType = expression.verifyExpr(compiler, localEnv, currentClass);
         Type type2 = typeIdent.verifyType(compiler);
         if (!((expType.isNull() || expType.isClass()) && type2.isClass())){
-            throw new ContextualError("Using Inctanceof is not valid", this.getLocation());
+            throw new ContextualError("Using Instanceof is not valid", this.getLocation());
         }
+        this.setType(type2);
         return compiler.environmentType.BOOLEAN;
     }
 
