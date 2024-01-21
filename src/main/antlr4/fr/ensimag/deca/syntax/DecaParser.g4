@@ -610,16 +610,17 @@ decl_field[AbstractIdentifier t, Visibility v] returns[AbstractDeclField tree]
         }
     ;
 
+
 decl_method returns[AbstractDeclMethod tree]
 @init {
     ListDeclParam list_param = new ListDeclParam();
     MethodBody methodBody;
 }
-    : type i=ident OPARENT params=list_params[list_param] CPARENT (b=block {
+    : t=type i=ident OPARENT params=list_params[list_param] CPARENT (b=block {
         methodBody=new MethodBody($block.decls,$block.insts);
         $tree = new DeclMethod($type.tree, $ident.tree, list_param,methodBody);
-        setLocation($tree,$i.start);
-        setLocation(methodBody,$i.start);
+        setLocation($tree,$t.start);
+        setLocation(methodBody,$b.start);
         }
       | ASM OPARENT code=multi_line_string CPARENT SEMI {
         }
