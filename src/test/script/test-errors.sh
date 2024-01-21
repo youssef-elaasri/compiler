@@ -23,13 +23,6 @@ then
     exit 1
 fi
 
-# tester l'erreur sur l'acces a un element protected hors de la classe fille //TODO:
-if ! test_context src/test/deca/context/invalid/provided/class-is-not-defined.deca 2>&1  | \
-    grep -q "Super Class B is not defined !";
-then
-    echo "FAILED"
-    exit 1
-fi
 
 
 # tester l'erreur sur l'accces sur une method qui n'existe pas dans la classe
@@ -55,6 +48,13 @@ then
     exit 1
 fi
 
+# tester l'acces a un field protected en dehors de la classe fille
+if ! test_context src/test/deca/context/invalid/provided/access-protected-field.deca 2>&1  | \
+    grep -q "Cannot get access to field x from current class";
+then
+    echo "FAILED"
+    exit 1
+fi
 
 
 

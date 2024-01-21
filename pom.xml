@@ -207,7 +207,7 @@
                     <execution>
                         <id>Interactive reading</id>
                         <configuration>
-                            <executable>./src/test/script/interactive-test.sh</executable>
+                            <executable>./src/test/script/test-interactive.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -237,7 +237,7 @@
                     <execution>
                         <id>Testing lexical grammar</id>
                         <configuration>
-                            <executable>./src/test/script/test-lexer-in-general.sh</executable>
+                            <executable>./src/test/script/test-general-lexer.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -252,7 +252,7 @@
                     <execution>
                         <id>Testing reserved words</id>
                         <configuration>
-                            <executable>./src/test/script/mots-reserves-test.sh</executable>
+                            <executable>./src/test/script/test-mots-reserves.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -282,7 +282,7 @@
                     <execution>
                         <id>Detecting errors</id>
                         <configuration>
-                            <executable>./src/test/script/error-detector.sh</executable>
+                            <executable>./src/test/script/test-errors.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -297,7 +297,7 @@
                     <execution>
                         <id>If else</id>
                         <configuration>
-                            <executable>./src/test/script/ifelse-test.sh</executable>
+                            <executable>./src/test/script/test-ifelse.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>

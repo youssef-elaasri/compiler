@@ -1,7 +1,9 @@
 class A {
    protected int x ;
+   int y;
    int getX() {
       return x ;
-    }
- }
+   }
+}
+
 

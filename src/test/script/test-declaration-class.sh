@@ -5,20 +5,20 @@ PATH=./src/test/script/launchers:"$PATH"
 echo  -e "\033[33mTesting class declaration with methods and fields\033[0m"
 
 if ! test_synt src/test/deca/context/valid/provided/test_class_decl.deca 2>&1  | \
-    grep -q "\[2, 18\] [visibility=PROTECTED] DeclField";
+    grep -q "\[2, 17\] \[visibility = PROTECTED\] DeclField";
 then
     echo "FAILED"
     exit 1
 fi
 if ! test_synt src/test/deca/context/valid/provided/test_class_decl.deca  | \
-    grep -q "\[3, 18\] [visibility=PROTECTED] DeclField";
+    grep -q "\[3, 7\] \[visibility = PUBLIC\] DeclField";
 then
     echo "FAILED"
     exit 1
 fi 
 
 if ! test_synt src/test/deca/context/valid/provided/test_class_decl.deca  | \
-    grep -q "ListDeclMethod [List with \1 elements]";
+    grep -q "ListDeclMethod \[List with 1 elements\]";
 then
     echo "FAILED"
     exit 1
