@@ -60,7 +60,7 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         //here we verify if type1 and type2 are in dom(type_arith_op) and if op is in the opList
         if( (opList.contains(op) && verifyDomTypeArithOp(type1) && verifyDomTypeArithOp(type2))
         //here we verify if type1 and type2 are both boolean and if the op is eq or neq
-        || ( (type1.isBoolean() && type2.isBoolean()) && (op.equals("==") || op.equals("!=")) ) ) {
+        || (( (type1.isBoolean() && type2.isBoolean()) || (type1.isClassOrNull() && type2.isClassOrNull()) ) && (op.equals("==") || op.equals("!=")) ) ) {
             if ((type1.isInt() && type2.isFloat())) {
                 AbstractExpr leftOp = new ConvFloat(this.getLeftOperand());
                 this.setLeftOperand(leftOp);
