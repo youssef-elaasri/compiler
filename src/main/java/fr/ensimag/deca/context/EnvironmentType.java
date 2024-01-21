@@ -54,7 +54,8 @@ public class EnvironmentType {
         objectDef.incNumberOfMethods();
         Signature equalsSig = new Signature();
         equalsSig.add(OBJECT);
-        MethodDefinition equalsMeth = new MethodDefinition(BOOLEAN, Location.BUILTIN, equalsSig, 1);
+        /*Here we consider that the index of the first method is 0 and not 1*/
+        MethodDefinition equalsMeth = new MethodDefinition(BOOLEAN, Location.BUILTIN, equalsSig, 0);
         Symbol equalsSymb = compiler.createSymbol("equals");
         objectDef.getMembers().declare(equalsSymb, equalsMeth);
         envTypes.put(objectSymb, objectDef);
