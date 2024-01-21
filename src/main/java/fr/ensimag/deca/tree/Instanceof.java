@@ -39,11 +39,13 @@ public class Instanceof extends AbstractExpr{
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
-
+        typeIdent.prettyPrint(s, prefix, false);
+        expression.prettyPrint(s, prefix, true);
     }
 
     @Override
     protected void iterChildren(TreeFunction f) {
-
+        typeIdent.iter(f);
+        expression.iter(f);
     }
 }
