@@ -22,7 +22,7 @@ DEBUG fr.ensimag.deca.tree.Program.verifyProgram(Program.java:52) - verify progr
 | | +> [2, 17] Identifier (x)
 | | | definition: field defined at [2, 17], type=int
 | | `> NoInitialization
-| `> ListDeclMethod [List with 2 elements]
+ixing | `> ListDeclMethod [List with 1 elements]
 | []> [3, 3] DeclMethod
 | || +> [3, 3] Identifier (int)
 | || | definition: type (builtin), type=int
