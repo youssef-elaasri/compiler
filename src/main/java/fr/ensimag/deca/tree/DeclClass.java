@@ -40,11 +40,13 @@ public class DeclClass extends AbstractDeclClass {
 
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("class");
+        s.print("class ");
         className.decompile(s);
-        s.print("extends");
+        if(superName.getName().getName() != "Object"){
+        s.print(" extends ");
         superName.decompile(s);
-        s.print(" {");
+        }
+        s.println(" {");
         this.listField.decompile(s);
         this.listMethod.decompile(s);
         s.print("}");

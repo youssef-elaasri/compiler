@@ -1,18 +1,9 @@
-class A{
-    protected int x;
-    protected int y;
-
-
-
-    int getX(){
-        x=x+1;
-        return x;
-    }
+class A {
+   protected int x ;
+   int y;
+   int getX() {
+      return x ;
+   }
 }
 
-{
-    A a= new A();
-    A b = new A();
-    a=b;
 
-}

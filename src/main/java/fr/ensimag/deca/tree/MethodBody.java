@@ -46,7 +46,7 @@ public class MethodBody extends Tree{
     }
     @Override
     public void decompile(IndentPrintStream s) {
-        s.print("{");
+        s.println("{");
         this.listDeclVar.decompile(s);
         this.listInst.decompile(s);
         s.print("}");

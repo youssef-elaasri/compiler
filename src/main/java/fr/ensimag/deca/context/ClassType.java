@@ -75,7 +75,7 @@ public class ClassType extends Type {
                 realSuperClass.isSubClassOf(potentialSuperClass))) {
             return true;
         }
-        return this.isNull();
+        return false;
     }
 
 
