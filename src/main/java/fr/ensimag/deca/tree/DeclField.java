@@ -108,4 +108,9 @@ public class DeclField extends AbstractDeclField{
         // nothing to do
     }
 
+    @Override
+    public Type getType() {
+        return type.getType();
+    }
+
 }

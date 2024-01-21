@@ -87,8 +87,9 @@ public class MethodBody extends Tree{
             compiler.addInstruction(new ERROR());
         }
         compiler.addLabel(new Label("end." + className + "." + methodName));
-        for (int i = Math.max(compiler.getStack().getCurrentRegister(), compiler.getStack().getMaxRegister()
-                )-1;i>1;i--) {
+        int max = Math.max(compiler.getStack().getCurrentRegister(), compiler.getStack().getMaxRegister())-1;
+        compiler.getStack().increaseCounterTSTO(max-1);
+        for (int i = max;i>1;i--) {
             compiler.getProgram().addFirst(new PUSH(
                     Register.getR(i)
             ));

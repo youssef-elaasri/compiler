@@ -178,13 +178,11 @@ public class DeclClass extends AbstractDeclClass {
                         )
                 );
                 if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
-                    compiler.addInstruction(new LOAD(0, Register.R0));
+                    loadR0(compiler, abstractDeclField);
                     compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
                 } else {
                     codeGenInit(compiler, abstractDeclField, index);
                 }
-                compiler.getStack().resetCurrentRegister();
-//                offset++;
             }
         }
         else {
@@ -194,8 +192,9 @@ public class DeclClass extends AbstractDeclClass {
             if (!compiler.getCompilerOptions().getNoCheck())
                 compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
-            compiler.addInstruction(new LOAD(0, Register.R0));
+
             for (AbstractDeclField abstractDeclField : listField.getList()) {
+                loadR0(compiler, abstractDeclField);
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
                 compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
             }
@@ -209,7 +208,6 @@ public class DeclClass extends AbstractDeclClass {
                     codeGenInit(compiler, abstractDeclField, index);
                 }
             }
-            compiler.getStack().resetCurrentRegister();
         }
         compiler.addInstruction(new RTS());
 
@@ -267,5 +265,17 @@ public class DeclClass extends AbstractDeclClass {
 
     public void codeGenMethods(DecacCompiler compiler) {
         listMethod.codeGenMethods(compiler);
+    }
+
+    public void loadR0(DecacCompiler compiler, AbstractDeclField declField) {
+        if (declField.getType().isFloat()) {
+            compiler.addInstruction(new FLOAT(new ImmediateInteger(0), Register.R0));
+            return;
+        }
+        else if (declField.getType().isClassOrNull()) {
+            compiler.addInstruction(new LOAD(new NullOperand(), Register.R0));
+            return;
+        }
+        compiler.addInstruction(new LOAD(0, Register.R0));
     }
 }

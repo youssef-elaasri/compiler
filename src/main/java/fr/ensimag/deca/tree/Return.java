@@ -8,6 +8,7 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
@@ -41,6 +42,11 @@ public class Return extends AbstractInst {
      */
     @Override
     protected  void codeGenInst(DecacCompiler compiler){
+        returnedExpr.codeGenInst(compiler);
+        compiler.addInstruction(new LOAD(
+                Register.getR(compiler.getStack().getCurrentRegister()-1),
+                Register.R0
+                ));
         compiler.addInstruction(new BRA(new Label(
                 "end." + compiler.getMethod()
         )));
