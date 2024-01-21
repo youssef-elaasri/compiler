@@ -108,14 +108,4 @@ public class DeclField extends AbstractDeclField{
         // nothing to do
     }
 
-    @Override
-    protected void prettyPrintType(PrintStream s, String prefix) {
-        Definition d = this.fieldName.getDefinition();
-        if (d != null) {
-            s.print(prefix);
-            s.print("definition: ");
-            s.print(d);
-            s.println();
-        }
-    }
 }
