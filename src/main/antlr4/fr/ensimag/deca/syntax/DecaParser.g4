@@ -457,7 +457,7 @@ primary_expr returns[AbstractExpr tree]
             assert($type.tree != null);
             assert($expr.tree != null);
             $tree = new Cast($type.tree, $expr.tree);
-            setLocation($tree, $cast.start);
+            setLocation($tree, $cast);
         }
     | e=literal {
             assert($literal.tree != null);
