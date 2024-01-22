@@ -1,13 +1,3 @@
-DEBUG fr.ensimag.deca.tree.Program.verifyProgram(Program.java:43) - verify program: start
-DEBUG fr.ensimag.deca.tree.ListDeclClass.verifyListClass(ListDeclClass.java:34) - verify listClass: start
-DEBUG fr.ensimag.deca.tree.DeclClass.verifyClass(DeclClass.java:61) - verify verifyClass: start
-DEBUG fr.ensimag.deca.tree.DeclClass.verifyClass(DeclClass.java:77) - verify verifyClass: end
-DEBUG fr.ensimag.deca.tree.ListDeclClass.verifyListClass(ListDeclClass.java:39) - verify listClass: end
-DEBUG fr.ensimag.deca.tree.ListDeclClass.verifyListClassMembers(ListDeclClass.java:46) - verify listClassMembers: start
-DEBUG fr.ensimag.deca.tree.DeclClass.verifyClassMembers(DeclClass.java:84) - verify verifyClassMembers: start
-DEBUG fr.ensimag.deca.tree.DeclClass.verifyClassMembers(DeclClass.java:113) - verify verifyClassMembers: end
-DEBUG fr.ensimag.deca.tree.ListDeclClass.verifyListClassMembers(ListDeclClass.java:50) - verify listClassMembers: end
-DEBUG fr.ensimag.deca.tree.Program.verifyProgram(Program.java:52) - verify program: end
 `> [1, 0] Program
 +> ListDeclClass [List with 1 elements]
 | []> [1, 0] DeclClass
