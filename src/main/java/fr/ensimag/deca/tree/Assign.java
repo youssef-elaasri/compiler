@@ -10,6 +10,8 @@ import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
 
+import java.io.PrintStream;
+
 /**
  * Assignment, i.e. lvalue = expr.
  *
@@ -48,6 +50,12 @@ public class Assign extends AbstractBinaryExpr {
         return "=";
     }
 
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+        getLeftOperand().prettyPrint(s, prefix, false);
+        getRightOperand().prettyPrint(s, prefix, true);
+    }
 
     /**
      * Overrides the instruction code generation method for a specific expression.

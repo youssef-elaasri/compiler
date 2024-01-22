@@ -2,7 +2,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo "\033[33mTesting the options of the compiler \033[0m"
 
 
 # decac -b

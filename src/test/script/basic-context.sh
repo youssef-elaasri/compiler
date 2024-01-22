@@ -10,7 +10,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 PATH=./src/test/script/launchers:"$PATH"
 
 
-echo "\033[33mTesting Basic AST Decoration\033[0m"
 
 
 # Test variable declarations
@@ -89,6 +88,13 @@ then
     exit 1
 fi
 
+
+if ! test_context src/test/deca/context/valid/provided/test_error_identifier.deca 2>&1 | \
+    grep -q -e "Type: String is undefined !"
+then
+    echo "FAILED"
+    exit 1
+fi
 
 
 

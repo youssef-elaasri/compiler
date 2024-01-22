@@ -3,12 +3,20 @@ class A{
     float y;
 
     int getX(){
-        return x;
+
+        return this.x;
     }
 
+}
+
+class B extends A{
+    protected int d;
 }
 
 
 {
     A a = new A();
+    if(a instanceof A){
+        println("AAA");
+    }
 }

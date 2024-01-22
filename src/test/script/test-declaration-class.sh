@@ -2,7 +2,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo  -e "\033[33mTesting class declaration with methods and fields\033[0m"
 
 if ! test_synt src/test/deca/context/valid/provided/test_class_decl.deca 2>&1  | \
     grep -q "\[2, 17\] \[visibility = PROTECTED\] DeclField";
