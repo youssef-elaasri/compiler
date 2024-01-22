@@ -19,7 +19,6 @@ class A {
 
 class B extends A{
     protected int y;
-
     void setY(int y) {
         this.y = y;
     }
@@ -28,16 +27,15 @@ class B extends A{
         return y*y;
     }
 
-    int WhoAmI(){
-        return 5;
+    int Square(){
+        return 9;
     }
-
 }
 
 
 {
     A a = new A();
-    B b = new B();
+    A b = new B();
 
     a.setX(1);
     b.setY(3);
@@ -46,7 +44,7 @@ class B extends A{
     // test overriden function call
     print(b.Square()); // = 9
     // test overloaded function call
-    print(b.Square()); // = 9
+    print(b.Square(3)); // = 9
     // test inherited function call
     println(b.WhoAmI()); // = 5
 

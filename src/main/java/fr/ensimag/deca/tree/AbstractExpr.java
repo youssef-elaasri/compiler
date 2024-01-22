@@ -219,6 +219,9 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     protected DVal getDval(AbstractExpr expr) {
         if (expr instanceof Identifier) {
+            if (((Identifier) expr).getDefinition().isField()) {
+                return null;
+            }
             return ((Identifier) expr).getExpDefinition().getOperand();
         } else if (expr instanceof IntLiteral) {
             return new ImmediateInteger(((IntLiteral) expr).getValue());

@@ -9,4 +9,13 @@
     else if(a>10){
         println("PAssed");
     }
+
+    if(a<8 && b>2){
+        println("yes");
+    }
+    else{
+        if(a>2 || b<2){
+            println("No");
+        }
+    }
 }

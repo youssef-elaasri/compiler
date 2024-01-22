@@ -1,14 +1,8 @@
 package fr.ensimag.deca.tree;
 
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import fr.ensimag.deca.context.*;
-import fr.ensimag.deca.tools.SymbolTable.Symbol;
-
-
-import fr.ensimag.deca.tools.SymbolTable;
 import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
@@ -35,11 +29,6 @@ public class MethodBody extends Tree{
 
         EnvironmentExp localEnvInst = new EnvironmentExp(localEnv);
         localEnvInst.setExpDefinitionMap(localEnvVariable.getExpDefinitionMap());
-//        for(Map.Entry<Symbol, ExpDefinition> entry: localEnvVariable.getExpDefinitionMap().entrySet()){
-//            if (localEnv.get(entry.getKey()) == null){
-//                localEnvInst.declare(entry.getKey(), entry.getValue());
-//            }
-//        }
 
         listInst.verifyListInst(compiler, localEnvInst, currentClass, returnType);
         

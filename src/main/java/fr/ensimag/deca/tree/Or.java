@@ -2,11 +2,7 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.BEQ;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
 
 /**
  *
@@ -14,8 +10,6 @@ import fr.ensimag.ima.pseudocode.instructions.CMP;
  * @date 01/01/2024
  */
 public class Or extends AbstractOpBool {
-
-    private static int counter = 0;
 
     public Or(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
@@ -63,10 +57,5 @@ public class Or extends AbstractOpBool {
 
         // Add the label for the end of the OR operation
         compiler.addLabel(endOr);
-    }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
     }
 }
