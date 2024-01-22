@@ -59,7 +59,7 @@ public class Cast extends AbstractExpr {
     public boolean assignCompatible(DecacCompiler compiler, Type type1, Type type2) throws ContextualError{
         if (!(type1.isFloat() && type2.isInt())) {
             if (!(type1.isSubType(compiler.environmentType, type2))) {
-                throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + type2.getName() + " to " + type1.getName(), this.getLocation());
+                throw new ContextualError( "Can not cast " + type1.getName() + " to " + type2.getName() + " !", this.getLocation());
             }
         }
         return true;
