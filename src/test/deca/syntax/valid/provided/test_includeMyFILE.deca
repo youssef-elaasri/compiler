@@ -1,5 +1,1 @@
-{
-    // Testing the include functionnality
-    #include "MyFILE.deca";
-
-}
+#include "MyFILE.deca"

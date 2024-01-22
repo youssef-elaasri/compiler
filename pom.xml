@@ -324,6 +324,21 @@
                             <goal>exec</goal>
                         </goals>
                     </execution>
+                     <execution>
+                        <id>Testing code generation for classes </id>
+                        <configuration>
+                            <executable>./src/test/script/test-class-gencode.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>basic-synt</id>
                         <configuration>
