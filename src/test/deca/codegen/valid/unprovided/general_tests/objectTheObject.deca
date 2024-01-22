@@ -16,7 +16,7 @@ class King{
 		println("Kings and queens are equal");
 	}else if(q.equals(k)){
 		println("Queens and kings are equal");
-	}else if(q.equals(q){
+	}else if(q.equals(q)){
 		println("Queen is queen");
 	}
 }
