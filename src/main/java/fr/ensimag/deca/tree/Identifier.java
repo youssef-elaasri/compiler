@@ -248,7 +248,9 @@ public class Identifier extends AbstractIdentifier {
                     new RegisterOffset(getFieldDefinition().getIndex(), Register.getR(compiler.getStack().getCurrentRegister()))
                     , Register.getR(compiler.getStack().getCurrentRegister())));
         }
-        compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        else {
+            compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        }
         compiler.getStack().increaseRegister();
     }
 
