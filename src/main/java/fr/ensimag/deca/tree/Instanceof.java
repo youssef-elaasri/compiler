@@ -65,23 +65,29 @@ public class Instanceof extends AbstractExpr{
         Label trueInstanceof = new Label("true_instanceof_" + index);
         Label falseInstanceof = new Label("false_instanceof_" + index);
         Label endInstanceof = new Label("end_Instanceof_" + index);
+        compiler.getStack().increaseRegister();
         expression.codeGenInst(compiler);
         compiler.addInstruction(new CMP(
                 new NullOperand(),
                 Register.getR(compiler.getStack().getCurrentRegister()-1)
         ));
         compiler.addInstruction(new BEQ(compiler.getErrorHandler().addDereferencingNull()));
-        compiler.addLabel(initLabel);
-        compiler.addInstruction(new LOAD(
-                new RegisterOffset(0, Register.getR(compiler.getStack().getCurrentRegister()-1)),
+        compiler.getStack().decreaseRegister();
+        compiler.addInstruction(new LEA(
+                typeIdent.getDefinition().getOperand(),
                 Register.getR(compiler.getStack().getCurrentRegister()-1)
         ));
+        compiler.addLabel(initLabel);
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(0, Register.getR(compiler.getStack().getCurrentRegister())),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
         compiler.addInstruction(new CMP(
-                new NullOperand(),Register.getR(compiler.getStack().getCurrentRegister()-1)
+                new RegisterOffset(1, Register.GB),Register.getR(compiler.getStack().getCurrentRegister())
         ));
         compiler.addInstruction(new BEQ(falseInstanceof));
         compiler.addInstruction(new CMP(
-                typeIdent.getExpDefinition().getOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister()),
                 Register.getR(compiler.getStack().getCurrentRegister()-1)
         ));
         compiler.addInstruction(new BEQ(trueInstanceof));
@@ -96,6 +102,5 @@ public class Instanceof extends AbstractExpr{
                 0, Register.getR(compiler.getStack().getCurrentRegister()-1)
         ));
         compiler.addLabel(endInstanceof);
-
     }
 }

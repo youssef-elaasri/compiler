@@ -163,17 +163,8 @@ public class DeclClass extends AbstractDeclClass {
 
     }
 
-    @Override
-    public void codeGenInitListDeclClass(DecacCompiler compiler) {
-
-        compiler.addComment("Initialize " + this.className.getName() + "'s fields");
-        Label init = new Label("init." + this.className.getName());
-        compiler.addLabel(init);
-
-        compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
-        compiler.getStack().increaseCounterTSTO(2);
+    public void codeGenInitListDeclClassBody(DecacCompiler compiler) {
         if (superName.getName().toString().equals("Object")) {
-//            int offset = 1;
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
                 ((DeclField) abstractDeclField).getFieldName().getExpDefinition().setOperand(
@@ -183,6 +174,7 @@ public class DeclClass extends AbstractDeclClass {
                 );
                 if (((DeclField) abstractDeclField).getInitialization() instanceof NoInitialization) {
                     loadR0(compiler, abstractDeclField);
+                    compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
                     compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
                 } else {
                     codeGenInit(compiler, abstractDeclField, index);
@@ -191,20 +183,19 @@ public class DeclClass extends AbstractDeclClass {
         }
         else {
             ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(className.getClassDefinition().getNumberOfFields() - superName.getClassDefinition().getNumberOfFields() + 1);
-            compiler.addInstruction(new TSTO(TSTOimmediateInteger));
-
-            if (!compiler.getCompilerOptions().getNoCheck())
-                compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
 
 
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 loadR0(compiler, abstractDeclField);
                 int index = ((DeclField) abstractDeclField).getFieldName().getFieldDefinition().getIndex();
+                compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
                 compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
             }
             compiler.getStack().pushRegister(compiler, Register.R1);
             Label initBSR = new Label("init." + this.superName.getName());
+            compiler.getStack().increaseCounterTSTO(2);
             compiler.addInstruction(new BSR(initBSR));
+            compiler.getStack().decreaseCounterTSTO(2);
             compiler.addInstruction(new SUBSP(1));
             for (AbstractDeclField abstractDeclField : listField.getList()) {
                 if ((((DeclField) abstractDeclField).getInitialization() instanceof Initialization)) {
@@ -213,9 +204,46 @@ public class DeclClass extends AbstractDeclClass {
                 }
             }
         }
-        compiler.addInstruction(new RTS());
-        compiler.getStack().decreaseCounterTSTO(2);
+    }
+    @Override
+    public void codeGenInitListDeclClass(DecacCompiler compiler) {
+        compiler.getStack().resetMaxRegister();
+        compiler.addComment("Initialize " + this.className.getName() + "'s fields");
+        Label init = new Label("init." + this.className.getName());
+        compiler.addLabel(init);
 
+        ImmediateInteger integer = new ImmediateInteger(0);
+        IMAProgram myProgram = compiler.getProgram();
+        IMAProgram copyProgram = new IMAProgram();
+
+        compiler.getStack().resetCurrentRegister();
+        compiler.getStack().resetTSTO();
+        compiler.getStack().resetAddrCounter();
+        compiler.addInstruction(new TSTO(integer));
+        compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
+        compiler.setProgram(copyProgram);
+
+        codeGenInitListDeclClassBody(compiler);
+
+        pushAndPopRegister(compiler, integer, myProgram, copyProgram);
+
+    }
+
+    static void pushAndPopRegister(DecacCompiler compiler, ImmediateInteger integer, IMAProgram myProgram, IMAProgram copyProgram) {
+        int max = Math.max(compiler.getStack().getCurrentRegister(), compiler.getStack().getMaxRegister())-1;
+        for (int i = max;i>1;i--) {
+            compiler.getProgram().addFirst(new PUSH(
+                    Register.getR(i)
+            ));
+            compiler.addInstruction(new POP(
+                    Register.getR(i)
+            ));
+        }
+        compiler.addInstruction(new RTS());
+        myProgram.append(copyProgram);
+        compiler.setProgram(myProgram);
+        compiler.setProgram(myProgram);
+        integer.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO())+ max-1);
     }
 
 
@@ -259,10 +287,12 @@ public class DeclClass extends AbstractDeclClass {
             compiler.addInstruction( new LOAD(
                     dVal, Register.R0
             ));
+            compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
             compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
         }
         else {
             ((Initialization) ((DeclField) abstractDeclField).getInitialization()).getExpression().codeGenInst(compiler);
+            compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
             compiler.addInstruction(new STORE(Register.getR(compiler.getStack().getCurrentRegister() - 1)
                     , new RegisterOffset(index, Register.R1)));
         }
