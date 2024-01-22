@@ -11,7 +11,6 @@ import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 
 import java.io.PrintStream;
-import java.security.PublicKey;
 
 public class This extends AbstractExpr{
     private final boolean value;

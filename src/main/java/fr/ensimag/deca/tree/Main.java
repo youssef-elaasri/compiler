@@ -5,23 +5,21 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
 
 /**
  * @author gl22
  * @date 01/01/2024
  */
 public class Main extends AbstractMain {
-    private static final Logger LOG = Logger.getLogger(Main.class);
     
-    private ListDeclVar declVariables;
-    private ListInst insts;
+    private final ListDeclVar declVariables;
+    private final ListInst insts;
     public Main(ListDeclVar declVariables,
-            ListInst insts) {
+            ListInst insets) {
         Validate.notNull(declVariables);
-        Validate.notNull(insts);
+        Validate.notNull(insets);
         this.declVariables = declVariables;
-        this.insts = insts;
+        this.insts = insets;
     }
 
     @Override
@@ -35,8 +33,6 @@ public class Main extends AbstractMain {
         declVariables.verifyListDeclVariable(compiler, envExp, classDef);
         Type voidT = compiler.environmentType.VOID;
         insts.verifyListInst(compiler, envExp, classDef, voidT);
-        //LOG.debug("verify Main: end");
-//        throw new UnsupportedOperationException("not yet implemented");
     }
 
     /**

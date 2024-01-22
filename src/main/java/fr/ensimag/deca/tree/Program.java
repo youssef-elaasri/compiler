@@ -1,8 +1,6 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.codegen.ErrorHandler;
-import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.ImmediateInteger;
@@ -35,8 +33,8 @@ public class Program extends AbstractProgram {
     public AbstractMain getMain() {
         return main;
     }
-    private ListDeclClass classes;
-    private AbstractMain main;
+    private final ListDeclClass classes;
+    private final AbstractMain main;
 
     @Override
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
@@ -149,11 +147,13 @@ public class Program extends AbstractProgram {
         compiler.addInstruction(new SEQ(Register.R0));
         compiler.addInstruction(new RTS());
     }
-    
+
     /**
-     * This function adds the method label to class methods table
-     * @param compiler
-     * @param methodLabel
+     * Sets the operand method by loading the given method label into a register,
+     * storing it in the method block on the stack, and updating the stack's address counter.
+     *
+     * @param compiler     The DecacCompiler instance for compilation.
+     * @param methodLabel  The label representing the method to set as the operand.
      */
     public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
         compiler.addInstruction(new LOAD(methodLabel, Register.R0));

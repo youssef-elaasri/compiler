@@ -8,11 +8,8 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.RegisterOffset;
-import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 
@@ -36,9 +33,10 @@ public class Return extends AbstractInst {
         }
 
     /**
-     * Generate assembly code for the instruction.
-     * 
-     * @param compiler
+     * Generates assembly code for the current instruction.
+     * This method is called during the code generation phase.
+     *
+     * @param compiler The DecacCompiler instance for compilation.
      */
     @Override
     protected  void codeGenInst(DecacCompiler compiler){
@@ -55,7 +53,6 @@ public class Return extends AbstractInst {
 
     /**
      * Decompile the tree, considering it as an instruction.
-     *
      * In most case, this simply calls decompile(), but it may add a semicolon if needed
      */
     protected void decompileInst(IndentPrintStream s) {
