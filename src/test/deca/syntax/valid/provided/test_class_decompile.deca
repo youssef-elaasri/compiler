@@ -16,6 +16,8 @@ class B extends A{
 
 {
     A a = new A();
+    float f=3.5;
+    int j = (int)(f);
     if(a instanceof A){
         println("AAA");
     }
