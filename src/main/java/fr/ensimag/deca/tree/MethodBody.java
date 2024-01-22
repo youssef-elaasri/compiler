@@ -69,15 +69,17 @@ public class MethodBody extends Tree{
 
     protected void codeGenMethods(DecacCompiler compiler, String className,
                                   String methodName, boolean isVoid) {
+        ImmediateInteger integer = new ImmediateInteger(0);
+        IMAProgram myProgram = compiler.getProgram();
+        IMAProgram copyProgram = new IMAProgram();
+
         compiler.getStack().resetCurrentRegister();
         compiler.setMethod(className + "." + methodName);
         compiler.getStack().resetTSTO();
-        compiler.getStack().resetAddrCounter();
-        ImmediateInteger integer = new ImmediateInteger(0);
+        compiler.getStack().resetMaxRegister();
+
         compiler.addInstruction(new TSTO(integer));
         compiler.addInstruction(new BOV(compiler.getErrorHandler().addStackOverflowError()));
-        IMAProgram myProgram = compiler.getProgram();
-        IMAProgram copyProgram = new IMAProgram();
         compiler.setProgram(copyProgram);
         listDeclVar.codeGenMethods(compiler);
         listInst.codeGenListInst(compiler);
@@ -88,20 +90,7 @@ public class MethodBody extends Tree{
             compiler.addInstruction(new ERROR());
         }
         compiler.addLabel(new Label("end." + className + "." + methodName));
-        int max = Math.max(compiler.getStack().getCurrentRegister(), compiler.getStack().getMaxRegister())-1;
-        compiler.getStack().increaseCounterTSTO(max-1);
-        for (int i = max;i>1;i--) {
-            compiler.getProgram().addFirst(new PUSH(
-                    Register.getR(i)
-            ));
-            compiler.addInstruction(new POP(
-                    Register.getR(i)
-            ));
-        }
-        compiler.addInstruction(new RTS());
-        myProgram.append(copyProgram);
-        compiler.setProgram(myProgram);
-        integer.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
+        DeclClass.pushAndPopRegister(compiler, integer, myProgram, copyProgram);
     }
     
 

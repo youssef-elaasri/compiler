@@ -8,6 +8,7 @@ import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LEA;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
@@ -238,6 +239,15 @@ public class Identifier extends AbstractIdentifier {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
+        if (getDefinition().isField()) {
+            compiler.addInstruction(new LOAD(
+                    new RegisterOffset(-2,Register.LB),
+                    Register.getR(compiler.getStack().getCurrentRegister()
+            )));
+            compiler.addInstruction(new LOAD(
+                    new RegisterOffset(getFieldDefinition().getIndex(), Register.getR(compiler.getStack().getCurrentRegister()))
+                    , Register.getR(compiler.getStack().getCurrentRegister())));
+        }
         compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }

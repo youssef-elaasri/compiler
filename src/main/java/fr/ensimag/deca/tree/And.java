@@ -2,12 +2,7 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.ima.pseudocode.Label;
-import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.BRA;
-import fr.ensimag.ima.pseudocode.instructions.CMP;
-import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 import org.antlr.v4.runtime.atn.SemanticContext;
 
 /**
@@ -68,6 +63,11 @@ public class And extends AbstractOpBool {
         compiler.addLabel(endAnd);
     }
 
+    /**
+     * Increases the counter by 1.
+     * This method overrides the corresponding method in the parent class or interface.
+     * It is used to increment the value of the 'counter' variable by 1.
+     */
     @Override
     public void increaseCounter() {
         counter++;

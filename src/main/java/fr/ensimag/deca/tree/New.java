@@ -84,6 +84,7 @@ public class New extends AbstractExpr{
         compiler.addInstruction(new PUSH(
                 Register.getR(compiler.getStack().getCurrentRegister()
         )));
+        compiler.getStack().increaseCounterTSTO(3);
         compiler.addInstruction(
                 new BSR(new Label("init."
                         + compiler.getClassManager().get(className).getClassName().getName())
@@ -91,6 +92,7 @@ public class New extends AbstractExpr{
         compiler.addInstruction(new POP(
                 Register.getR(compiler.getStack().getCurrentRegister()
                 )));
+        compiler.getStack().decreaseCounterTSTO(3);
 
         compiler.getStack().increaseRegister();
     }

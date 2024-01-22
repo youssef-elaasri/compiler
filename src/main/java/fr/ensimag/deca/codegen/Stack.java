@@ -96,7 +96,11 @@ public class Stack {
     }
 
     public void setCurrentRegister(int currentRegister) {this.currentRegister = currentRegister;}
-    public void resetCurrentRegister() {this.currentRegister = 2;}
+    public void resetCurrentRegister() {
+        if (currentRegister > maxRegister)
+            setMaxRegister(currentRegister);
+        this.currentRegister = 2;
+    }
 
     public void increaseRegister(){
         currentRegister++;
@@ -111,6 +115,10 @@ public class Stack {
             setMaxRegister(currentRegister);
         currentRegister--;
 
+    }
+
+    public void resetMaxRegister() {
+        maxRegister = 0;
     }
 
     public int getNumberOfRegisters() {
