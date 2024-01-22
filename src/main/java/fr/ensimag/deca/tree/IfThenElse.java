@@ -7,7 +7,6 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
-import java.util.List;
 
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
@@ -26,7 +25,7 @@ public class IfThenElse extends AbstractInst {
     
     private final AbstractExpr condition; 
     private final ListInst thenBranch;
-    private ListInst elseBranch;
+    private final ListInst elseBranch;
 
     public IfThenElse(AbstractExpr condition, ListInst thenBranch, ListInst elseBranch) {
         Validate.notNull(condition);

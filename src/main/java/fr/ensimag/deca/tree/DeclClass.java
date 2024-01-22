@@ -178,7 +178,6 @@ public class DeclClass extends AbstractDeclClass {
                 compiler.addInstruction(new LOAD(new RegisterOffset(-2, Register.LB), Register.R1));
                 compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(index, Register.R1)));
             }
-            compiler.getStack().pushRegister(compiler, Register.R1);
             Label initBSR = new Label("init." + this.superName.getName());
             compiler.getStack().increaseCounterTSTO(2);
             compiler.addInstruction(new BSR(initBSR));

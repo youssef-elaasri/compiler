@@ -11,8 +11,6 @@ import fr.ensimag.deca.tools.SymbolTable;
 
 public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
 
-    private Map<Integer, AbstractDeclMethod> indexMethodMap = new HashMap<Integer, AbstractDeclMethod>();
-
     //static int indexCounter = 0;
 
     @Override
@@ -45,7 +43,6 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
                 throw new ContextualError("Vous avez déclaré la méthode " + keySr + " plusieurs fois dans la classe !", meth.getLocation());
             }
             envExpr.getExpDefinitionMap().putAll(envExp.getExpDefinitionMap());
-            indexMethodMap.put(meth.getIndex(), meth);
         }
         return envExpr;
     }
