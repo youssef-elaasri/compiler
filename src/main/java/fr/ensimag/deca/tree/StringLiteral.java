@@ -28,7 +28,7 @@ public class StringLiteral extends AbstractStringLiteral {
 
     public StringLiteral(String value) {
         Validate.notNull(value);
-        this.value = value;
+        this.value = value.substring(1,value.length()-1);
     }
 
     @Override
