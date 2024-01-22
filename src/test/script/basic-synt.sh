@@ -20,7 +20,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 PATH=./src/test/script/launchers:"$PATH"
 
 
-echo "\033[33m Testing AST \033[0m"
 
 
 # exemple de définition d'une fonction

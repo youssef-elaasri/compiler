@@ -35,7 +35,11 @@ public class Instanceof extends AbstractExpr{
 
     @Override
     public void decompile(IndentPrintStream s) {
-
+        s.print("(");
+        this.expression.decompile(s);
+        s.print(" instanceof ");
+        typeIdent.decompile(s);
+        s.print(")");
     }
 
     @Override

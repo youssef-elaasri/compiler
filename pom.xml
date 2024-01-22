@@ -205,7 +205,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Interactive reading</id>
+                        <id>testing Interactive reading</id>
                         <configuration>
                             <executable>./src/test/script/test-interactive.sh</executable>
                             <!-- If we need to pass arguments :
@@ -220,7 +220,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Decompile</id>
+                        <id>testing Decompilation</id>
                         <configuration>
                             <executable>./src/test/script/test-decompile-sans-objets.sh</executable>
                             <!-- If we need to pass arguments :
@@ -265,7 +265,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Decompile classes</id>
+                        <id>Testing Decompilation of classes</id>
                         <configuration>
                             <executable>./src/test/script/test-class-decompile.sh</executable>
                             <!-- If we need to pass arguments :
@@ -280,7 +280,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Detecting errors</id>
+                        <id>Testing Errors detection</id>
                         <configuration>
                             <executable>./src/test/script/test-errors.sh</executable>
                             <!-- If we need to pass arguments :
@@ -295,7 +295,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>If else</id>
+                        <id>Testing If else</id>
                         <configuration>
                             <executable>./src/test/script/test-ifelse.sh</executable>
                             <!-- If we need to pass arguments :
@@ -320,9 +320,9 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Sans Object</id>
+                        <id>Testing Without Objects</id>
                         <configuration>
-                            <executable>./src/test/script/Sans-Objet-test.sh</executable>
+                            <executable>./src/test/script/test-general-sans-objet.sh</executable>
                         </configuration>
                         <phase>test</phase>
                         <goals>

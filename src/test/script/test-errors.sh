@@ -3,7 +3,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 PATH=./src/test/script/launchers:"$PATH"
 
 
-echo -e "\033[33mTesting Errors \033[0m"
 
 
 # tester l'erreur de definition de la meme classe 2 fois

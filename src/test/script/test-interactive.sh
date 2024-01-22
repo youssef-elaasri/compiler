@@ -19,7 +19,7 @@ if [ ! -f ./src/test/deca/codegen/interactive/readInt_test.ass ]; then
     exit 1
 fi
 
-resultat=$(echo 23.5 | ima ./src/test/deca/codegen/interactive/readInt_test.ass)  
+resultat=$(echo 23 | ima ./src/test/deca/codegen/interactive/readInt_test.ass)  
 rm -f ./src/test/deca/codegen/interactive/readInt_test.ass
 
 # On code en dur la valeur attendue.
@@ -38,7 +38,7 @@ if [ ! -f ./src/test/deca/codegen/interactive/readFloat_test.ass ]; then
     exit 1
 fi
 
-resultat=$(echo 3 | ima ./src/test/deca/codegen/interactive/readFloat_test.ass)  
+resultat=$(echo 3.5 | ima ./src/test/deca/codegen/interactive/readFloat_test.ass)  
 rm -f ./src/test/deca/codegen/interactive/readFloat_test.ass
 
 # On code en dur la valeur attendue.
@@ -51,4 +51,4 @@ if [ "$resultat" != "$attendu" ]; then
 fi
 
 
-echo "\033[32mPASSED\033[0m"
+echo -e "\033[32mPASSED\033[0m"

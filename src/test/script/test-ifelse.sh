@@ -11,7 +11,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo   "\033[33mTesting ifelse\033[0m"
 
 expected_text="\[3, 4\] IfThenElse"
 

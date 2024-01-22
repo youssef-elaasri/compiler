@@ -3,7 +3,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo   "\033[33mTesting lexicography\033[0m"
 
 
 
@@ -595,4 +594,4 @@ fi
 
 
 
-echo "\033[32mPASSED\033[0m"
+echo -e "\033[32mPASSED\033[0m"

@@ -21,7 +21,6 @@ RED='\e[0;31m'
 GREEN='\e[0;32m'
 RESET='\e[0m'
 
-echo "\033[33mTesting Lexer synthax\033[0m"
 
 # Testing  synthax
 if ! test_lex "./src/test/deca/syntax/valid/provided/Synthax_test.deca" 2>&1 | \

@@ -12,7 +12,6 @@ cd "$(dirname "$0")"/../../..
 
 PATH=./src/test/script/launchers:./src/main/bin:"$PATH"
 
-echo "\033[33mTesting Code generation\033[0m"
 
 
 
