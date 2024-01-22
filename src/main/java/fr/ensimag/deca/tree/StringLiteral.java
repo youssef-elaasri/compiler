@@ -28,7 +28,12 @@ public class StringLiteral extends AbstractStringLiteral {
 
     public StringLiteral(String value) {
         Validate.notNull(value);
-        this.value = value.substring(1,value.length()-1);
+        if (value.startsWith("\"")){
+            this.value = value.substring(1,value.length()-1);
+        }
+        else {
+            this.value  = value ;
+        }
     }
 
     @Override
