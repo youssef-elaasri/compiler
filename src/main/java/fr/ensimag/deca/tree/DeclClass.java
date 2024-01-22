@@ -182,7 +182,6 @@ public class DeclClass extends AbstractDeclClass {
             }
         }
         else {
-            ImmediateInteger TSTOimmediateInteger = new ImmediateInteger(className.getClassDefinition().getNumberOfFields() - superName.getClassDefinition().getNumberOfFields() + 1);
 
 
             for (AbstractDeclField abstractDeclField : listField.getList()) {

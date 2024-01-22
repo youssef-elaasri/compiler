@@ -6,6 +6,10 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
@@ -69,5 +73,18 @@ public class Cast extends AbstractExpr {
             }
         }
         return true;
+    }
+
+    @Override
+    public void codeGenInst(DecacCompiler compiler) {
+        expression.codeGenInst(compiler);
+        compiler.addInstruction(new LEA(
+                type.getDefinition().getOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister())
+        ));
+        compiler.addInstruction(new STORE(
+                Register.getR(compiler.getStack().getCurrentRegister()),
+                new RegisterOffset(0,  Register.getR(compiler.getStack().getCurrentRegister()-1))
+        ));
     }
 }
