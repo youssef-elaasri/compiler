@@ -32,7 +32,6 @@ public class And extends AbstractOpBool {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         int i = counter;
-        increaseCounter();
         // Create labels for the end of the AND operation, true condition, and false condition
         Label isFalse = new Label("is_false_"+i);
         Label isTrue = new Label("is_true_"+i);
@@ -61,16 +60,6 @@ public class And extends AbstractOpBool {
 
         // Add the label for the end of the AND operation
         compiler.addLabel(endAnd);
-    }
-
-    /**
-     * Increases the counter by 1.
-     * This method overrides the corresponding method in the parent class or interface.
-     * It is used to increment the value of the 'counter' variable by 1.
-     */
-    @Override
-    public void increaseCounter() {
-        counter++;
     }
 
 
