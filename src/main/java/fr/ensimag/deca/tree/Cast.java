@@ -61,7 +61,7 @@ public class Cast extends AbstractExpr {
         if (type1.isVoid()) {
             throw new ContextualError("Can not cast a void type !", this.getLocation());
         }
-        if (!assignCompatible(compiler, type1, type2) && !assignCompatible(compiler, type2, type1)) {
+        if (assignCompatible(compiler, type1, type2) && assignCompatible(compiler, type2, type1)) {
             throw new ContextualError("Can not cast " + type1.getName() + " to " + type2.getName() + " !", this.getLocation());
         }
     }
@@ -72,7 +72,7 @@ public class Cast extends AbstractExpr {
                 throw new ContextualError( "Can not cast " + type1.getName() + " to " + type2.getName() + " !", this.getLocation());
             }
         }
-        return true;
+        return false;
     }
 
     @Override

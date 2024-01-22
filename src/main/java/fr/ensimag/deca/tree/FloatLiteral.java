@@ -12,7 +12,6 @@ import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
 import fr.ensimag.ima.pseudocode.instructions.WFLOATX;
-import fr.ensimag.ima.pseudocode.instructions.WINT;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -27,7 +26,7 @@ public class FloatLiteral extends AbstractExpr {
         return value;
     }
 
-    private float value;
+    private final float value;
 
     public FloatLiteral(float value) {
         Validate.isTrue(!Float.isInfinite(value),

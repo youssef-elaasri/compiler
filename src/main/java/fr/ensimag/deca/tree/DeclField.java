@@ -2,19 +2,16 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.*;
-import fr.ensimag.deca.context.EnvironmentExp.DoubleDefException;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 
 public class DeclField extends AbstractDeclField{
     final private Visibility visibility;
     final private AbstractIdentifier type;
     final private AbstractIdentifier fieldName;
     final private AbstractInitialization initialization;
-    private int offset;
 
 
 
@@ -32,13 +29,6 @@ public class DeclField extends AbstractDeclField{
     public AbstractIdentifier getFieldName() {
         return fieldName;
     }
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
 
     public AbstractInitialization getInitialization() {
         return initialization;
@@ -46,7 +36,7 @@ public class DeclField extends AbstractDeclField{
 
     @Override
     public void decompile(IndentPrintStream s) {
-        // this.visib.decompile...
+
         if(visibility==Visibility.PROTECTED){
             s.print("protected");
         }
