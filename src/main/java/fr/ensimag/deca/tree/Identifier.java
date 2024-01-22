@@ -9,10 +9,8 @@ import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
-import fr.ensimag.ima.pseudocode.instructions.LEA;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
 
 /**
  * Deca Identifier
@@ -37,7 +35,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * ClassDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -59,7 +56,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * MethodDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -81,7 +77,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * FieldDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -103,7 +98,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * VariableDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -124,7 +118,6 @@ public class Identifier extends AbstractIdentifier {
 
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a ExpDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -148,7 +141,7 @@ public class Identifier extends AbstractIdentifier {
         this.definition = definition;
     }
 
-    private Symbol name;
+    private final Symbol name;
 
     @Override
     public Symbol getName() {
