@@ -21,7 +21,9 @@ public class Print extends AbstractPrint {
     public void decompile(IndentPrintStream s) {
         String st = this.getPrintHex() ? "printx(" : "print(";
         s.print(st);
+        s.print('"');
         this.getArguments().decompile(s);
+        s.print('"');
         s.print(");");
     }
 

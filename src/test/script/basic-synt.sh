@@ -45,14 +45,14 @@ done
 # Testing  println tree
 
 if ! test_synt src/test/deca/syntax/valid/provided/helloWorld.deca 2>&1 | \
-    grep -q -e '\[2, 12\] StringLiteral ("hello world")'
+    grep -q  "\[2, 12\] StringLiteral (hello world)"
 then
     echo "FAILED"
     exit 1
 fi
 
 if ! test_synt src/test/deca/syntax/valid/provided/test_declaration_int.deca 2>&1 | \
-    grep -q '\[9, 4\] Assign'
+    grep -q '\[9, 5\] Assign'
 then
     echo "FAILED"
     exit 1
@@ -60,7 +60,7 @@ fi
 
 
 if ! test_synt src/test/deca/syntax/valid/provided/affectationCompatible.deca 2>&1 | \
-    grep -q -e "\[4, 4\] Assign"
+    grep -q -e "\[4, 5\] Assign"
 then
     echo "FAILED"
     exit 1

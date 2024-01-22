@@ -28,7 +28,9 @@ public class Println extends AbstractPrint {
     public void decompile(IndentPrintStream s) {
         String st = this.getPrintHex() ? "printlnx(" : "println(";
         s.print(st);
+        s.print('"');
         this.getArguments().decompile(s);
+        s.print('"');
         s.print(");");
     }
 

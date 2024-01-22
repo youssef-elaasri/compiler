@@ -309,6 +309,21 @@
                             <goal>exec</goal>
                         </goals>
                     </execution>
+                     <execution>
+                        <id>Testing AST of Objects </id>
+                        <configuration>
+                            <executable>./src/test/script/test-general-ast.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>basic-synt</id>
                         <configuration>
