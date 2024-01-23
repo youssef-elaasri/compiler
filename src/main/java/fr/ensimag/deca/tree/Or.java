@@ -11,8 +11,6 @@ import fr.ensimag.ima.pseudocode.Label;
  */
 public class Or extends AbstractOpBool {
 
-    private static int counter = 0;
-
     public Or(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -43,10 +41,5 @@ public class Or extends AbstractOpBool {
     @Override
     public void checkAliveVariables() {
         // nothing to do
-    }
-
-    @Override
-    public void increaseCounter() {
-        counter++;
     }
 }

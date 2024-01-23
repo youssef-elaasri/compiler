@@ -35,6 +35,10 @@ public class EnvironmentExp {
         return expDefinitionMap;
     }
 
+    public void setParentEnvironment(EnvironmentExp parentEnvironment) {
+        this.parentEnvironment = parentEnvironment;
+    }
+
     public EnvironmentExp(EnvironmentExp parentEnvironment) {
         this.parentEnvironment = parentEnvironment;
     }
@@ -63,6 +67,10 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
         return definition;
     }
 
+    public ExpDefinition getInCurrentEnv(Symbol key) {
+        return expDefinitionMap.get(key);
+    }
+
     /**
      * Add the definition def associated to the symbol name in the environment.
      * 
@@ -78,12 +86,13 @@ chaque identificateur sa définition, lorsque celle-ci est instance de ExpDefini
      *             if the symbol is already defined at the "current" dictionary
      *
      */
-    public void declare(Symbol name, ExpDefinition def) throws DoubleDefException {
-        if (expDefinitionMap.containsKey(name)) {
-            throw new DoubleDefException("Symbol " + name + "is already defined in the environment.");
-        }
+    public void declare(Symbol name, ExpDefinition def) {
         expDefinitionMap.put(name, def);
-
     }
+
+    public void setExpDefinitionMap(Map<Symbol, ExpDefinition> expDefinitionMap) {
+        this.expDefinitionMap = new HashMap<>(expDefinitionMap);
+    }
+
 
 }

@@ -6,6 +6,8 @@ import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BGE;
 import fr.ensimag.ima.pseudocode.instructions.BGT;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.SGE;
 
 /**

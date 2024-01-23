@@ -15,53 +15,72 @@ import java.io.PrintStream;
 import java.util.HashSet;
 
 public class New extends AbstractExpr{
-    AbstractIdentifier classNanme;
-
+    AbstractIdentifier className;
     public New(AbstractIdentifier abstractIdentifier){
         super();
-        classNanme = abstractIdentifier;
+        className = abstractIdentifier;
     }
 
 
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
-        return null;
+        Type classType = className.verifyType(compiler);
+        if (!classType.isClass()){
+            throw new ContextualError("The type " + classType + " is not a class type", this.getLocation());
+        }
+        this.setType(classType);
+        return classType;
     }
-
     @Override
     public void decompile(IndentPrintStream s) {
+        s.print("new ");
+        className.decompile(s);
+        s.print("()");
 
     }
 
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
+        className.prettyPrint(s, prefix, true);
 
+        
     }
+
+
 
     @Override
     protected void iterChildren(TreeFunction f) {
+        className.iter(f);
 
     }
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         compiler.addInstruction(new NEW(
-                compiler.getClassManager().get(classNanme).getListField().getList().size(),
+                compiler.getClassManager().get(className).getClassName().getClassDefinition().getNumberOfFields() + 1,
                 Register.getR(compiler.getStack().getCurrentRegister())
         ));
         compiler.addInstruction(new BOV(compiler.getErrorHandler().addFullStack()));
         compiler.addInstruction(
-                new LEA(compiler.getClassManager().get(classNanme).getClassName().getExpDefinition().getOperand(),
+                new LEA(compiler.getClassManager().get(className).getClassName().getClassDefinition().getOperand(),
                 Register.R0
                 ));
         compiler.addInstruction(
                 new STORE(Register.R0,new RegisterOffset(0,
                         Register.getR(compiler.getStack().getCurrentRegister()))
                 ));
+        compiler.addInstruction(new PUSH(
+                Register.getR(compiler.getStack().getCurrentRegister()
+        )));
+        compiler.getStack().increaseCounterTSTO(3);
         compiler.addInstruction(
                 new BSR(new Label("init."
-                        + compiler.getClassManager().get(classNanme).getClassName().getName())
+                        + compiler.getClassManager().get(className).getClassName().getName())
                 ));
+        compiler.addInstruction(new POP(
+                Register.getR(compiler.getStack().getCurrentRegister()
+                )));
+        compiler.getStack().decreaseCounterTSTO(3);
 
         compiler.getStack().increaseRegister();
     }

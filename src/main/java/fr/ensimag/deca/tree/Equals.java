@@ -3,9 +3,9 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.*;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.*;
-
-import java.util.Random;
 
 /**
  *

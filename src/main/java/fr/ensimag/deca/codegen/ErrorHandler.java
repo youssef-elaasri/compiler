@@ -52,7 +52,15 @@ public class ErrorHandler {
     public Label addDivisionByZero(){
         Label label = new Label("division_by_zero");
         errors.putIfAbsent(
-                "\"Error: Division by Zero\"",
+                "Error: Division by Zero",
+                label
+                );
+        return label;
+    }
+
+    public Label addDereferencingNull() {
+        Label label = new Label("dereferencing.null");
+        errors.putIfAbsent("\"Error: dereferencing null\"",
                 label
                 );
         return label;

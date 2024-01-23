@@ -53,7 +53,7 @@ public class ClassType extends Type {
 // TODO
     @Override
     public boolean sameType(Type otherType) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return otherType.isClass();
     }
 
     /**
@@ -61,7 +61,21 @@ public class ClassType extends Type {
      */
     // TODO
     public boolean isSubClassOf(ClassType potentialSuperClass) {
-        throw new UnsupportedOperationException("not yet implemented"); 
+        if (potentialSuperClass.getName().equals(this.getName()))
+            return true;
+        if (potentialSuperClass.getName().toString().equals("Object")) {
+            return true;
+        }
+        ClassType realSuperClass =  this.getDefinition().getSuperClass().getType();
+        if(realSuperClass.getName().equals(potentialSuperClass.getName())) {
+            return true;
+        }
+        //here we verify if the realSuperClass is Object or not
+        if ((realSuperClass.getDefinition().getSuperClass() != null &&
+                realSuperClass.isSubClassOf(potentialSuperClass))) {
+            return true;
+        }
+        return false;
     }
 
 

@@ -124,6 +124,14 @@ public abstract class AbstractIdentifier extends AbstractLValue {
      */
     public abstract Type verifyType(DecacCompiler compiler) throws ContextualError;
 
+    public Visibility getVisibility(DecacCompiler compiler) {
+        SymbolTable.Symbol publicVisib = compiler.createSymbol("PUBLIC");
+        SymbolTable.Symbol protectedVisib = compiler.createSymbol("PROTECTED");
+        if (this.getName().equals(publicVisib)) {
+            return Visibility.PUBLIC;
+        }
+        return Visibility.PROTECTED;
+    }
 
     @Override
     public int hashCode() {
@@ -133,7 +141,8 @@ public abstract class AbstractIdentifier extends AbstractLValue {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AbstractIdentifier)
-            return ((AbstractIdentifier) obj).getName() == getName();
-        return super.equals(obj);
+            return ((AbstractIdentifier) obj).getName().equals(getName());
+        return false;
     }
+
 }

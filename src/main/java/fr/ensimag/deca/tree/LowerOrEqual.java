@@ -5,6 +5,8 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BLE;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.SLE;
 
 /**
@@ -13,8 +15,6 @@ import fr.ensimag.ima.pseudocode.instructions.SLE;
  * @date 01/01/2024
  */
 public class LowerOrEqual extends AbstractOpIneq {
-
-    private static int counter = 0;
     public LowerOrEqual(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
     }

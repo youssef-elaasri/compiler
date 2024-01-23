@@ -43,4 +43,6 @@ public abstract class AbstractDeclVar extends Tree {
 
     public abstract void ConstantFoldingAndPropagation(DecacCompiler compiler);
 
+    public abstract void codeGenMethods(DecacCompiler compiler);
+
 }

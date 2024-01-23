@@ -8,10 +8,9 @@ result_file="./src/test/deca/syntax/valid/provided/decompile_results/decompile_r
 result_file2="./src/test/deca/syntax/valid/provided/decompile_results/decompile_result2.deca"
 
 
-echo -e "\033[33mTesting Decompile\033[0m"
 
 # tester la decompilation de print,println
-input_file="./src/test/deca/syntax/valid/provided/test_include_decompile.deca"
+input_file="./src/test/deca/syntax/valid/provided/test_includeMyFILE.deca"
 decac -p "$input_file" > "$result_file"
 decac -p "$result_file" > "$result_file2"
 

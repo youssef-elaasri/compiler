@@ -46,9 +46,9 @@ public abstract class AbstractExpr extends AbstractInst {
 
     @Override
     protected void checkDecoration() {
-//        if (getType() == null) {
-//            throw new DecacInternalError("Expression " + decompile() + " has no Type decoration");
-//        }
+        if (getType() == null) {
+            throw new DecacInternalError("Expression " + decompile() + " has no Type decoration");
+        }
     }
 
     /**
@@ -88,9 +88,10 @@ public abstract class AbstractExpr extends AbstractInst {
             Type expectedType)
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
+
         Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
         if (!(expectedType.isFloat() && currentType.isInt())) {
-            if (!(currentType.getClass().isAssignableFrom(expectedType.getClass()))) {
+            if (!(currentType.isSubType(compiler.environmentType, expectedType))) {
                 throw new ContextualError("assign_compatible condition in rvalue no-terminal fails !: Trying to assign " + currentType + " to " + expectedType, this.getLocation());
             }
         }
@@ -99,6 +100,7 @@ public abstract class AbstractExpr extends AbstractInst {
             convF.verifyExpr(compiler, localEnv, currentClass);
             return convF;
         }
+        this.setType(currentType);
         return this;
     }
     
@@ -212,6 +214,9 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     protected DVal getDval(AbstractExpr expr) {
         if (expr instanceof Identifier) {
+            if (((Identifier) expr).getDefinition().isField()) {
+                return null;
+            }
 
             return ((Identifier) expr).getExpDefinition().getOperand();
 

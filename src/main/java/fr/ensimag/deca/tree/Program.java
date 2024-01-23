@@ -1,8 +1,6 @@
 package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
-import fr.ensimag.deca.codegen.ErrorHandler;
-import fr.ensimag.deca.codegen.Stack;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.ImmediateInteger;
@@ -35,14 +33,19 @@ public class Program extends AbstractProgram {
     public AbstractMain getMain() {
         return main;
     }
-    private ListDeclClass classes;
-    private AbstractMain main;
+    private final ListDeclClass classes;
+    private final AbstractMain main;
 
     @Override
     public void verifyProgram(DecacCompiler compiler) throws ContextualError {
         LOG.debug("verify program: start");
         //throw new UnsupportedOperationException("not yet implemented");
+        /* Passe 1*/
         classes.verifyListClass(compiler);
+        /* Passe 2*/
+        classes.verifyListClassMembers(compiler);
+        /*Passe 3*/
+        classes.verifyListClassBody(compiler);
         main.verifyMain(compiler);
         LOG.debug("verify program: end");
     }
@@ -93,6 +96,9 @@ public class Program extends AbstractProgram {
         // Halt the program execution
         compiler.addInstruction(new HALT());
 
+        // Update TSTO and SP values based on stack information
+        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
+        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
 
 
         // Classes constructors
@@ -101,6 +107,7 @@ public class Program extends AbstractProgram {
         compiler.addComment("                  Constructors                    ");
         compiler.addComment("--------------------------------------------------");
         classes.codeGenInitListDeclClass(compiler);
+        classes.codeGenMethods(compiler);
 
 
         // Object.equals
@@ -109,10 +116,6 @@ public class Program extends AbstractProgram {
 
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
-
-        // Update TSTO and SP values based on stack information
-        TSTOimmediateInteger.setValue(Math.max(compiler.getStack().getMaxTSTO(), compiler.getStack().getCounterTSTO()));
-        SPimmediateInteger.setValue(compiler.getStack().getAddrCounter()-1);
     }
 
 
@@ -145,7 +148,30 @@ public class Program extends AbstractProgram {
 
     private void putObjectDotEquals(DecacCompiler compiler){
         compiler.addLabel(equalsLabel);
-        //TODO complete this
+        compiler.addInstruction(new LOAD(
+                new RegisterOffset(-2, Register.LB),
+                Register.R0
+        ));
+        compiler.addInstruction(new CMP(
+                new RegisterOffset(-3,Register.LB),
+                Register.R0
+        ));
+        compiler.addInstruction(new SEQ(Register.R0));
         compiler.addInstruction(new RTS());
     }
+
+    /**
+     * Sets the operand method by loading the given method label into a register,
+     * storing it in the method block on the stack, and updating the stack's address counter.
+     *
+     * @param compiler     The DecacCompiler instance for compilation.
+     * @param methodLabel  The label representing the method to set as the operand.
+     */
+    public static void setOperandMethod(DecacCompiler compiler, Label methodLabel){
+        compiler.addInstruction(new LOAD(methodLabel, Register.R0));
+        compiler.addInstruction(new STORE(Register.R0, new RegisterOffset(compiler.getStack().getAddrCounter(),Register.GB)));
+        compiler.getStack().increaseAddrCounter();
+        compiler.getStack().increaseCounterTSTO();
+    }
+
 }

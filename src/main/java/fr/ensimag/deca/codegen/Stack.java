@@ -25,6 +25,8 @@ public class Stack {
     private int counterTSTO;
     private int currentRegister;
 
+    private int maxRegister;
+
     /**
      * The Stack constructor initializes stack-related variables.
      * It sets the maximum TSTO to 1, the counter TSTO to 1, and the current register to 2.
@@ -32,8 +34,8 @@ public class Stack {
      */
     public Stack(){
 
-        maxTSTO = 1;
-        counterTSTO = 1;
+        maxTSTO = 0;
+        counterTSTO = 0;
         currentRegister = 2;
     }
 
@@ -43,6 +45,8 @@ public class Stack {
     public void increaseTSTO(){
         maxTSTO++;
     }
+
+
 
     /**
      * Returns the current maximum TSTO value.
@@ -87,12 +91,15 @@ public class Stack {
         addrCounter++;
     }
 
-    public void decreaseAddrCounter(){
-        addrCounter--;
-    }
-
     public int getCurrentRegister(){
         return currentRegister;
+    }
+
+    public void setCurrentRegister(int currentRegister) {this.currentRegister = currentRegister;}
+    public void resetCurrentRegister() {
+        if (currentRegister > maxRegister)
+            setMaxRegister(currentRegister);
+        this.currentRegister = 2;
     }
 
     public void increaseRegister(){
@@ -100,7 +107,18 @@ public class Stack {
     }
 
     public void decreaseRegister(){
+        if (currentRegister == 0) {
+            System.err.println("Error: The expression exceeds the available register capacity.");
+            System.exit(1);
+        }
+        if (currentRegister > maxRegister)
+            setMaxRegister(currentRegister);
         currentRegister--;
+
+    }
+
+    public void resetMaxRegister() {
+        maxRegister = 0;
     }
 
     public int getNumberOfRegisters() {
@@ -110,11 +128,19 @@ public class Stack {
     public void increaseCounterTSTO() {
         counterTSTO++;
     }
-
+    public void increaseCounterTSTO(int i) {
+        counterTSTO += i;
+    }
     public void decreaseCounterTSTO() {
         if (getCounterTSTO() > getMaxTSTO())
             setMaxTSTO(getCounterTSTO());
         counterTSTO--;
+    }
+
+    public void decreaseCounterTSTO(int i) {
+        if (getCounterTSTO() > getMaxTSTO())
+            setMaxTSTO(getCounterTSTO());
+        counterTSTO -= i;
     }
 
     /**
@@ -125,9 +151,13 @@ public class Stack {
     public void pushRegister(DecacCompiler compiler){
         compiler.getStack().decreaseRegister();
         compiler.addInstruction(new PUSH(Register.getR(compiler.getStack().getCurrentRegister())));
-        increaseCounterTSTO();
     }
 
+    public void pushRegister(DecacCompiler compiler, Register R) {
+        compiler.getStack().setCurrentRegister(1);
+        compiler.addInstruction(new PUSH(R));
+        increaseCounterTSTO();
+    }
 
     /**
      * Pops the current register from the stack and decreases the counter TSTO.
@@ -140,4 +170,20 @@ public class Stack {
         decreaseCounterTSTO();
     }
 
+    public void resetTSTO() {
+        counterTSTO = 0;
+        maxTSTO = 0;
+    }
+
+    public void resetAddrCounter() {
+        addrCounter = 1;
+    }
+
+    public void setMaxRegister(int maxRegister) {
+        this.maxRegister = maxRegister;
+    }
+
+    public int getMaxRegister() {
+        return maxRegister;
+    }
 }

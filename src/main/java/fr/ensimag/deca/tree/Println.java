@@ -2,7 +2,6 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.instructions.WNL;
 
 /**
@@ -47,7 +46,9 @@ public class Println extends AbstractPrint {
     public void decompile(IndentPrintStream s) {
         String st = this.getPrintHex() ? "printlnx(" : "println(";
         s.print(st);
+        s.print('"');
         this.getArguments().decompile(s);
+        s.print('"');
         s.print(");");
     }
 

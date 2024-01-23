@@ -67,6 +67,23 @@ public abstract class Type {
     public boolean isClassOrNull() {
         return false;
     }
+    /**
+     * Verifiying if a type is a SubType of another Type
+     * @param env
+     * @param T
+     * @return
+     */
+    public boolean isSubType(EnvironmentType env, Type T){
+        if (T.isClass() && this.isNull()) {return true;}
+
+        if (this.sameType(T)) {
+            if (this.isClass()) {
+                return ((ClassType) this).isSubClassOf((ClassType) T);
+            }
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Returns the same object, as type ClassType, if possible. Throws
@@ -77,6 +94,9 @@ public abstract class Type {
      */
     public ClassType asClassType(String errorMessage, Location l)
             throws ContextualError {
+        if (this.isNull()) {
+            return (ClassType) this;
+        }
         throw new ContextualError(errorMessage, l);
     }
 

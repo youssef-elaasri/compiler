@@ -9,10 +9,9 @@ import java.io.PrintStream;
 import java.util.HashSet;
 
 import fr.ensimag.ima.pseudocode.Register;
-import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
 
 /**
  * Deca Identifier
@@ -37,7 +36,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * ClassDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -59,7 +57,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * MethodDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -81,7 +78,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * FieldDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -103,7 +99,6 @@ public class Identifier extends AbstractIdentifier {
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a
      * VariableDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -124,7 +119,6 @@ public class Identifier extends AbstractIdentifier {
 
     /**
      * Like {@link #getDefinition()}, but works only if the definition is a ExpDefinition.
-     * 
      * This method essentially performs a cast, but throws an explicit exception
      * when the cast fails.
      * 
@@ -148,7 +142,7 @@ public class Identifier extends AbstractIdentifier {
         this.definition = definition;
     }
 
-    private Symbol name;
+    private final Symbol name;
 
     @Override
     public Symbol getName() {
@@ -170,12 +164,11 @@ public class Identifier extends AbstractIdentifier {
         if (expDefinition == null){
             throw new ContextualError("Expression " + "'" + name + "'" + " is not defined in the local environment", this.getLocation());
         }
-        else{
-            this.setDefinition(expDefinition);
-            Type typeId = expDefinition.getType();
-            this.setType(typeId);
-            return typeId;
-        }
+        this.setDefinition(expDefinition);
+        Type typeId = expDefinition.getType();
+        this.setType(typeId);
+
+        return typeId;
     }
 
     /**
@@ -191,6 +184,8 @@ public class Identifier extends AbstractIdentifier {
         if (tDef.getType() == null) {
             throw new ContextualError("Name: "+ name +" is undefined !", this.getLocation());
         }
+        this.setDefinition(tDef);
+        this.setType(tDef.getType());
         return tDef.getType();
     }
 
@@ -253,7 +248,18 @@ public class Identifier extends AbstractIdentifier {
      */
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        if (getDefinition().isField()) {
+            compiler.addInstruction(new LOAD(
+                    new RegisterOffset(-2,Register.LB),
+                    Register.getR(compiler.getStack().getCurrentRegister()
+            )));
+            compiler.addInstruction(new LOAD(
+                    new RegisterOffset(getFieldDefinition().getIndex(), Register.getR(compiler.getStack().getCurrentRegister()))
+                    , Register.getR(compiler.getStack().getCurrentRegister())));
+        }
+        else {
+            compiler.addInstruction(new LOAD(getExpDefinition().getOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
+        }
         compiler.getStack().increaseRegister();
     }
 

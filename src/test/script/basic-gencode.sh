@@ -12,7 +12,6 @@ cd "$(dirname "$0")"/../../..
 
 PATH=./src/test/script/launchers:./src/main/bin:"$PATH"
 
-echo "\033[33mTesting Code generation\033[0m"
 
 
 
@@ -162,7 +161,7 @@ fi
 
 
 
-# Tester 
+# Tester AND et OR
 
 rm -f src/test/deca/context/valid/provided/test_AND.ass 2>/dev/null
 decac src/test/deca/context/valid/provided/test_AND.deca 
@@ -183,6 +182,7 @@ if [ "$resultat" != "$attendu" ]; then
     exit 1
 fi
 
+# Tester le declenchement d'erreure d'une division par 0
 
 rm -f src/test/deca/codegen/invalid/zeroDivision.ass 2>/dev/null
 decac src/test/deca/codegen/invalid/zeroDivision.deca  
@@ -202,12 +202,10 @@ if [ "$resultat" != "$attendu" ]; then
     echo "expected $attendu but got instead $resultat"
     exit 1
 fi
-
+# Tester le declenchement d'erreure d'un debordement de flaot
 
 decac src/test/deca/codegen/invalid/floatOverflow.deca
 
-# On code en dur la valeur attendue.
-attendu="the float may be too long or invalid"
 
 if ! decac src/test/deca/codegen/invalid/floatOverflow.deca  2>&1 | grep -q  "Invalid float" ; then
     echo "FAILED"

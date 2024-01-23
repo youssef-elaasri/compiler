@@ -43,16 +43,34 @@ public class EnvironmentType {
         Symbol stringSymb = compiler.createSymbol("string");
         STRING = new StringType(stringSymb);
         // not added to envTypes, it's not visible for the user.
+
+        Symbol nullSymb = compiler.createSymbol("null");
+        NULL = new NullType(nullSymb);
+        // not added to envTypes, it's not visible for the user.
+
         Symbol objectSymb = compiler.createSymbol("Object");
         OBJECT = new ClassType(objectSymb, Location.BUILTIN,null);
-        ClassDefinition objectDef = new ClassDefinition(OBJECT,Location.BUILTIN, null);
+        ClassDefinition objectDef = OBJECT.getDefinition();
+        objectDef.incNumberOfMethods();
+        Signature equalsSig = new Signature();
+        equalsSig.add(OBJECT);
+        /*Here we consider that the index of the first method is 0 and not 1*/
+        MethodDefinition equalsMeth = new MethodDefinition(BOOLEAN, Location.BUILTIN, equalsSig, 0);
+        Symbol equalsSymb = compiler.createSymbol("equals");
+        objectDef.getMembers().declare(equalsSymb, equalsMeth);
         envTypes.put(objectSymb, objectDef);
+
+        
     }
 
     public void declareClass(AbstractIdentifier id, ClassDefinition superClass) {
         ClassType classType = new ClassType(id.getName(), id.getLocation(), superClass);
-        TypeDefinition classDef = new ClassDefinition(classType, id.getLocation(), superClass);
+        TypeDefinition classDef = classType.getDefinition();
         envTypes.put(id.getName(), classDef);
+    }
+
+    public void put(Symbol symb, TypeDefinition typeD) {
+        envTypes.put(symb, typeD);
     }
 
     public TypeDefinition defOfType(Symbol s) {
@@ -64,5 +82,7 @@ public class EnvironmentType {
     public final FloatType   FLOAT;
     public final StringType  STRING;
     public final BooleanType BOOLEAN;
+    public final NullType NULL;
     public final ClassType OBJECT;
+
 }

@@ -15,27 +15,57 @@ import org.apache.commons.lang.Validate;
  */
 public abstract class AbstractBinaryExpr extends AbstractExpr {
 
+
+/**
+ * The function returns the left operand of an abstract expression.
+ * 
+ * @return The method is returning the left operand of an abstract expression.
+ */
     public AbstractExpr getLeftOperand() {
         return leftOperand;
     }
 
+/**
+ * The function returns the right operand of an abstract expression.
+ * 
+ * @return The method is returning the right operand of an abstract expression.
+ */
     public AbstractExpr getRightOperand() {
         return rightOperand;
     }
 
+/**
+ * The function sets the left operand of an expression and validates that it is not null.
+ * 
+ * @param leftOperand The `leftOperand` parameter is of type `AbstractExpr`, which is an abstract class
+ * representing an expression.
+ */
     protected void setLeftOperand(AbstractExpr leftOperand) {
         Validate.notNull(leftOperand);
         this.leftOperand = leftOperand;
     }
 
+/**
+ * The function sets the right operand of an abstract expression and validates that it is not null.
+ * 
+ * @param rightOperand The rightOperand parameter is an instance of the AbstractExpr class.
+ */
     protected void setRightOperand(AbstractExpr rightOperand) {
         Validate.notNull(rightOperand);
         this.rightOperand = rightOperand;
     }
 
+
     private AbstractExpr leftOperand;
     private AbstractExpr rightOperand;
 
+    
+    /***
+     * Constructor of the class
+     * Validates that @param leftOperand abd @param rightOperand are not null.
+     * @param leftOperand
+     * @param rightOperand
+     */
     public AbstractBinaryExpr(AbstractExpr leftOperand,
             AbstractExpr rightOperand) {
         Validate.notNull(leftOperand, "left operand cannot be null");
@@ -45,7 +75,10 @@ public abstract class AbstractBinaryExpr extends AbstractExpr {
         this.rightOperand = rightOperand;
     }
 
-
+    /***
+     * Generate the decompiled version of the class
+     * @param s PrintStream variable
+     */
     @Override
     public void decompile(IndentPrintStream s) {
         s.print("(");

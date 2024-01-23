@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>8</java-version>
-        <jacoco.skip>true</jacoco.skip>
+        <jacoco.skip>false</jacoco.skip>
         <jacoco.report_dir>${project.build.directory}/site/jacoco</jacoco.report_dir>
     </properties>
 
@@ -205,9 +205,9 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Decompile</id>
+                        <id>testing Interactive reading</id>
                         <configuration>
-                            <executable>./src/test/script/decompile-test.sh</executable>
+                            <executable>./src/test/script/test-interactive.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -220,9 +220,114 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>If else</id>
+                        <id>testing Decompilation</id>
                         <configuration>
-                            <executable>./src/test/script/ifelse-test.sh</executable>
+                            <executable>./src/test/script/test-decompile-sans-objets.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Testing lexical grammar</id>
+                        <configuration>
+                            <executable>./src/test/script/test-general-lexer.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Testing reserved words</id>
+                        <configuration>
+                            <executable>./src/test/script/test-mots-reserves.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Testing Decompilation of classes</id>
+                        <configuration>
+                            <executable>./src/test/script/test-class-decompile.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Testing Errors detection</id>
+                        <configuration>
+                            <executable>./src/test/script/test-errors.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Testing If else</id>
+                        <configuration>
+                            <executable>./src/test/script/test-ifelse.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                     <execution>
+                        <id>Testing AST of Objects </id>
+                        <configuration>
+                            <executable>./src/test/script/test-general-ast.sh</executable>
+                            <!-- If we need to pass arguments :
+                                 <arguments>
+                                 <argument>...</argument>
+                                 </arguments>
+                            -->
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                     <execution>
+                        <id>Testing code generation for classes </id>
+                        <configuration>
+                            <executable>./src/test/script/test-class-gencode.sh</executable>
                             <!-- If we need to pass arguments :
                                  <arguments>
                                  <argument>...</argument>
@@ -245,9 +350,9 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>Sans Object</id>
+                        <id>Testing Without Objects</id>
                         <configuration>
-                            <executable>./src/test/script/Sans-Objet-test.sh</executable>
+                            <executable>./src/test/script/test-general-sans-objet.sh</executable>
                         </configuration>
                         <phase>test</phase>
                         <goals>
@@ -312,6 +417,16 @@
                         <id>classy-classes-test</id>
                         <configuration>
                             <executable>./src/test/script/unprovided_tests.sh</executable>
+                        </configuration>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>general-tests</id>
+                        <configuration>
+                            <executable>./src/test/script/general.sh</executable>
                         </configuration>
                         <phase>test</phase>
                         <goals>

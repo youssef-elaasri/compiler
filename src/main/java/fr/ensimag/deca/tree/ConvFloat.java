@@ -1,6 +1,6 @@
 package fr.ensimag.deca.tree;
 
-import fr.ensimag.deca.context.ContextualError;
+
 import fr.ensimag.deca.context.Type;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
@@ -44,7 +44,7 @@ public class ConvFloat extends AbstractUnaryExpr {
      */
 
     @Override
-    protected void codeGenInst(DecacCompiler compiler) {
+    public void codeGenInst(DecacCompiler compiler) {
 
         DVal dVal = getDval(getOperand());
         // Check if the operand is a constant (DVal)

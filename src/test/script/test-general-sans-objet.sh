@@ -2,7 +2,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 
 PATH=./src/test/script/launchers:"$PATH"
 
-echo  "\033[33mTesting Sans Object Sript \033[0m"
 
 rm -f ./src/test/deca/codegen/valid/provided/Sans-Objet.ass  2>/dev/null
 decac ./src/test/deca/codegen/valid/provided/Sans-Objet.deca || exit 1

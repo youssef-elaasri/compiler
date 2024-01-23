@@ -3,7 +3,6 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.NullOperand;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
@@ -43,14 +42,21 @@ public class ListDeclClass extends TreeList<AbstractDeclClass> {
      * Pass 2 of [SyntaxeContextuelle]
      */
     public void verifyListClassMembers(DecacCompiler compiler) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+        LOG.debug("verify listClassMembers: start");
+        for(AbstractDeclClass absClass: this.getList()){
+            absClass.verifyClassMembers(compiler);
+        }
+        LOG.debug("verify listClassMembers: end");
     }
     
     /**
      * Pass 3 of [SyntaxeContextuelle]
      */
     public void verifyListClassBody(DecacCompiler compiler) throws ContextualError {
-        throw new UnsupportedOperationException("not yet implemented");
+//        throw new UnsupportedOperationException("not yet implemented");
+        for (AbstractDeclClass declClass : this.getList()) {
+            declClass.verifyClassBody(compiler);
+        }
     }
 
     public void codeGenListDeclClass(DecacCompiler compiler) {
@@ -75,6 +81,12 @@ public class ListDeclClass extends TreeList<AbstractDeclClass> {
 
         for (AbstractDeclClass abstractDeclClass : getList()){
             abstractDeclClass.codeGenInitListDeclClass(compiler);
+        }
+    }
+
+    public void codeGenMethods(DecacCompiler compiler) {
+        for (AbstractDeclClass declClass : getList()) {
+            declClass.codeGenMethods(compiler);
         }
     }
 

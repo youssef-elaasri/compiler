@@ -2,7 +2,6 @@ package fr.ensimag.deca.tree;
 
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
-import fr.ensimag.ima.pseudocode.instructions.WNL;
 
 import java.util.HashSet;
 
@@ -23,7 +22,9 @@ public class Print extends AbstractPrint {
     public void decompile(IndentPrintStream s) {
         String st = this.getPrintHex() ? "printx(" : "print(";
         s.print(st);
+        s.print('"');
         this.getArguments().decompile(s);
+        s.print('"');
         s.print(");");
     }
 

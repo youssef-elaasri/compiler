@@ -78,6 +78,7 @@ public class CompilerOptions {
         return Collections.unmodifiableList(sourceFiles);
     }
 
+
     private int debug = 0;
     private boolean parallel = false;
     private boolean printBanner = false;

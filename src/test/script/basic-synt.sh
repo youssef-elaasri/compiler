@@ -20,7 +20,6 @@ cd "$(dirname "$0")"/../../.. || exit 1
 PATH=./src/test/script/launchers:"$PATH"
 
 
-echo "\033[33m Testing AST \033[0m"
 
 
 # exemple de définition d'une fonction
@@ -46,14 +45,14 @@ done
 # Testing  println tree
 
 if ! test_synt src/test/deca/syntax/valid/provided/helloWorld.deca 2>&1 | \
-    grep -q -e '\[2, 12\] StringLiteral ("hello world")'
+    grep -q  "\[2, 12\] StringLiteral (hello world)"
 then
     echo "FAILED"
     exit 1
 fi
 
 if ! test_synt src/test/deca/syntax/valid/provided/test_declaration_int.deca 2>&1 | \
-    grep -q '\[9, 4\] Assign'
+    grep -q '\[9, 5\] Assign'
 then
     echo "FAILED"
     exit 1
@@ -61,7 +60,7 @@ fi
 
 
 if ! test_synt src/test/deca/syntax/valid/provided/affectationCompatible.deca 2>&1 | \
-    grep -q -e "\[4, 4\] Assign"
+    grep -q -e "\[4, 5\] Assign"
 then
     echo "FAILED"
     exit 1
@@ -83,13 +82,7 @@ then
     exit 1
 fi
 
-# AST_file=src/test/deca/syntax/valid/provided/test_AND_AST.txt
-# result=$(test_synt src/test/deca/syntax/valid/provided/test_AND.deca)
 
-# if diff "$AST_file" "$result"  &> /dev/null;
-# then
-#     echo "FAILED"
-#     exit 1
-# fi
+
 
 echo "\033[32mPASSED\033[0m"
