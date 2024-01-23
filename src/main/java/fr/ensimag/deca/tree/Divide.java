@@ -81,6 +81,10 @@ public class Divide extends AbstractOpArith {
                 setLeftOperand(leftValue);
             if (rightValue != null)
                 setRightOperand(rightValue);
+            if (leftValue != null)
+                setLeftOperand(leftValue);
+            if (rightValue != null)
+                setRightOperand(rightValue);
             if (rightValue instanceof IntLiteral) {
                 if (leftValue instanceof IntLiteral) {
                     return new IntLiteral(((IntLiteral) leftValue).getValue() / ((IntLiteral) rightValue).getValue());

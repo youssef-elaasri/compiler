@@ -187,7 +187,8 @@ public class Assign extends AbstractBinaryExpr {
         AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
         if (rightValue != null) {
             setRightOperand(rightValue);
-            ((Identifier) getLeftOperand()).getExpDefinition().setValue(rightValue);
+            if (getLeftOperand() instanceof Identifier)
+                ((Identifier) getLeftOperand()).getExpDefinition().setValue(rightValue);
         }
         return null;
     }

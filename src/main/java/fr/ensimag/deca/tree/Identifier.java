@@ -226,6 +226,8 @@ public class Identifier extends AbstractIdentifier {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        if (getDefinition().isParam() || getDefinition().isField())
+            return null;
         return getExpDefinition().getValue();
     }
 

@@ -81,7 +81,11 @@ public class MethodBody extends Tree{
         compiler.addLabel(new Label("end." + className + "." + methodName));
         DeclClass.pushAndPopRegister(compiler, integer, myProgram, copyProgram);
     }
-    
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        listDeclVar.ConstantFoldingAndPropagation(compiler);
+        listInst.ConstantFoldingAndPropagation(compiler);
+    }
 
 
     

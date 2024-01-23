@@ -76,7 +76,7 @@ public class Multiply extends AbstractOpArith {
         int leftExponent = getLeftExponent();
         if (rightExponent == -1 && leftExponent == -1
                 || (rightExponent > 9 && leftExponent > 9)) {
-            codeGenInstOP(compiler);
+            codeGenInst(compiler);
             return;
         }
 

@@ -76,6 +76,10 @@ public class Modulo extends AbstractOpArith {
         try {
             AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
             AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+            if (leftValue != null)
+                setLeftOperand(leftValue);
+            if (rightValue != null)
+                setRightOperand(rightValue);
             if (rightValue instanceof IntLiteral) {
                 if (leftValue instanceof IntLiteral) {
                     return new IntLiteral(((IntLiteral) leftValue).getValue() % ((IntLiteral) rightValue).getValue());

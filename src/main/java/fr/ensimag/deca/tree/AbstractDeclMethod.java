@@ -21,4 +21,6 @@ public abstract class AbstractDeclMethod extends Tree {
     protected abstract void codeGenMethods(DecacCompiler compiler);
 
     protected abstract void setClassName(String className);
+
+    public abstract void ConstantFoldingAndPropagation(DecacCompiler compiler);
 }

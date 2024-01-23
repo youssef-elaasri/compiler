@@ -58,6 +58,7 @@ public class Program extends AbstractProgram {
 
     public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
         main.ConstantFoldingAndPropagation(compiler);
+        classes.ConstantFoldingAndPropagation(compiler);
     }
 
     @Override

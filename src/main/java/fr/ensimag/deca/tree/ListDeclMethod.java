@@ -59,4 +59,10 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
         }
     }
 
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractDeclMethod abstractDeclMethod : getList()) {
+            abstractDeclMethod.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
 }

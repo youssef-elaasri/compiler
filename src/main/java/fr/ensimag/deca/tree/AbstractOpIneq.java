@@ -20,6 +20,10 @@ public abstract class AbstractOpIneq extends AbstractOpCmp {
     protected AbstractExpr ConstantFoldingAndPropagationOpIn(DecacCompiler compiler, boolean isGreater) {
         AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
         AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+        if (leftValue != null)
+            setLeftOperand(leftValue);
+        if (rightValue != null)
+            setRightOperand(rightValue);
         if (rightValue instanceof IntLiteral) {
             if (leftValue instanceof IntLiteral) {
                 if (isGreater)
@@ -55,6 +59,10 @@ public abstract class AbstractOpIneq extends AbstractOpCmp {
     protected AbstractExpr ConstantFoldingAndPropagationOpEq(DecacCompiler compiler, boolean isGreater) {
         AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
         AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+        if (leftValue != null)
+            setLeftOperand(leftValue);
+        if (rightValue != null)
+            setRightOperand(rightValue);
         if (rightValue instanceof IntLiteral) {
             if (leftValue instanceof IntLiteral) {
                 if (isGreater)

@@ -61,6 +61,9 @@ public class Return extends AbstractInst {
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr expr = returnedExpr.ConstantFoldingAndPropagation(compiler);
+        if (expr != null)
+            setReturnedExpr(expr);
         return null;
     }
 
@@ -86,5 +89,7 @@ public class Return extends AbstractInst {
         returnedExpr.prettyPrint(s, prefix,true);
     }
 
-
+    public void setReturnedExpr(AbstractExpr returnedExpr) {
+        this.returnedExpr = returnedExpr;
+    }
 }
