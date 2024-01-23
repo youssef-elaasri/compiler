@@ -100,6 +100,16 @@ public class Selection extends AbstractLValue {
 
     }
 
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+
+    }
+
     protected DAddr codeGenInstAssign(DecacCompiler compiler) {
         codeGenInstGeneral(compiler);
         return new RegisterOffset(fieldIdent.getFieldDefinition().getIndex(),

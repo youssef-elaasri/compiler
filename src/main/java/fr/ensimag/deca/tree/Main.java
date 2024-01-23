@@ -13,7 +13,7 @@ import org.apache.commons.lang.Validate;
 public class Main extends AbstractMain {
     
     private final ListDeclVar declVariables;
-    private final ListInst insts;
+    private ListInst insts;
     public Main(ListDeclVar declVariables,
             ListInst insets) {
         Validate.notNull(declVariables);
