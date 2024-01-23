@@ -125,36 +125,54 @@ public class Assign extends AbstractBinaryExpr {
     @Override
     protected void codeGenInstOP(DecacCompiler compiler) {
         LOG.debug("This is codeGen assign");
-        if(!compiler.isVariableInDict((AbstractIdentifier) getLeftOperand())){
-            codeGenInst(compiler);
-            return;
+
+        String vars = extractVariable(compiler);
+
+        switch (vars){
+            case "both":
+                compiler.addInstruction(new LOAD(
+                        compiler.getRegister((AbstractIdentifier) getRightOperand()),
+                        compiler.getRegister((AbstractIdentifier) getLeftOperand())
+
+                ));
+                break;
+            case "right":
+                if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+
+                    compiler.addInstruction(new STORE(
+                            compiler.getRegister((AbstractIdentifier) getRightOperand()),
+                            ((Selection) getLeftOperand()).codeGenInstAssign(compiler)
+                    ));
+
+                    compiler.getStack().decreaseRegister();
+                }
+                else {
+                    compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+                break;
+            case "left":
+                if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+                    getRightOperand().codeGenInstOP(compiler);
+                    compiler.addInstruction(new LOAD(
+                            Register.getR(compiler.getStack().getCurrentRegister() -  1),
+                            compiler.getRegister((AbstractIdentifier) getLeftOperand())
+                    ));
+                }
+                else {
+                    compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+                break;
+            default:
+                codeGenInst(compiler);
+
+
+
         }
 
-        if(getRightOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getRightOperand())){
-            compiler.addInstruction(new LOAD(
-                    compiler.getRegister((AbstractIdentifier) getRightOperand()),
-                    compiler.getRegister((AbstractIdentifier) getLeftOperand())
-
-            ));
-        }
-
-        if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
-
-            getRightOperand().codeGenInstOP(compiler);
-
-
-
-            compiler.addInstruction(new LOAD(
-                    Register.getR(compiler.getStack().getCurrentRegister()-1),
-                    compiler.getRegister((AbstractIdentifier) getLeftOperand())
-            ));
-
-        }
-        else {
-            compiler.getStack().pushRegister(compiler);
-            codeGenInst(compiler);
-            compiler.getStack().popRegister(compiler);
-        }
 
 
     }
