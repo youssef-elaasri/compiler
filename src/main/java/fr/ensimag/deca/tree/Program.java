@@ -64,6 +64,7 @@ public class Program extends AbstractProgram {
     @Override
     public void DeadCodeElimination() {
         main.DeadCodeElimination();
+        classes.DeadCodeElimination();
     }
 
     @Override

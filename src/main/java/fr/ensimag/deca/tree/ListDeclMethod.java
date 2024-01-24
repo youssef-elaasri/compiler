@@ -65,4 +65,10 @@ public class ListDeclMethod extends TreeList<AbstractDeclMethod> {
         }
     }
 
+    public void DeadCodeElimination() {
+        for (AbstractDeclMethod abstractDeclMethod : getList()) {
+            abstractDeclMethod.DeadCodeElimination();
+        }
+    }
+
 }

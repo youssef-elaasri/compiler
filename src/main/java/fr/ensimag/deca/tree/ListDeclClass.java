@@ -97,4 +97,11 @@ public class ListDeclClass extends TreeList<AbstractDeclClass> {
     }
 
 
+    public void DeadCodeElimination() {
+        for (AbstractDeclClass abstractDeclClass : getList()) {
+            abstractDeclClass.DeadCodeElimination();
+        }
+    }
+
+
 }
