@@ -28,7 +28,7 @@ public class While extends AbstractInst {
     private AbstractExpr condition;
     private ListInst body;
 
-    HashSet<AbstractIdentifier> liveVariables = new HashSet<>();
+    private final HashSet<AbstractIdentifier> liveVariables = new HashSet<>();
 
     private static int counter = 0;
 
@@ -191,9 +191,11 @@ public class While extends AbstractInst {
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
         //FIXME
-//        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
-//        if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
-//            condition = conditionValue;
+        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
+        if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
+            condition = conditionValue;
+
+
         body.checkAliveVariables();
         for (AbstractInst abstractInst : body.getList()) {
             abstractInst.ConstantFoldingAndPropagation(compiler);
