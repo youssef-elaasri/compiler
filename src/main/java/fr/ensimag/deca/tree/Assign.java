@@ -195,7 +195,8 @@ public class Assign extends AbstractBinaryExpr {
 
     @Override
     public void checkAliveVariables() {
-        ((Identifier) getLeftOperand()).getExpDefinition().setValue(null);
+        if (getLeftOperand() instanceof Identifier)
+            ((Identifier) getLeftOperand()).getExpDefinition().setValue(null);
     }
 
 
