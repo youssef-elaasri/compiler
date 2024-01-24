@@ -290,7 +290,8 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                         (((IntLiteral) getRightOperand()).getValue() -1) )== 0||
                         (-((IntLiteral) getRightOperand()).getValue() &
                                 (-((IntLiteral) getRightOperand()).getValue() -1) )== 0)) {
-
+            if (((IntLiteral) getRightOperand()).getValue() == 0)
+                return -1;
             return getExponent(((IntLiteral) getRightOperand()).getValue());
         }
         else {
@@ -304,6 +305,8 @@ public abstract class AbstractOpArith extends AbstractBinaryExpr {
                         (((IntLiteral) getLeftOperand()).getValue() -1) )== 0  ||
                         (-((IntLiteral) getLeftOperand()).getValue() &
                                 (-((IntLiteral) getLeftOperand()).getValue() -1) )== 0 )) {
+            if (((IntLiteral) getLeftOperand()).getValue() == 0)
+                return -1;
             return getExponent(((IntLiteral) getLeftOperand()).getValue());
         } else {
             return -1;
