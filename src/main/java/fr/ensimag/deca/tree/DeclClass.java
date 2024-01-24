@@ -291,6 +291,11 @@ public class DeclClass extends AbstractDeclClass {
         listMethod.ConstantFoldingAndPropagation(compiler);
     }
 
+    @Override
+    public void DeadCodeElimination() {
+        listMethod.DeadCodeElimination();
+    }
+
     public void loadR0(DecacCompiler compiler, AbstractDeclField declField) {
         if (declField.getType().isFloat()) {
             compiler.addInstruction(new FLOAT(new ImmediateInteger(0), Register.R0));

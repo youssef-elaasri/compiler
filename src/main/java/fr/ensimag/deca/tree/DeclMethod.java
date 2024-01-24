@@ -87,6 +87,11 @@ public class DeclMethod extends AbstractDeclMethod{
     }
 
     @Override
+    public void DeadCodeElimination() {
+        methodBody.DeadCodeElimination();
+    }
+
+    @Override
     protected EnvironmentExp verifyMethod(DecacCompiler compiler, AbstractIdentifier superId, ClassDefinition classDef) throws ContextualError {
         ClassDefinition envSup = (ClassDefinition) compiler.environmentType.defOfType(superId.getName());
         Signature signature = list_param.verifyListDeclParam(compiler);
