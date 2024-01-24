@@ -113,11 +113,13 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
     }
 
     protected void codeGenInstGeneralOP(DecacCompiler compiler, UnaryInstructionToReg branchInstruction){
+        LOG.debug("Im OpCMP and ill call extract variables");
         String vars = extractVariable(compiler);
 
         GPRegister rightRegister = null;
         GPRegister leftRegister = null;
 
+        LOG.debug(vars);
 
         switch (vars){
             case "both":

@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.HashSet;
 
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 /**
  * Binary expressions.
@@ -14,6 +15,7 @@ import org.apache.commons.lang.Validate;
  * @date 01/01/2024
  */
 public abstract class AbstractBinaryExpr extends AbstractExpr {
+    private static final Logger LOG = Logger.getLogger(AbstractBinaryExpr.class);
 
 
 /**
@@ -110,6 +112,7 @@ public abstract class AbstractBinaryExpr extends AbstractExpr {
     }
 
     public String extractVariable(DecacCompiler compiler){
+        LOG.debug("getLeftOperand() instanceof AbstractIdentifier is " + (getLeftOperand() instanceof AbstractIdentifier));
         if(getLeftOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getLeftOperand())){
             if (getRightOperand() instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) getRightOperand())){
                 return "both";

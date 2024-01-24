@@ -169,7 +169,6 @@ public abstract class AbstractOpBool extends AbstractBinaryExpr {
 
         switch (vars){
             case "both":
-                LOG.debug("This is an And");
                 compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getLeftOperand()), endAnd, compiler);
                 compareAndJump(isOr(), compiler.getRegister((AbstractIdentifier) getRightOperand()), endAnd, compiler);
                 compiler.getStack().increaseRegister();

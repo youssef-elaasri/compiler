@@ -111,6 +111,10 @@ public class Stack {
             System.err.println("Error: The expression exceeds the available register capacity.");
             System.exit(1);
         }
+        if(currentRegister == lastLiveRegister + 1){
+            System.err.println("Error: The expression exceeds the available register capacity. Thus the code cannot be optimized");
+            System.exit(1);
+        }
         if (currentRegister > maxRegister)
             setMaxRegister(currentRegister);
         currentRegister--;
@@ -186,4 +190,16 @@ public class Stack {
     public int getMaxRegister() {
         return maxRegister;
     }
+
+    private int lastLiveRegister = -1;
+
+    public void setLastLiveRegister() {
+        this.lastLiveRegister = currentRegister;
+    }
+
+    public void resetLastLiveRegister() {
+        this.lastLiveRegister = -1;
+    }
+
+
 }

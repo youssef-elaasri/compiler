@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -368,6 +369,10 @@ public class DecacCompiler {
     }
 
     private HashMap<AbstractIdentifier, GPRegister> variablesDict = new HashMap<>();
+
+    public Set<AbstractIdentifier> getVariables() {
+        return variablesDict.keySet();
+    }
 
     public void initVariablesDict(){
         variablesDict = new HashMap<>();
