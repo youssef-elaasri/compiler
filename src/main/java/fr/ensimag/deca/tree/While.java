@@ -13,6 +13,7 @@ import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -100,6 +101,7 @@ public class While extends AbstractInst {
             compiler.addInstruction(new BEQ(endOfWile));
 
             LOG.info("There are " + liveVariables.size() + " live variables in the while ...");
+            LOG.debug("The variables are: " + liveVariables);
 
             Boolean isInWhile = compiler.isInWhile();
             // Load live variables
@@ -126,6 +128,8 @@ public class While extends AbstractInst {
             //Store variables
             if (!isInWhile)
                 storeLiveVariable(compiler);
+
+
         } else {
             compiler.getStack().pushRegister(compiler);
             codeGenInstOP(compiler);
@@ -133,6 +137,7 @@ public class While extends AbstractInst {
         }
 
     }
+
 
 
     private void loadLiveVariable(DecacCompiler compiler) {
@@ -144,16 +149,21 @@ public class While extends AbstractInst {
 
 
         compiler.initVariablesDict();
+        Iterator<AbstractIdentifier> iterator = liveVariables.iterator();
+        int i = compiler.getStack().getCurrentRegister();
+        LOG.debug("Has next is " + iterator.hasNext());
 
-        for (AbstractIdentifier abstractIdentifier : liveVariables) {
-            LOG.debug("Let's see those variables ...");
+        for (; (i < compiler.getStack().getNumberOfRegisters() - 4) && iterator.hasNext(); ++i  ) {
+
+            AbstractIdentifier abstractIdentifier = iterator.next();
+            LOG.info("Let's see those variables ...");
             compiler.addInstruction(new LOAD(
                     abstractIdentifier.getExpDefinition().getOperand(),
                     Register.getR(compiler.getStack().getCurrentRegister())
             ));
 
             compiler.addToVariablesDict(abstractIdentifier, Register.getR(compiler.getStack().getCurrentRegister()));
-
+            compiler.getStack().setLastLiveRegister();
             compiler.getStack().increaseRegister();
             LOG.debug("The current register is " + compiler.getStack().getCurrentRegister());
 
@@ -161,11 +171,12 @@ public class While extends AbstractInst {
     }
 
     private void storeLiveVariable(DecacCompiler compiler) {
-
+        // reset live register so that the program doesn't throw an error
+        compiler.getStack().resetLastLiveRegister();
         // Getting out of a while is marked by storing all the variables in registers
         compiler.getOutWhile();
 
-        for (AbstractIdentifier abstractIdentifier : liveVariables) {
+        for (AbstractIdentifier abstractIdentifier : compiler.getVariables()) {
 
             compiler.addInstruction(new STORE(
                     compiler.getRegister(abstractIdentifier),
@@ -173,16 +184,16 @@ public class While extends AbstractInst {
             ));
             compiler.getStack().decreaseRegister();
         }
-
         compiler.initVariablesDict();
     }
 
 
     @Override
     protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
-        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
-        if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
-            condition = conditionValue;
+        //FIXME
+//        AbstractExpr conditionValue = condition.ConstantFoldingAndPropagation(compiler);
+//        if (conditionValue instanceof BooleanLiteral && !((BooleanLiteral) conditionValue).getValue())
+//            condition = conditionValue;
         body.checkAliveVariables();
         for (AbstractInst abstractInst : body.getList()) {
             abstractInst.ConstantFoldingAndPropagation(compiler);
