@@ -13,6 +13,7 @@ import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 public class Selection extends AbstractLValue {
 
@@ -64,6 +65,12 @@ public class Selection extends AbstractLValue {
         s.print(".");
         this.fieldIdent.decompile(s);
 
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (expression instanceof Identifier)
+            liveVariable.add((AbstractIdentifier) expression);
     }
 
     @Override
