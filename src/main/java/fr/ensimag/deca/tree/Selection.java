@@ -13,6 +13,7 @@ import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import org.apache.commons.lang.Validate;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 public class Selection extends AbstractLValue {
 
@@ -25,6 +26,7 @@ public class Selection extends AbstractLValue {
         this.expression = expression;
         this.fieldIdent = fieldIdent;
     }
+
     @Override
     public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv, ClassDefinition currentClass) throws ContextualError {
         Type typeExp = expression.verifyExpr(compiler, localEnv, currentClass);
@@ -33,18 +35,18 @@ public class Selection extends AbstractLValue {
         }
         TypeDefinition classDef2 = compiler.environmentType.defOfType(typeExp.getName());
         if (classDef2 == null) {
-            throw new ContextualError("Class: " + typeExp.getName() +" is not defined in local environment", this.getLocation());
+            throw new ContextualError("Class: " + typeExp.getName() + " is not defined in local environment", this.getLocation());
         }
         EnvironmentExp envExp2 = ((ClassDefinition) classDef2).getMembers();
-        if(envExp2 == null){
-            throw new ContextualError("Class: "+ typeExp.getName() +" is not defined in local environment", this.getLocation());
+        if (envExp2 == null) {
+            throw new ContextualError("Class: " + typeExp.getName() + " is not defined in local environment", this.getLocation());
         }
         Type fieldIdentType = fieldIdent.verifyExpr(compiler, envExp2, currentClass);
         FieldDefinition fieldDefinition = fieldIdent.getFieldDefinition();
 
-        if (fieldDefinition.getVisibility().equals(Visibility.PROTECTED)){
+        if (fieldDefinition.getVisibility().equals(Visibility.PROTECTED)) {
             ClassType classField = fieldDefinition.getContainingClass().getType();
-            if(currentClass.getType() == null ||!classField.isSubType(compiler.environmentType, currentClass.getType())){
+            if (currentClass.getType() == null || !classField.isSubType(compiler.environmentType, currentClass.getType())) {
                 throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
                         " from current class", this.getLocation());
             }
@@ -53,7 +55,7 @@ public class Selection extends AbstractLValue {
                 throw new ContextualError("Cannot get access to field " + fieldIdent.getName() +
                         " from current class", this.getLocation());
             }
-            }
+        }
         this.setType(fieldIdentType);
         return fieldIdentType;
     }
@@ -64,6 +66,12 @@ public class Selection extends AbstractLValue {
         s.print(".");
         this.fieldIdent.decompile(s);
 
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (expression instanceof Identifier)
+            liveVariable.add((AbstractIdentifier) expression);
     }
 
     @Override
@@ -82,7 +90,26 @@ public class Selection extends AbstractLValue {
         expression.codeGenInst(compiler);
         compiler.addInstruction(new CMP(
                 new NullOperand(),
-                Register.getR(compiler.getStack().getCurrentRegister()-1)
+                Register.getR(compiler.getStack().getCurrentRegister() - 1)
+        ));
+        compiler.addInstruction(new BEQ(
+                compiler.getErrorHandler().addDereferencingNull()
+        ));
+    }
+
+    protected void codeGenInstGeneralOP(DecacCompiler compiler) {
+        if (expression instanceof AbstractIdentifier && compiler.isVariableInDict(((AbstractIdentifier) expression))) {
+            compiler.addInstruction(new LOAD(
+                    compiler.getRegister((AbstractIdentifier) expression),
+                    Register.getR(compiler.getStack().getCurrentRegister())
+            ));
+            compiler.getStack().increaseRegister();
+        } else
+            expression.codeGenInst(compiler);
+
+        compiler.addInstruction(new CMP(
+                new NullOperand(),
+                Register.getR(compiler.getStack().getCurrentRegister() - 1)
         ));
         compiler.addInstruction(new BEQ(
                 compiler.getErrorHandler().addDereferencingNull()
@@ -91,18 +118,36 @@ public class Selection extends AbstractLValue {
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
-        codeGenInstGeneral(compiler);
+        if(compiler.getCompilerOptions().getOPTIM())
+            codeGenInstGeneralOP(compiler);
+        else
+            codeGenInstGeneral(compiler);
+
         compiler.addInstruction(new LOAD(
-                new RegisterOffset(fieldIdent.getFieldDefinition().getIndex(),
-                        Register.getR(compiler.getStack().getCurrentRegister()-1)),
-                Register.getR(compiler.getStack().getCurrentRegister()-1))
-        );
+
+                new RegisterOffset(
+                        fieldIdent.getFieldDefinition().getIndex(),
+                        Register.getR(compiler.getStack().getCurrentRegister() - 1)
+                ),
+
+                Register.getR(compiler.getStack().getCurrentRegister() - 1)
+        ));
+
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
 
     }
 
     protected DAddr codeGenInstAssign(DecacCompiler compiler) {
         codeGenInstGeneral(compiler);
         return new RegisterOffset(fieldIdent.getFieldDefinition().getIndex(),
-                Register.getR(compiler.getStack().getCurrentRegister()-1));
+                Register.getR(compiler.getStack().getCurrentRegister() - 1));
     }
 }

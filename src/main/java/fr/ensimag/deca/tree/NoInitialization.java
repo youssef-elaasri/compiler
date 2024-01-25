@@ -5,6 +5,8 @@ import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+
 import java.io.PrintStream;
 
 /**
@@ -58,6 +60,11 @@ public class NoInitialization extends AbstractInitialization {
     @Override
     public void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName) {
         // This method does nothing.
+    }
+
+    @Override
+    public AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return new IntLiteral(42);
     }
 
 

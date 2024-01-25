@@ -13,4 +13,6 @@ public abstract class AbstractDeclField extends Tree{
     public abstract void codeGenInitListDeclClass(DecacCompiler compiler);
 
     public abstract Type getType();
+
+    public abstract void ConstantFoldingAndPropagation(DecacCompiler compiler);
 }

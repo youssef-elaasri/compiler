@@ -29,7 +29,7 @@ if cat "$RESULT" | grep -qE "init.Father:|init.Mother:"; then
     echo -e "${GREEN}${PASSED}${NC}"
     exit 0
 else
-    echo -e "${GREEN}${FAILED}${NC}"
+    echo -e "${RED}${FAILED}${NC}"
 fi
 
 

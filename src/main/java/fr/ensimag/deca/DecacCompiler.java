@@ -9,20 +9,16 @@ import fr.ensimag.deca.syntax.DecaParser;
 import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.SymbolTable;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
-import fr.ensimag.deca.tree.AbstractIdentifier;
-import fr.ensimag.deca.tree.AbstractProgram;
-import fr.ensimag.deca.tree.DeclClass;
-import fr.ensimag.deca.tree.LocationException;
-import fr.ensimag.ima.pseudocode.AbstractLine;
-import fr.ensimag.ima.pseudocode.IMAProgram;
-import fr.ensimag.ima.pseudocode.Instruction;
-import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.deca.tree.*;
+import fr.ensimag.ima.pseudocode.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -180,7 +176,7 @@ public class DecacCompiler {
             err.println("Internal compiler error while compiling file " + sourceFile + ", sorry.");
             return true;
         }
-        
+
     }
 
     /**
@@ -219,6 +215,21 @@ public class DecacCompiler {
         if(getCompilerOptions().getVerification()){ System.exit(0);}
         assert(prog.checkAllDecorations());
 
+        if(getCompilerOptions().getParse()){
+            prog.decompile(out);
+            System.exit(1);
+        }
+        if (compilerOptions.getOPTIM()) {
+            // pass 1 of OPTIM
+            prog.ConstantFoldingAndPropagation(this);
+
+            // pass 2 of OPTIM
+            prog.DeadCodeElimination();
+
+            // pass 3 of OPTIM
+            isPass3 = true;
+            prog.ConstantFoldingAndPropagation(this);
+        }
 
 
         if(getCompilerOptions().doChangeRegisterNumber()){
@@ -292,6 +303,26 @@ public class DecacCompiler {
         return errorHandler;
     }
 
+    private boolean isCritical;
+
+    public boolean getIsCritical() {
+        return isCritical;
+    }
+
+    public void setIsCritical(boolean isCritical) {
+        this.isCritical = isCritical;
+    }
+
+    public HashMap<AbstractIdentifier, AbstractExpr> ifManager = new HashMap<>();
+
+    public HashMap<AbstractIdentifier, AbstractExpr> getIfManager() {
+        return ifManager;
+    }
+
+    public void setIfManager(HashMap<AbstractIdentifier, AbstractExpr> ifManager) {
+        this.ifManager = ifManager;
+    }
+
     private final HashMap<AbstractIdentifier, DeclClass> classManager = new HashMap<>();
 
     public HashMap<AbstractIdentifier, DeclClass> getClassManager() {
@@ -315,4 +346,48 @@ public class DecacCompiler {
     public void setProgram(IMAProgram program) {
         this.program = program;
     }
+
+    private boolean isPass3 = false;
+
+    public boolean isPass3() {
+        return isPass3;
+    }
+
+
+    private Boolean inWhile = false;
+
+    public Boolean isInWhile(){
+        return inWhile;
+    }
+
+    public void getInWhile(){
+        inWhile = true;
+    }
+
+    public void getOutWhile(){
+        inWhile = false;
+    }
+
+    private HashMap<AbstractIdentifier, GPRegister> variablesDict = new HashMap<>();
+
+    public Set<AbstractIdentifier> getVariables() {
+        return variablesDict.keySet();
+    }
+
+    public void initVariablesDict(){
+        variablesDict = new HashMap<>();
+    }
+
+    public void addToVariablesDict(AbstractIdentifier variable, GPRegister register){
+        variablesDict.putIfAbsent(variable, register);
+    }
+
+    public GPRegister getRegister(AbstractIdentifier variable){
+        return variablesDict.get(variable);
+    }
+
+    public Boolean isVariableInDict(AbstractIdentifier variable){
+        return variablesDict.containsKey(variable);
+    }
+
 }

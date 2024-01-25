@@ -2,6 +2,9 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.*;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BLE;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.SLE;
@@ -14,6 +17,10 @@ import fr.ensimag.ima.pseudocode.instructions.SLE;
 public class LowerOrEqual extends AbstractOpIneq {
     public LowerOrEqual(AbstractExpr leftOperand, AbstractExpr rightOperand) {
         super(leftOperand, rightOperand);
+    }
+    @Override
+    public UnaryInstructionToReg getOperator(GPRegister op) {
+        return new SLE(op);
     }
 
 
@@ -36,7 +43,15 @@ public class LowerOrEqual extends AbstractOpIneq {
         );
         codeGenInstGeneral(compiler,branchInstruction);
     }
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return ConstantFoldingAndPropagationOpEq(compiler,false);
+    }
 
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
 
 
 }

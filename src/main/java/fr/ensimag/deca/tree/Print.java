@@ -3,6 +3,8 @@ package fr.ensimag.deca.tree;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.deca.tools.IndentPrintStream;
 
+import java.util.HashSet;
+
 /**
  * @author gl22
  * @date 01/01/2024
@@ -29,6 +31,16 @@ public class Print extends AbstractPrint {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         super.codeGenInst(compiler);
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return super.ConstantFoldingAndPropagation(compiler);
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
     }
 
     @Override

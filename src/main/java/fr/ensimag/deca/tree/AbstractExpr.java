@@ -10,6 +10,7 @@ import java.io.PrintStream;
 
 import fr.ensimag.ima.pseudocode.instructions.*;
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 /**
  * Expression, i.e. anything that has a value.
@@ -18,6 +19,10 @@ import org.apache.commons.lang.Validate;
  * @date 01/01/2024
  */
 public abstract class AbstractExpr extends AbstractInst {
+
+    private static final Logger LOG = Logger.getLogger(AbstractExpr.class);
+
+
     /**
      * @return true if the expression does not correspond to any concrete token
      * in the source code (and should be decompiled to the empty string).
@@ -83,7 +88,7 @@ public abstract class AbstractExpr extends AbstractInst {
             Type expectedType)
             throws ContextualError {
 //        throw new UnsupportedOperationException("not yet implemented");
-        
+
         Type currentType = this.verifyExpr(compiler, localEnv, currentClass);
         if (!(expectedType.isFloat() && currentType.isInt())) {
             if (!(currentType.isSubType(compiler.environmentType, expectedType))) {
@@ -127,12 +132,6 @@ public abstract class AbstractExpr extends AbstractInst {
         }
     }
 
-    private int labelCounter = 0;
-
-
-    private void increaseLabelCounter(){
-        labelCounter++;
-    }
     /**
      * Generate code to print the expression
      *
@@ -140,7 +139,10 @@ public abstract class AbstractExpr extends AbstractInst {
      */
     protected void codeGenPrint(DecacCompiler compiler, boolean ex) {
         if(compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()){
-            codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                codeGenInstOP(compiler);
+            else
+                codeGenInst(compiler);
             compiler.addInstruction(new LOAD(
                     Register.getR(compiler.getStack().getCurrentRegister() - 1),
                     Register.R1
@@ -157,24 +159,7 @@ public abstract class AbstractExpr extends AbstractInst {
             else if (this.getType().isInt())
                 compiler.addInstruction(new WINT());
 
-            else{
-                // Create labels for the end of the NOT operation and the false condition
-                Label endNot = new Label("print_end_not_" + labelCounter);
-                Label falseNot = new Label("print_false_not_"+ labelCounter);
-                increaseLabelCounter();
 
-                compiler.addInstruction(new CMP(0, Register.R1));
-
-                compiler.addInstruction(new BEQ(falseNot));
-
-                compiler.addInstruction(new WSTR("\"true\""));
-                compiler.addInstruction(new BRA(endNot));
-
-                compiler.addLabel(falseNot);
-                compiler.addInstruction(new WSTR("\"false\""));
-
-                compiler.addLabel(endNot);
-            }
             compiler.getStack().decreaseRegister();
         }else {
 
@@ -182,6 +167,16 @@ public abstract class AbstractExpr extends AbstractInst {
             codeGenPrint(compiler, ex);
             compiler.getStack().popRegister(compiler);
         }
+    }
+
+
+    protected void codeGenPrintOP(DecacCompiler compiler, boolean ex){
+        codeGenPrint(compiler, ex);
+    }
+
+
+    protected boolean isVariable(DecacCompiler compiler){
+        return this instanceof AbstractIdentifier && compiler.isVariableInDict((AbstractIdentifier) this);
     }
 
 
@@ -222,7 +217,9 @@ public abstract class AbstractExpr extends AbstractInst {
             if (((Identifier) expr).getDefinition().isField()) {
                 return null;
             }
+
             return ((Identifier) expr).getExpDefinition().getOperand();
+
         } else if (expr instanceof IntLiteral) {
             return new ImmediateInteger(((IntLiteral) expr).getValue());
         } else if (expr instanceof FloatLiteral) {

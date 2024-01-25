@@ -12,6 +12,7 @@ import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 public class New extends AbstractExpr{
     AbstractIdentifier className;
@@ -82,6 +83,21 @@ public class New extends AbstractExpr{
         compiler.getStack().decreaseCounterTSTO(3);
 
         compiler.getStack().increaseRegister();
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        // nothing to do
     }
 
 

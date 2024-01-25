@@ -4,11 +4,13 @@ import fr.ensimag.deca.context.*;
 import fr.ensimag.deca.DecacCompiler;
 import fr.ensimag.ima.pseudocode.NullOperand;
 import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
 import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
 import fr.ensimag.ima.pseudocode.instructions.STORE;
+import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
 
@@ -19,6 +21,9 @@ import java.io.PrintStream;
  * @date 01/01/2024
  */
 public class Assign extends AbstractBinaryExpr {
+
+    private static final Logger LOG = Logger.getLogger(Assign.class);
+
 
     @Override
     public AbstractLValue getLeftOperand() {
@@ -67,7 +72,12 @@ public class Assign extends AbstractBinaryExpr {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
-            getRightOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM()) {
+                LOG.debug("Let's optimize that assign");
+                getRightOperand().codeGenInstOP(compiler);
+            }
+            else
+                getRightOperand().codeGenInst(compiler);
             if (getLeftOperand() instanceof Identifier) {
                 if (((Identifier) getLeftOperand()).getDefinition().isField()) {
                     compiler.addInstruction(new LOAD(
@@ -111,5 +121,83 @@ public class Assign extends AbstractBinaryExpr {
             compiler.getStack().popRegister(compiler);
         }
     }
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        LOG.debug("This is codeGen assign");
+
+        String vars = extractVariable(compiler);
+
+        switch (vars){
+            case "both":
+                compiler.addInstruction(new LOAD(
+                        compiler.getRegister((AbstractIdentifier) getRightOperand()),
+                        compiler.getRegister((AbstractIdentifier) getLeftOperand())
+
+                ));
+                break;
+            case "right":
+                if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+
+                    compiler.addInstruction(new STORE(
+                            compiler.getRegister((AbstractIdentifier) getRightOperand()),
+                            ((Selection) getLeftOperand()).codeGenInstAssign(compiler)
+                    ));
+
+                    compiler.getStack().decreaseRegister();
+                }
+                else {
+                    compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+                break;
+            case "left":
+                if (compiler.getStack().getCurrentRegister() < compiler.getStack().getNumberOfRegisters()) {
+                    getRightOperand().codeGenInstOP(compiler);
+                    compiler.addInstruction(new LOAD(
+                            Register.getR(compiler.getStack().getCurrentRegister() -  1),
+                            compiler.getRegister((AbstractIdentifier) getLeftOperand())
+                    ));
+                }
+                else {
+                    compiler.getStack().pushRegister(compiler);
+                    codeGenInstOP(compiler);
+                    compiler.getStack().popRegister(compiler);
+                }
+                break;
+            default:
+                codeGenInst(compiler);
+
+
+
+        }
+
+
+
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        if (compiler.getIsCritical()) {
+            compiler.getIfManager().putIfAbsent((Identifier) getLeftOperand(),
+                    ((Identifier) getLeftOperand()).getExpDefinition().getValue()
+            );
+        };
+        AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        if (rightValue != null) {
+            setRightOperand(rightValue);
+            if (getLeftOperand() instanceof Identifier)
+                ((Identifier) getLeftOperand()).getExpDefinition().setValue(rightValue);
+        }
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        if (getLeftOperand() instanceof Identifier)
+            ((Identifier) getLeftOperand()).getExpDefinition().setValue(null);
+    }
+
 
 }

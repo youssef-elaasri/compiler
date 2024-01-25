@@ -38,4 +38,8 @@ public abstract class AbstractDeclClass extends Tree {
 
     public abstract void codeGenMethods(DecacCompiler compiler);
 
+    public abstract void ConstantFoldingAndPropagation(DecacCompiler compiler);
+
+    public abstract void DeadCodeElimination();
+
 }

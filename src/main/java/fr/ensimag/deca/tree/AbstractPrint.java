@@ -10,6 +10,8 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.Label;
 import java.io.PrintStream;
+import java.util.HashSet;
+
 import org.apache.commons.lang.Validate;
 
 /**
@@ -35,6 +37,10 @@ public abstract class AbstractPrint extends AbstractInst {
         return arguments;
     }
 
+    public void setArguments(ListExpr arguments) {
+        this.arguments = arguments;
+    }
+
     @Override
     protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
             ClassDefinition currentClass, Type returnType)
@@ -52,6 +58,16 @@ public abstract class AbstractPrint extends AbstractInst {
     protected void codeGenInst(DecacCompiler compiler) {
         for (AbstractExpr a : getArguments().getList()) {
             a.codeGenPrint(compiler, printHex);
+        }
+
+    }
+
+
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        for (AbstractExpr a : getArguments().getList()) {
+            a.codeGenPrintOP(compiler, printHex);
         }
     }
 
@@ -72,6 +88,29 @@ public abstract class AbstractPrint extends AbstractInst {
     @Override
     protected void prettyPrintChildren(PrintStream s, String prefix) {
         arguments.prettyPrint(s, prefix, true);
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        ListExpr listExpr = new ListExpr();
+        for (AbstractExpr expr : getArguments().getList()) {
+            AbstractExpr value = expr.ConstantFoldingAndPropagation(compiler);
+            if (value != null) {
+                listExpr.add(value);
+            }
+            else {
+                listExpr.add(expr);
+            }
+        }
+        setArguments(listExpr);
+        return null;
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        for (AbstractExpr expr : getArguments().getList()) {
+            expr.addLiveVariable(liveVariable);
+        }
     }
 
 }

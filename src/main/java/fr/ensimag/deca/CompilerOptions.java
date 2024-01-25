@@ -33,10 +33,15 @@ public class CompilerOptions {
         return debug;
     }
 
+
+
     public boolean getParallel() {
         return parallel;
     }
 
+    public boolean getOPTIM() {
+        return OPTIM;
+    }
     public boolean getOtherThanBOption() {
         return otherThanBOption;
     }
@@ -81,6 +86,8 @@ public class CompilerOptions {
     private boolean verification = false;
     private boolean noCheck = false;
     private boolean changeRegisterNumber=false;
+
+    private boolean OPTIM = false;
     private boolean otherThanBOption = false;
     private int numberOfRegistersEntered;
 
@@ -134,7 +141,9 @@ public class CompilerOptions {
                         changeRegisterNumber=true;
                         otherThanBOption = true;
                         break;
-
+                    case "-op":
+                        OPTIM = true;
+                        break;
                     default:
                         throw new CLIException("the option: " + arg + " does not exist");
                     }

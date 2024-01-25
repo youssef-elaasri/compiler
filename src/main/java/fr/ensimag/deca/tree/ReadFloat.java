@@ -9,6 +9,7 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 /**
  *
@@ -55,6 +56,21 @@ public class ReadFloat extends AbstractReadExpr {
         if (!compiler.getCompilerOptions().getNoCheck())
             compiler.addInstruction(new BOV(compiler.getErrorHandler().addInvalidFloatInput()));
         super.moveToRegister(compiler);
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        // nothing to do
     }
 
     @Override
