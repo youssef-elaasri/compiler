@@ -1,21 +1,23 @@
-class A {}
-class B {}
-
 {
-   int a = 5;
-   int b = 7; 
-   
-   println("Addition : ", (a + b));
-   println("Soustraction : ", (a - b));
-   println("Multiplication : ", (a * b));
-   println("Division : ", (a / b));
 
-    // Utilisation d'une structure conditionnelle (if-else)
-    if (a > b) {
-        println("Variable 'a' est plus grande que 'b'.");
-    } else {
-        println("Variable 'b' est plus grande que 'a'.");
+        // Initial value
+        int counter = 6;
+
+        // Using a while loop to print numbers from 1 to 5
+        println("Numbers from 1 to 5 using a while loop:");
+
+        if (counter <= 5) {
+          counter = 1; 
+        } else {
+          counter = 2;
         }
+        
+        counter = counter +1;
+        println(counter);
+
+        // Display a message after the loop
+        println("Loop completed!");
+        
 }
 
 

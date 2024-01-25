@@ -9,6 +9,8 @@ import fr.ensimag.ima.pseudocode.DVal;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.FLOAT;
 
+import java.util.HashSet;
+
 /**
  * Conversion of an int into a float. Used for implicit conversions.
  *
@@ -56,13 +58,55 @@ public class ConvFloat extends AbstractUnaryExpr {
         }
         else {
             // Operand is not a constant, generate code for the operand
-            super.getOperand().codeGenInst(compiler);
+            if (compiler.getCompilerOptions().getOPTIM())
+                getOperand().codeGenInstOP(compiler);
+            else
+                getOperand().codeGenInst(compiler);
             // Load the value from the operand into a register and then convert to a floating-point value
             compiler.addInstruction(new FLOAT(
                     Register.getR(compiler.getStack().getCurrentRegister() - 1),
                     Register.getR(compiler.getStack().getCurrentRegister() - 1)
             ));
         }
+    }
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        if(!isVariable(compiler)){
+            codeGenInst(compiler);
+            return;
+        }
+
+        compiler.getStack().increaseRegister();
+
+        // Load the value from the operand into a register and then convert to a floating-point value
+        compiler.addInstruction(new FLOAT(
+                compiler.getRegister((AbstractIdentifier) getOperand()),
+                Register.getR(compiler.getStack().getCurrentRegister() - 1)
+        ));
+
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
+        if (value instanceof IntLiteral) {
+            return new FloatLiteral(((IntLiteral) value).getValue());
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getOperand() instanceof Identifier)
+            liveVariable.add((Identifier) getOperand());
     }
 
 }

@@ -90,5 +90,18 @@ public class ListDeclClass extends TreeList<AbstractDeclClass> {
         }
     }
 
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractDeclClass abstractDeclClass : getList()) {
+            abstractDeclClass.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
+
+    public void DeadCodeElimination() {
+        for (AbstractDeclClass abstractDeclClass : getList()) {
+            abstractDeclClass.DeadCodeElimination();
+        }
+    }
+
 
 }

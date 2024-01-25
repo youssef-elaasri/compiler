@@ -41,6 +41,8 @@ public abstract class AbstractDeclVar extends Tree {
      */
     public abstract void codeGenDeclVar(DecacCompiler compiler);
 
+    public abstract void ConstantFoldingAndPropagation(DecacCompiler compiler);
+
     public abstract void codeGenMethods(DecacCompiler compiler);
 
 }

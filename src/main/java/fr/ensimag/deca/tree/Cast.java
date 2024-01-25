@@ -87,4 +87,14 @@ public class Cast extends AbstractExpr {
                 new RegisterOffset(0,  Register.getR(compiler.getStack().getCurrentRegister()-1))
         ));
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+
+    }
 }

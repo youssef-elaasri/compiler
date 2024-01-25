@@ -39,4 +39,6 @@ public abstract class AbstractInitialization extends Tree {
      */
     public abstract void codeGenInitialization(DecacCompiler compiler, AbstractIdentifier varName);
 
+    public abstract AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler);
+
 }

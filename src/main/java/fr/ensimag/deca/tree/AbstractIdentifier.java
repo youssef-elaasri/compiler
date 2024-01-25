@@ -11,6 +11,12 @@ import fr.ensimag.deca.context.MethodDefinition;
 import fr.ensimag.deca.context.ExpDefinition;
 import fr.ensimag.deca.context.VariableDefinition;
 import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOATX;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
 
 /**
  *
@@ -83,6 +89,30 @@ public abstract class AbstractIdentifier extends AbstractLValue {
     public abstract VariableDefinition getVariableDefinition();
 
     public abstract void setDefinition(Definition definition);
+
+    @Override
+    protected void codeGenPrintOP(DecacCompiler compiler, boolean ex) {
+        if(!compiler.isVariableInDict(this)){
+            codeGenPrint(compiler, ex);
+            return;
+        }
+        compiler.addInstruction(new LOAD(
+                compiler.getRegister(this),
+                Register.R1
+        ));
+
+        if(this.getType().isFloat())
+            if(ex)
+                compiler.addInstruction(new WFLOATX());
+            else
+                compiler.addInstruction(new WFLOAT());
+
+        else if (this.getType().isInt())
+            compiler.addInstruction(new WINT());
+
+    }
+
+
 
 
 

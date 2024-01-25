@@ -55,6 +55,18 @@ public class Program extends AbstractProgram {
      * This method is called during the code generation phase for the main program.
      * @param compiler The {@link DecacCompiler} instance managing the compilation process.
      */
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        main.ConstantFoldingAndPropagation(compiler);
+        classes.ConstantFoldingAndPropagation(compiler);
+    }
+
+    @Override
+    public void DeadCodeElimination() {
+        main.DeadCodeElimination();
+        classes.DeadCodeElimination();
+    }
+
     @Override
     public void codeGenProgram(DecacCompiler compiler) {
 
@@ -107,6 +119,8 @@ public class Program extends AbstractProgram {
         // Add error labels and associate them with their corresponding error messages
         compiler.getErrorHandler().putErrors(compiler);
     }
+
+
 
     @Override
     public void decompile(IndentPrintStream s) {

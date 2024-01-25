@@ -12,7 +12,7 @@ import fr.ensimag.deca.tools.IndentPrintStream;
 
 public class MethodBody extends Tree{
     final private ListDeclVar listDeclVar;
-    final private ListInst listInst;
+    private ListInst listInst;
 
 
     public MethodBody(ListDeclVar listDeclVar, ListInst listInst){
@@ -81,7 +81,15 @@ public class MethodBody extends Tree{
         compiler.addLabel(new Label("end." + className + "." + methodName));
         DeclClass.pushAndPopRegister(compiler, integer, myProgram, copyProgram);
     }
-    
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        listDeclVar.ConstantFoldingAndPropagation(compiler);
+        listInst.ConstantFoldingAndPropagation(compiler);
+    }
+
+    public void DeadCodeElimination() {
+        listInst = listInst.DeadCodeElimination();
+    }
 
 
     
