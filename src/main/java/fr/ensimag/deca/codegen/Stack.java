@@ -39,13 +39,6 @@ public class Stack {
         currentRegister = 2;
     }
 
-    /**
-     * Increases the maximum TSTO by one.
-     */
-    public void increaseTSTO(){
-        maxTSTO++;
-    }
-
 
 
     /**
