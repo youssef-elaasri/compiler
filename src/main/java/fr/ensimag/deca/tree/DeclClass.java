@@ -89,7 +89,11 @@ public class DeclClass extends AbstractDeclClass {
 
         /*Vérifier si les deux environnements sont disjoints*/
         if (!Collections.disjoint(keyF, keyM)) {
-            throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", this.getLocation());
+            for (SymbolTable.Symbol symbolF : keyF){
+                if(keyM.contains(symbolF)){
+                    throw new ContextualError("Un champ et une méthode ont le même nom dans la classe " + className.getName() + " !", envExpm.get(symbolF).getLocation());
+                }
+            }
         }
         /*Method putAll overwrites Symbols already present in the superclass map*/
         Map<SymbolTable.Symbol, ExpDefinition> mergedMap = new HashMap<>(((ClassDefinition) compiler.environmentType.defOfType(superName.getName())).getMembers().getExpDefinitionMap());
