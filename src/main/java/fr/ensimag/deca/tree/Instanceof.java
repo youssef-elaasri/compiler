@@ -107,4 +107,14 @@ public class Instanceof extends AbstractExpr{
         ));
         compiler.addLabel(endInstanceof);
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+
+    }
 }

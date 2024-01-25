@@ -12,6 +12,7 @@ import fr.ensimag.ima.pseudocode.instructions.WINT;
 import fr.ensimag.ima.pseudocode.instructions.WSTR;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 
 /**
  *
@@ -76,6 +77,22 @@ public class BooleanLiteral extends AbstractExpr {
         ));
         compiler.getStack().increaseRegister();
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return this;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        // nothing to do
+    }
+
 
 
 }

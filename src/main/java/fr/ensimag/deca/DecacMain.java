@@ -2,6 +2,7 @@ package fr.ensimag.deca;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class DecacMain {
             List<File> files = options.getSourceFiles();
             List<DecacCompiler> decacCompilerFiles = new ArrayList<DecacCompiler>();
             for(File file:files){
-                decacCompilerFiles.add(new DecacCompiler(options, file)); 
+                decacCompilerFiles.add(new DecacCompiler(options, file));
             }
 
             List<Future<Boolean>> futures = new ArrayList<>();

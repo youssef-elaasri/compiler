@@ -133,4 +133,14 @@ public class MethodCall extends AbstractExpr{
         compiler.getStack().increaseRegister();
 
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+
+    }
 }

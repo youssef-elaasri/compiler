@@ -44,4 +44,10 @@ public class ListDeclField extends TreeList<AbstractDeclField>{
         }
     }
 
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractDeclField abstractDeclField : getList()) {
+            abstractDeclField.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
 }

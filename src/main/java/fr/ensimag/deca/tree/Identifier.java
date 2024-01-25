@@ -6,6 +6,7 @@ import fr.ensimag.deca.tools.DecacInternalError;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import fr.ensimag.deca.tools.SymbolTable.Symbol;
 import java.io.PrintStream;
+import java.util.HashSet;
 
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.RegisterOffset;
@@ -221,6 +222,23 @@ public class Identifier extends AbstractIdentifier {
             s.print(d);
             s.println();
         }
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        if (getDefinition().isParam() || getDefinition().isField())
+            return null;
+        return getExpDefinition().getValue();
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        //nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        liveVariable.add(this);
     }
 
     /**

@@ -39,4 +39,14 @@ public class Null extends AbstractExpr {
         compiler.addInstruction(new LOAD(new NullOperand(), Register.getR(compiler.getStack().getCurrentRegister())));
         compiler.getStack().increaseRegister();
     }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+
+    }
 }
