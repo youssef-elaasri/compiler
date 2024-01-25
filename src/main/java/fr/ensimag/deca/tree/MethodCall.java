@@ -89,7 +89,7 @@ public class MethodCall extends AbstractExpr{
 
         AbstractExpr abstractExpr;
         for(int i = size - 1; i >= 0; --i){
-            abstractExpr = listExpression.getList().get(i);
+            abstractExpr = listExpression.getList().get(size - i - 1);
 
             abstractExpr.codeGenInst(compiler);
             compiler.getStack().decreaseRegister();
