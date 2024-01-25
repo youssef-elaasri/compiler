@@ -6,6 +6,7 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 import java.io.PrintStream;
+import java.util.HashSet;
 
 /**
  * 
@@ -22,6 +23,21 @@ public class NoOperation extends AbstractInst {
 
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
+        // nothing to do
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        return null;
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
         // nothing to do
     }
 

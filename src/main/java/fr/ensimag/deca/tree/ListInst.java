@@ -7,6 +7,8 @@ import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.deca.tools.IndentPrintStream;
 
+import java.util.HashSet;
+
 /**
  * 
  * @author gl22
@@ -33,11 +35,21 @@ public class ListInst extends TreeList<AbstractInst> {
     }
 
     public void codeGenListInst(DecacCompiler compiler) {
-        for (AbstractInst i : getList()) {
-            i.codeGenInst(compiler);
-            if (i instanceof AbstractExpr)
-                compiler.getStack().decreaseRegister();
+        if (compiler.getCompilerOptions().getOPTIM()) {
+            for (AbstractInst i : getList()) {
+                i.codeGenInstOP(compiler);
+                if (i instanceof AbstractExpr)
+                    compiler.getStack().decreaseRegister();
 
+            }
+        }
+        else {
+            for (AbstractInst i : getList()) {
+                i.codeGenInst(compiler);
+                if (i instanceof AbstractExpr)
+                    compiler.getStack().decreaseRegister();
+
+            }
         }
     }
 
@@ -46,6 +58,43 @@ public class ListInst extends TreeList<AbstractInst> {
         for (AbstractInst i : getList()) {
             i.decompileInst(s);
             s.println();
+        }
+    }
+
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        for (AbstractInst i : getList()) {
+            i.ConstantFoldingAndPropagation(compiler);
+        }
+    }
+
+    public void checkAliveVariables() {
+        for (AbstractInst i : getList()) {
+            i.checkAliveVariables();
+        }
+    }
+
+    public ListInst DeadCodeElimination() {
+        ListInst listInst = new ListInst();
+        for (AbstractInst i : getList()) {
+            if (i instanceof IfThenElse ) {
+                for (AbstractInst inst : ((IfThenElse) i).DeadCodeElimination().getList()) {
+                    listInst.add(inst);
+                }
+            }
+            else if (i instanceof While ) {
+                for (AbstractInst inst : ((While) i).DeadCodeElimination().getList()) {
+                    listInst.add(inst);
+                }
+            }
+            else
+                listInst.add(i);
+        }
+        return listInst;
+    }
+
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        for (AbstractInst i : getList()) {
+            i.addLiveVariable(liveVariable);
         }
     }
 }

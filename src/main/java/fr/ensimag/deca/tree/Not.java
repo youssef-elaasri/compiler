@@ -8,6 +8,8 @@ import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.instructions.*;
 
+import java.util.HashSet;
+
 /**
  *
  * @author gl22
@@ -48,14 +50,49 @@ public class Not extends AbstractUnaryExpr {
     @Override
     protected void codeGenInst(DecacCompiler compiler) {
         // Generate code for the operand
-        super.getOperand().codeGenInst(compiler);
+        if (compiler.getCompilerOptions().getOPTIM())
+            getOperand().codeGenInstOP(compiler);
+        else
+            getOperand().codeGenInst(compiler);
 
-
-        // Compare the result of the operand with 0 and jump to falseNot if equal (operand is false)
         compiler.addInstruction(new CMP(0, Register.getR(compiler.getStack().getCurrentRegister() - 1)));
         compiler.addInstruction(new SEQ(Register.getR(compiler.getStack().getCurrentRegister() - 1)));
 
+    }
 
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        if(!isVariable(compiler)){
+            codeGenInst(compiler);
+            return;
+        }
+        compiler.getStack().increaseRegister();
+        compiler.addInstruction(new CMP(0, compiler.getRegister((AbstractIdentifier) getOperand())));
+        compiler.addInstruction(new SEQ(Register.getR(compiler.getStack().getCurrentRegister() - 1)));
+
+
+    }
+
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = getOperand().ConstantFoldingAndPropagation(compiler);
+        if (value instanceof BooleanLiteral) {
+            return new BooleanLiteral(!((BooleanLiteral) value).getValue());
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+    @Override
+    public void addLiveVariable(HashSet<AbstractIdentifier> liveVariable) {
+        if (getOperand() instanceof Identifier)
+            liveVariable.add((Identifier) getOperand());
     }
 
 }

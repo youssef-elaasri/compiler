@@ -105,4 +105,10 @@ public class DeclVar extends AbstractDeclVar {
         compiler.getStack().increaseAddrCounter();
         initialization.codeGenInitialization(compiler,varName);
     }
+
+    @Override
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr value = initialization.ConstantFoldingAndPropagation(compiler);
+        varName.getExpDefinition().setValue(value);
+    }
 }

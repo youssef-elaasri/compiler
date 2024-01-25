@@ -13,7 +13,7 @@ import org.apache.commons.lang.Validate;
 public class Main extends AbstractMain {
     
     private final ListDeclVar declVariables;
-    private final ListInst insts;
+    private ListInst insts;
     public Main(ListDeclVar declVariables,
             ListInst insets) {
         Validate.notNull(declVariables);
@@ -33,6 +33,17 @@ public class Main extends AbstractMain {
         declVariables.verifyListDeclVariable(compiler, envExp, classDef);
         Type voidT = compiler.environmentType.VOID;
         insts.verifyListInst(compiler, envExp, classDef, voidT);
+    }
+
+    @Override
+    protected void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        declVariables.ConstantFoldingAndPropagation(compiler);
+        insts.ConstantFoldingAndPropagation(compiler);
+    }
+
+    @Override
+    protected void DeadCodeElimination() {
+        insts = insts.DeadCodeElimination();
     }
 
     /**

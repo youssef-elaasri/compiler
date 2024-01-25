@@ -105,4 +105,9 @@ public class DeclField extends AbstractDeclField{
         return type.getType();
     }
 
+    @Override
+    public void ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        initialization.ConstantFoldingAndPropagation(compiler);
+    }
+
 }

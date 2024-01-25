@@ -2,6 +2,7 @@ package fr.ensimag.deca.tree;
 
 
 import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.*;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
 import fr.ensimag.ima.pseudocode.instructions.*;
@@ -37,6 +38,39 @@ public class Equals extends AbstractOpExactCmp {
         );
         codeGenInstGeneral(compiler,branchInstruction);
     }
+    @Override
+    protected AbstractExpr ConstantFoldingAndPropagation(DecacCompiler compiler) {
+        AbstractExpr rightValue = getRightOperand().ConstantFoldingAndPropagation(compiler);
+        AbstractExpr leftValue = getLeftOperand().ConstantFoldingAndPropagation(compiler);
+        if (rightValue instanceof IntLiteral) {
+            if (leftValue instanceof IntLiteral) {
+                return new BooleanLiteral(((IntLiteral) rightValue).getValue() == ((IntLiteral) leftValue).getValue());
+            }
+            if (leftValue instanceof FloatLiteral) {
+                return new BooleanLiteral(((IntLiteral) rightValue).getValue() == ((FloatLiteral) leftValue).getValue());
+            }
+        }
+        else if (rightValue instanceof FloatLiteral) {
+            if (leftValue instanceof IntLiteral) {
+                return new BooleanLiteral(((FloatLiteral) rightValue).getValue() == ((IntLiteral) leftValue).getValue());
+            }
+            else if (leftValue instanceof FloatLiteral) {
+                return new BooleanLiteral(((FloatLiteral) rightValue).getValue() == ((FloatLiteral) leftValue).getValue());
+            }
+        }
+        return null;
+    }
 
-    
+    @Override
+    public void checkAliveVariables() {
+        // nothing to do
+    }
+
+
+
+    @Override
+    public UnaryInstructionToReg getOperator(GPRegister register) {
+        return new SEQ(register);
+    }
+
 }

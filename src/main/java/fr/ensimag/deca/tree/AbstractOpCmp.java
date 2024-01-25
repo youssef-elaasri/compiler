@@ -6,6 +6,7 @@ import fr.ensimag.deca.context.ClassDefinition;
 import fr.ensimag.deca.context.ContextualError;
 import fr.ensimag.deca.context.EnvironmentExp;
 import fr.ensimag.ima.pseudocode.BranchInstruction;
+import fr.ensimag.ima.pseudocode.GPRegister;
 import fr.ensimag.ima.pseudocode.Label;
 import fr.ensimag.ima.pseudocode.Register;
 import fr.ensimag.ima.pseudocode.UnaryInstructionToReg;
@@ -13,6 +14,7 @@ import fr.ensimag.ima.pseudocode.instructions.BEQ;
 import fr.ensimag.ima.pseudocode.instructions.BRA;
 import fr.ensimag.ima.pseudocode.instructions.CMP;
 import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +27,9 @@ import java.util.Set;
  * @date 01/01/2024
  */
 public abstract class AbstractOpCmp extends AbstractBinaryExpr {
+
+    private static final Logger LOG = Logger.getLogger(AbstractOpCmp.class);
+
 
 
 
@@ -107,6 +112,53 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         }
     }
 
+    protected void codeGenInstGeneralOP(DecacCompiler compiler, UnaryInstructionToReg branchInstruction){
+        LOG.debug("Im OpCMP and ill call extract variables");
+        String vars = extractVariable(compiler);
+
+        GPRegister rightRegister = null;
+        GPRegister leftRegister = null;
+
+        LOG.debug(vars);
+
+        switch (vars){
+            case "both":
+                rightRegister = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                leftRegister = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                compiler.getStack().increaseRegister();
+                break;
+
+            case "left":
+                leftRegister = compiler.getRegister((AbstractIdentifier) getLeftOperand());
+                getRightOperand().codeGenInstOP(compiler);
+                rightRegister = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            case "right":
+                rightRegister = compiler.getRegister((AbstractIdentifier) getRightOperand());
+                getLeftOperand().codeGenInstOP(compiler);
+                leftRegister = Register.getR(compiler.getStack().getCurrentRegister() - 1);
+                break;
+
+            default:
+                codeGenInstGeneral(compiler, branchInstruction);
+                return;
+
+        }
+
+        compiler.addInstruction(new CMP(
+                rightRegister,
+                leftRegister
+        ));
+
+        compiler.addInstruction(branchInstruction);
+
+
+
+
+
+    }
+
     /**
      * Generate code for a comparison operation with branch instruction and loading true/false values.
      * Generates instructions for a comparison operation with a specified branch instruction,
@@ -117,9 +169,15 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
      */
     protected void codeGenInstOpCmp(DecacCompiler compiler,
                                     UnaryInstructionToReg branchInstruction) {
-        getLeftOperand().codeGenInst(compiler);
-        getRightOperand().codeGenInst(compiler);
 
+        if(compiler.getCompilerOptions().getOPTIM()) {
+            getLeftOperand().codeGenInstOP(compiler);
+            getRightOperand().codeGenInstOP(compiler);
+        }
+        else {
+            getLeftOperand().codeGenInst(compiler);
+            getRightOperand().codeGenInst(compiler);
+        }
         compiler.addInstruction(new CMP(
                 Register.getR(compiler.getStack().getCurrentRegister()-1),
                 Register.getR(compiler.getStack().getCurrentRegister()-2)
@@ -131,4 +189,14 @@ public abstract class AbstractOpCmp extends AbstractBinaryExpr {
         compiler.getStack().decreaseRegister();
     }
 
+
+    public abstract UnaryInstructionToReg getOperator(GPRegister register);
+
+
+    @Override
+    protected void codeGenInstOP(DecacCompiler compiler) {
+        LOG.debug("the current register is " + compiler.getStack().getCurrentRegister() + " AND I WANNA DIE");
+        UnaryInstructionToReg branchInstruction = getOperator(Register.getR(compiler.getStack().getCurrentRegister()));
+        codeGenInstGeneralOP(compiler,branchInstruction);
+    }
 }
